@@ -1,0 +1,18 @@
+#wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -60px;
+}
+
+.container {
+	padding-top: 60px;
+}
+
+#footer {
+	text-align: center;
+	height: 40px;
+	background: #E9E9E9;
+	padding-top: 20px;
+	font-weight: bold;
+}
