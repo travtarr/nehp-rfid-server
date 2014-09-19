@@ -1,0 +1,40 @@
+<script type="text/x-handlebars" data-template-name="main/list">
+<li class="dropdown"><a href="#" class="dropdown-toggle"
+	data-toggle="dropdown">Status<b class="caret"></b></a>
+	<ul class="dropdown-menu">
+		<li class="nav-header">In-Process</li>
+		<li><a href="#">Modeling</a></li>
+		<li><a href="#">Material Kitting</a></li>
+		<li><a href="#">Manufacturing</a></li>
+		<li><a href="#">Manufacturing Completed</a></li>
+		<li><a href="#">Shipped</a></li>
+		<li><a href="#">Arrival</a></li>
+		<li><a href="#">Installed</a></li>
+		<li class="divider"></li>
+		<li class="nav-header">Stopped</li>
+		<li><a href="#">All</a></li>
+	</ul>
+</li>
+<table>
+	<thead>
+		<th>Current Stage</th>
+		<th>RFID</th>
+		<th>Item ID</th>
+		<th>Description</th>
+		<th>Last Status Change</th>
+		<th>Revision</th>
+	</thead>
+	<tbody>
+		{{#each item}}
+			<tr>
+				<td>{{currentStage}}</td>
+				<td>{{rfid}}</td>
+				<td>{{itemId}}</td>
+				<td>{{description}}</td>
+				<td>{{lastStatusChange}}</td>
+				<td>{{currentRevision}}</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>
+</script>
