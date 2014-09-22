@@ -12,10 +12,17 @@ App.Auth = Em.Auth.extend({
 	tokenKey: 'auth_token',
 	tokenLocation: 'param',
 	session: 'local-stroage',
-	signInEndPoint: '/sign-in',
-	signOutEndPoint: '/sign-out',
-	modules: ['emberData'],
-	emberData: { userModel: 'user' }		
+	signInEndPoint: '/login',
+	signOutEndPoint: '/logout',
+	modules: ['emberData', 'authRedirectable', 'rememberable'],
+	emberData: { userModel: 'user' },
+	authRedirectable: { route: 'login' },
+	rememberable: {
+		    tokenKey: 'remember_token',
+		    period: 14,
+		    autoRecall: false
+    }
+
 });
 
 // Store

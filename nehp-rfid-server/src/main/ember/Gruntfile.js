@@ -25,26 +25,33 @@ module.exports = function(grunt) {
       files: ['<%= dist.src %>']
     },
     jshint: {
-        files: ['Gruntfile.js', 'app/**/*.js'],
-        options: {
-          // options here to override JSHint defaults
-          globals: {
-            jQuery: true,
-            console: true,
-            module: true,
-            document: true
-          }
+      files: ['Gruntfile.js', 'app/**/*.js'],
+      options: {
+        smarttabs: true,
+        // options here to override JSHint defaults
+        globals: {
+          jQuery: true,
+          console: true,
+          module: true,
+          document: true
         }
       }
+    },
+    emberTemplates: {
+      compile: {
+        files: {"dist/templates.js": "app/templates/*.hbs"}
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-ember-templates');
 
   grunt.registerTask('test', ['jshint']);
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'emberTemplates']);
 
 };

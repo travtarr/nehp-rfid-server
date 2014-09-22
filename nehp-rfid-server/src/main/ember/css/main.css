@@ -16,3 +16,7 @@ footer.container {
 	padding-top: 20px;
 	font-weight: bold;
 }
+
+.active {
+	color: #FFFFFF !important;
+}

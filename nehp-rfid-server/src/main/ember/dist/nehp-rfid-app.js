@@ -12,10 +12,17 @@ App.Auth = Em.Auth.extend({
 	tokenKey: 'auth_token',
 	tokenLocation: 'param',
 	session: 'local-stroage',
-	signInEndPoint: '/sign-in',
-	signOutEndPoint: '/sign-out',
-	modules: ['emberData'],
-	emberData: { userModel: 'user' }		
+	signInEndPoint: '/login',
+	signOutEndPoint: '/logout',
+	modules: ['emberData', 'authRedirectable', 'rememberable'],
+	emberData: { userModel: 'user' },
+	authRedirectable: { route: 'login' },
+	rememberable: {
+		    tokenKey: 'remember_token',
+		    period: 14,
+		    autoRecall: false
+    }
+
 });
 
 // Store
@@ -31,7 +38,7 @@ App.Store = DS.Store.extend({
 
 var config  = {
 	baseURL: "localhost"
-};;App.Controller = Ember.ArrayController.extend({
+};;;App.Controller = Ember.ArrayController.extend({
 	user: function() {
 		return App.Auth.get('user');
 	}
@@ -50,34 +57,44 @@ var config  = {
   admin: DS.attr('int')
 });;/**
  * 
- */;/**
+ */
+App.AdminRoute = Em.Auth.extend({
+	authRedirectable: true
+});;/**
  * 
  */
-App.MainListRoute = Ember.Route.extend({
+App.LoginRoute = Em.Auth.extend( function() {
+	
+});;;/**
+ * 
+ */
+App.StatusRoute = Ember.Route.extend({
+  authRedirectable: true,
   model: function() {
     var listObjects = [];
-    Ember.$.getJSON(config.baseURL + '/list', function(lists) {
-      lists.forEach(function(data) {
-        listObjects.pushObject(App.Item.createRecord(data));
+    Ember.$.getJSON(config.baseURL + '/status', function(status) {
+      status.forEach(function(data) {
+        statusObjects.pushObject(App.Item.createRecord(data));
       });
     });
-    return listObjects;
+    return statusObjects;
   }
 });;/**
  * 
- */;/**
- * 
- */;/**
- * 
- */;;App.Router.map(function() {
-  this.route('index', { path: '/' });
-  this.resource("main", { path:"/main" }, function () {  
-    this.route("summary", { path:"/summary" }); 
-    this.resource("list", { path:"/list" }, function() {
-      this.route("item", { path:"/:item" });
-    });
-    this.route("user", { path:"/user" });
-    this.route("admin", { path:"/admin" });
-    this.route("login", { path:"/login" });
+ */
+App.SummaryRoute = Em.Auth.extend({
+	authRedirectable: true
+});;;App.Router.map(function() {
+  this.route("summary", { path:"/summary" }); 
+  this.resource("status", { path:"/status" }, function() {
+    this.route("item", { path:"/:item" });
   });
+  this.route("user", { path:"/user" });
+  this.route("admin", { path:"/admin" });
+  this.route("login", { path:"/login" });
+});
+App.IndexRoute = Ember.Route.extend({
+  redirect: function(){
+	this.transitionTo('summary');
+  }
 });
