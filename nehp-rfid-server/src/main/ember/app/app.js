@@ -1,7 +1,7 @@
 // Application
-window.App = Ember.Application.create({
-		LOG_TRANSITIONS:true,
-		rootElement:'#rfid'
+var App = Ember.Application.create({
+		LOG_TRANSITIONS:true, // debugging == true
+		rootElement:'body'
 		});
 
 // Authentication
