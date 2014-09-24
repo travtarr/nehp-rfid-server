@@ -36,7 +36,7 @@ App.Store = DS.Store.extend({
  */
 
 var config  = {
-	baseURL: "localhost"
+	baseURL: "54.209.176.186"
 };;App.Controller = Ember.ArrayController.extend({
 	user: function() {
 		return App.Auth.get('user');
@@ -110,16 +110,10 @@ App.AdminRoute = Em.Auth.extend({
   model: function() {
     return this.store.find('notifications');
   }
-});;App.ListRoute = Ember.Route.extend({
-  //authRedirectable: true,
-  model: function(params){
-	return this.store.findAll('item');
-  }
 });;App.LoginRoute = Ember.Route.extend({
 	
 });;;App.StatusListRoute = Ember.Route.extend({
-	model: function(params) {
-		console.log(params);
+	model: function() {
 		//return this.store.findAll('item');	
 	}
 });;/**

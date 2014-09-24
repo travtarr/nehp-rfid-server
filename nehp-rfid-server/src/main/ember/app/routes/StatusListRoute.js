@@ -1,6 +1,5 @@
 App.StatusListRoute = Ember.Route.extend({
-	model: function(params) {
-		console.log(params);
+	model: function() {
 		//return this.store.findAll('item');	
 	}
 });
