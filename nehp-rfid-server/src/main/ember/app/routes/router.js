@@ -1,14 +1,10 @@
 App.Router.map(function() {
   this.route("summary", { path:"/summary" }); 
   this.resource("status", { path:"/status" }, function() {
-    this.route("item", { path:"/:item" });
+    this.resource("list", { path:"/list/:list" });
+    this.resource("item", { path:"/item/:item"});
   });
-  this.route("user", { path:"/user" });
+  this.resource("user", { path:"/user" });
   this.route("admin", { path:"/admin" });
   this.route("login", { path:"/login" });
-});
-App.IndexRoute = Ember.Route.extend({
-  redirect: function(){
-	this.transitionTo('summary');
-  }
 });

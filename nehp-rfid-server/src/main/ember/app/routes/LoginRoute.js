@@ -1,6 +1,3 @@
-/**
- * 
- */
-App.LoginRoute = Em.Auth.extend( function() {
+App.LoginRoute = Ember.Route.extend({
 	
 });

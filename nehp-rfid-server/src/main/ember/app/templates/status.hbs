@@ -1,38 +1,21 @@
-<li class="dropdown"><a href="#" class="dropdown-toggle"
-	data-toggle="dropdown">Status<b class="caret"></b></a>
-	<ul class="dropdown-menu">
-		<li class="nav-header">In-Process</li>
-		<li><a href="#">Modeling</a></li>
-		<li><a href="#">Material Kitting</a></li>
-		<li><a href="#">Manufacturing</a></li>
-		<li><a href="#">Manufacturing Completed</a></li>
-		<li><a href="#">Shipped</a></li>
-		<li><a href="#">Arrival</a></li>
-		<li><a href="#">Installed</a></li>
-		<li class="divider"></li>
-		<li class="nav-header">Stopped</li>
-		<li><a href="#">All</a></li>
-	</ul>
-</li>
-<table>
-	<thead>
-		<th>Current Stage</th>
-		<th>RFID</th>
-		<th>Item ID</th>
-		<th>Description</th>
-		<th>Last Status Change</th>
-		<th>Revision</th>
-	</thead>
-	<tbody>
-		{{#each item}}
-			<tr>
-				<td>{{currentStage}}</td>
-				<td>{{rfid}}</td>
-				<td>{{itemId}}</td>
-				<td>{{description}}</td>
-				<td>{{lastStatusChange}}</td>
-				<td>{{currentRevision}}</td>
-			</tr>
-		{{/each}}
-	</tbody>
-</table>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2">
+			<ul class="nav nav-inverse dark-list">
+				{{#link-to 'list' 'modeling' tagName='li' classNames='link'}}Modeling{{/link-to}}
+				{{#link-to 'list' 'material' tagName='li' classNames='link'}}Material Kitting{{/link-to}}
+				{{#link-to 'list' 'manufacturing' tagName='li' classNames='link'}}Manufacturing{{/link-to}}
+				{{#link-to 'list' 'mfr-completed' tagName='li' classNames='link'}}Manufacturing Completed{{/link-to}}
+				{{#link-to 'list' 'shipped' tagName='li' classNames='link'}}Shipped{{/link-to}}
+				{{#link-to 'list' 'arrival' tagName='li' classNames='link'}}Arrival{{/link-to}}
+				{{#link-to 'list' 'installed' tagName='li' classNames='link'}}Installed{{/link-to}}
+				<li class="divider"></li>
+				<li class="nav-header">Stopped</li>
+				{{#link-to 'list' 'stopped' tagName='li' classNames='link'}}All{{/link-to}}
+			</ul>
+		</div>
+		<div class="span10">
+			{{outlet}}
+		</div>
+	</div>
+</div>

@@ -39,7 +39,12 @@ module.exports = function(grunt) {
     },
     emberTemplates: {
       compile: {
-        files: {"dist/templates.js": "app/templates/*.hbs"}
+        options: {
+          templateName: function(name) {
+            return name.replace('app/templates/', '');
+          }
+        },
+        files: {"dist/templates.js": "app/templates/**/*.hbs"}
       }
     }
   });

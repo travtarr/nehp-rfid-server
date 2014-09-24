@@ -11,7 +11,7 @@ App.Auth = Em.Auth.extend({
 	strategy: 'token',
 	tokenKey: 'auth_token',
 	tokenLocation: 'param',
-	session: 'local-stroage',
+	session: 'local-storage',
 	signInEndPoint: '/login',
 	signOutEndPoint: '/logout',
 	modules: ['emberData', 'authRedirectable', 'rememberable'],
@@ -22,14 +22,13 @@ App.Auth = Em.Auth.extend({
 		    period: 14,
 		    autoRecall: false
     }
-
 });
+
+// Adapter
+App.ApplicationAdapter = DS.RESTAdapter.extend({});
 
 // Store
-App.Adapter = DS.RESTAdapter.extend({
-  namespace:'api'
-});
 App.Store = DS.Store.extend({
   revision:12,
-  adapter:App.Adapter.create({})
+  adapter: App.ApplicationAdapter.create()
 });

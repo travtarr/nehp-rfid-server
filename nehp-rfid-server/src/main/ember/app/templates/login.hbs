@@ -1,6 +1,11 @@
 <div class="centered-box">
-	<form name="form-login">
-		<input type="text" name="userID"> <input type="password"
-			name=password"> <input type="submit">
+	<form {{action login on="submit"}}>
+		<fieldset>
+			<legend>Sign In</legend>
+			<label>User ID:<br>{{input valueBinding='userID'}}</label>
+			<label>Password:<br>{{input type='password' valueBinding='password'}}</label>
+			<label>Remember Me?{{input type='checkbox' valueBinding='remember'}}</label>
+			<label>{{input type='submit' value="Log In"}}</label>
+		</fieldset>
 	</form>
 </div>

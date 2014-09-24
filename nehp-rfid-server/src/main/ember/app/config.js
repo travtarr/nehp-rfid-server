@@ -3,5 +3,5 @@
  */
 
 var config  = {
-	baseURL: "localhost"
+	baseURL: "54.209.176.186"
 };

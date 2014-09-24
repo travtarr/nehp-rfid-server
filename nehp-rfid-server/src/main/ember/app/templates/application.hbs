@@ -1,0 +1,43 @@
+<div id="wrap">
+		<section id="rfid">
+		
+			<!--  Navigation bar -->
+			<div class="navbar navbar-inverse navbar-fixed-top">
+				<div class="navbar-inner">
+        <div class="container">
+					{{#link-to 'index' classNames="pull-left pad-lg link title-link"}}NEHP Worldwide Tracker{{/link-to}}
+					<div class="nav-collapse collapse">
+					<ul class="nav">
+						{{#link-to 'summary' tagName='li' classNames='pad-sm link'}}Summary{{/link-to}}
+						{{#link-to 'status' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
+					</ul>
+					<ul class="nav pull-right">
+						{{#if auth.signedIn}} 
+							{{#link-to 'user' tagName='li' classNames='link'}}{{user}}{{/link-to}} 
+							{{#if App.Auth.user.admin}}
+								{{#link-to 'admin' tagName='li' classNames='link'}}Admin{{/link-to}}
+							{{/if}}
+						{{else}} 
+							{{#link-to 'login' tagName='li' classNames='link'}}Login{{/link-to}} 
+						{{/if}}
+					</ul>
+          </div>
+        </div>
+				</div>
+			</div>
+			<!-- /Navigation Bar -->
+
+			<!-- Content -->
+			<div class="container">
+				<section id="content">
+					<!--  Page Contents from Ember -->
+					{{outlet}}
+				</section>
+			</div>
+			<!-- /Content -->
+
+		</section>
+	</div>
+	<footer class="container">
+		<span>NEHP Worldwide, LLC. Copyright 2014.</span>
+	</div>

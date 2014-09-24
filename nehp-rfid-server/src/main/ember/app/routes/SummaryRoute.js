@@ -1,6 +1,3 @@
-/**
- * 
- */
-App.SummaryRoute = Em.Auth.extend({
+App.SummaryRoute = Ember.Route.extend({
 	authRedirectable: true
 });
