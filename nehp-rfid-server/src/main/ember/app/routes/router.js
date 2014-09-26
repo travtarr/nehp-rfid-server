@@ -4,7 +4,11 @@ App.Router.map(function() {
     this.resource("list", { path:"/list/:list" });
     this.resource("item", { path:"/item/:item"});
   });
-  this.resource("user", { path:"/user" });
+  this.resource("user", { path:"/user/:user_id" });
   this.route("admin", { path:"/admin" });
-  this.route("login", { path:"/login" });
+  this.resource("sessions", function(){
+	this.route("login"};
+	this.route("logout");
+  });
+  
 });

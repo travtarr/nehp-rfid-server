@@ -1,0 +1,4 @@
+allowedGrantTypes:
+  - password
+  
+ realm: nehp-rfid-server
