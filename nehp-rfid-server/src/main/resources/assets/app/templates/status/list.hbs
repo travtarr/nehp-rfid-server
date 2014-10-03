@@ -1,0 +1,22 @@
+<table class="table table-striped talbe-hover table-condensed dark-bg">
+	<thead>
+		<th>Current Stage</th>
+		<th>RFID</th>
+		<th>Item ID</th>
+		<th>Description</th>
+		<th>Last Status Change</th>
+		<th>Revision</th>
+	</thead>
+	<tbody>
+		{{#each}}
+			<tr>
+				<td>{{currentStage}}</td>
+				<td>{{rfid}}</td>
+				<td>{{itemId}}</td>
+				<td>{{description}}</td>
+				<td>{{lastStatusChange}}</td>
+				<td>{{currentRevision}}</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

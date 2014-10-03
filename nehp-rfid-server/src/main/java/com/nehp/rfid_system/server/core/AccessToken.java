@@ -3,13 +3,17 @@ package com.nehp.rfid_system.server.core;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+//import org.joda.time.contrib.hibernate.PersistentDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,33 +24,40 @@ import io.dropwizard.jackson.JsonSnakeCase;
 @Table(name = "accessToken")
 @NamedQueries({
 	@NamedQuery(name = "accessTokens.getById", 
-			query = "FROM AccessTokens p WHERE p.id = :accessTokenId")
+			query = "FROM AccessToken p WHERE p.id = :accessTokenId")
 })
 public class AccessToken {
 	
+	public AccessToken(){}
+	
 	public AccessToken(UUID id, long userId, DateTime lastAccess){
-		this.accessTokenId = id;
+		this.id = id;
 		this.userId = userId;
 		this.lastAccessUTC = lastAccess;
 	}
 	
+	@Id
 	@JsonProperty
 	@NotNull
-	private UUID accessTokenId;
+	@Column
+	private UUID id;
 	
 	@JsonProperty
 	@NotNull
+	@Column
 	private long userId;
 	
 	@JsonProperty
 	@NotNull
+	@Column
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime lastAccessUTC;
 	
 	@JsonProperty
 	public UUID getId(){
-		return accessTokenId;
+		return id;
 	}
-	
+		
 	@JsonProperty
 	public long getUserId(){
 		return userId;
@@ -58,8 +69,8 @@ public class AccessToken {
 	}
 	
 	@JsonProperty
-	public void setId(UUID id){
-		this.accessTokenId = id;
+	public void setUuid(UUID id){
+		this.id = id;
 	}
 	
 	@JsonProperty

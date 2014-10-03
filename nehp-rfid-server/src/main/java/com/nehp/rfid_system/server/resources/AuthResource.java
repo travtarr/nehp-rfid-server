@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.resources;
 
+import io.dropwizard.hibernate.UnitOfWork;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -34,11 +36,16 @@ public class AuthResource {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@UnitOfWork
 	public String postForToken(
 					@FormParam("grant_type") String grantType,
 					@FormParam("username") String username,
 					@FormParam("password") String password
 	){
+		System.out.println("grant_type=" + grantType);
+		System.out.println("username=" + username);
+		System.out.println("password=" + password);
+		
 		// Check if the grant type is allowed
 		if(!allowedGrantTypes.contains(grantType)){
 			Response response = Response.status(Responses.METHOD_NOT_ALLOWED).build();
@@ -52,7 +59,8 @@ public class AuthResource {
 		}
 		
 		// User found, generate token
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(user.get(),  new DateTime());
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(user.get().getId(),  new DateTime());
+		
 		return accessToken.getId().toString();
 	}
 }

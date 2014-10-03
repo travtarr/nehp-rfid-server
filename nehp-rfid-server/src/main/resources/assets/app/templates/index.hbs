@@ -1,0 +1,12 @@
+<span class="light-text"><h1>Welcome!</h1></span>
+<div class="notifications">
+	<h3>Notifications</h3>
+	<div>
+		<ul>
+		{{#each notifications}}
+			<li>Date:{{date}} &nbsp By:{{author}}</li>
+			<li>{{message}}</li>
+		{{/each}}
+		</ul>
+	</div>
+</div>

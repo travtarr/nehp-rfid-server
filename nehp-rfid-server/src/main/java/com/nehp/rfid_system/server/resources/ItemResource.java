@@ -1,5 +1,8 @@
 package com.nehp.rfid_system.server.resources;
 
+import io.dropwizard.auth.Auth;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,7 +14,7 @@ import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.data.ItemDAO;
 
 
-@Path("status/item/{id}")
+@Path("/status/item")
 @Produces(MediaType.APPLICATION_JSON)
 public class ItemResource {
 
@@ -23,28 +26,49 @@ public class ItemResource {
 	
 	@GET
 	@Timed
-	public Item getItem(@PathParam("id") String id){
+	@Path("/{id}")
+	public Item getItem(@Auth @PathParam("id") String id){
 		return items.getItemById(Long.getLong(id));	
 	}
 	
 	@GET
 	@Timed
-	@Path("/update")
-	public void updateItem(@PathParam("id") String id){
-
+	@Path("/{id}/update")
+	public String updateItem(@Auth @PathParam("id") String id, Item item){
+		if(items.update(item))
+			return "Item: " + id + " updated successfully";
+		else
+			return "Item: " + id + " not updated";
 	}
 	
 	@GET
 	@Timed
-	@Path("/delete")
-	public void deleteItem(@PathParam("id") String id){
+	@Path("/{id}/delete")
+	@Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+	public String deleteItem(@Auth @PathParam("id") String id){
+		Item item = items.getItemById(Long.getLong(id));
 		
+		if(item != null){
+			if(items.delete(item))
+				return "Item: " + id + " updated successfully";
+			else
+				return "Item: " + id + " was not deleted";
+			
+		} else {	
+			return "Item: " + id + " was not deleted";
+		}
 	}
 	
 	@GET
 	@Timed
 	@Path("/create")
-	public void createItem(@PathParam("id") String id){
+	public String createItem(@Auth Item item){
+		Long itemId = null;
+		itemId = items.create(item);
 		
+		if(itemId != null)
+			return "Item: " + item.getItemId() + " was created with id: " + itemId;
+		else
+			return "Item: " + item.getItemId() + " was not created";
 	}
 }

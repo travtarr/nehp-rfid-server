@@ -1,0 +1,1 @@
+App.SessionsLoginRoute = Ember.Route.extend({});

@@ -1,0 +1,1 @@
+App.SummaryRoute = Ember.Route.extend({});

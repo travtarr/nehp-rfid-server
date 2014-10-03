@@ -11,6 +11,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.jackson.JsonSnakeCase;
@@ -19,14 +22,16 @@ import io.dropwizard.jackson.JsonSnakeCase;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-	@NamedQuery(name = "users.getAll", query = "FROM Users"),
-	@NamedQuery(name = "users.getById", query = "FROM Users WHERE id = :id"),
-	@NamedQuery(name = "users.getByUsernameAndPassword", query = "FROM Users WHERE userId = :username AND password= :password"),
-	@NamedQuery(name = "users.updateByUserId", query = "UPDATE Users SET name= :name, "
-			+ "email= :email, password= :password, p.lastLoginDate= :lastLoginDate WHERE userId = :userId"),
-	@NamedQuery(name = "users.deleteByUserId", query = "DELETE FROM Users WHERE userId = :userId")
+	@NamedQuery(name = "users.getAll", query = "FROM User"),
+	@NamedQuery(name = "users.getById", query = "FROM User WHERE id = :id"),
+	@NamedQuery(name = "users.getByUsernameAndPassword", query = "FROM User WHERE username = :username AND password= :password"),
+	@NamedQuery(name = "users.updateByUserId", query = "UPDATE User SET name= :name, "
+			+ "email= :email, password= :password, lastLoginDate= :lastLoginDate WHERE id = :userId"),
+	@NamedQuery(name = "users.deleteByUserId", query = "DELETE FROM User WHERE id = :userId")
 })
 public class User {
+	
+	public User(){}
 	
 	// INITIALIZERS
 	@JsonProperty
@@ -40,9 +45,11 @@ public class User {
 	@JsonProperty
 	private String password;
 	@JsonProperty
-	private String lastLoginDate;
+	private DateTime lastLoginDate;
 	@JsonProperty
-	private String userCreatedDate;
+	private DateTime userCreatedDate;
+	@JsonProperty
+	private boolean admin;
 	
 	// SETTERS
 	@JsonProperty
@@ -66,12 +73,16 @@ public class User {
 		this.password = password;
 	}
 	@JsonProperty
-	public void setLastLoginDate(String date){
+	public void setLastLoginDate(DateTime date){
 		this.lastLoginDate = date;
 	}
 	@JsonProperty
-	public void setuserCreatedDate(String date){
+	public void setUserCreatedDate(DateTime date){
 		this.userCreatedDate = date;
+	}
+	@JsonProperty
+	public void setAdmin(boolean admin){
+		this.admin = admin;
 	}
 	
 	// GETTERS
@@ -107,15 +118,22 @@ public class User {
 		return password;
 	}
 	
-	@Column(name = "lastLoginDate", nullable = false, length = 24)
+	@Column(name = "lastLoginDate", nullable = false)
 	@JsonProperty
-	public String getLastLoginDate(){
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	public DateTime getLastLoginDate(){
 		return lastLoginDate;
 	}
 	
-	@Column(name = "userCreatedDate", nullable = false, length = 24)
+	@Column(name = "userCreatedDate", nullable = true)
 	@JsonProperty
-	public String getUserCreatedDate(){
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	public DateTime getUserCreatedDate(){
 		return userCreatedDate;
+	}
+	@Column(name = "admin", nullable = false)
+	@JsonProperty
+	public boolean getAdmin(){
+		return admin;
 	}
 }
