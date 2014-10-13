@@ -1,6 +1,4 @@
-# create a base object for any authentication protected route with the required verifications
-// create a base object for any authentication protected route with the required
-// verifications
+// create a base object for any authentication protected route
 App.AuthenticatedRoute = Ember.Route.extend({
   // verify if the token property of the sessions controller is set before
 	// continuing with the request
@@ -25,7 +23,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	      if (reason.status === 401) {
 	        this.redirectToLogin(transition);
 	      } else {
-	        console.log('unknown problem');
+	        console.log(reason.status);
 	      }
 	    }
 	  }

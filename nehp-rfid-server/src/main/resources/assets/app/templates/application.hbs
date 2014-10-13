@@ -12,11 +12,12 @@
 						{{#link-to 'status' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
 					</ul>
 					<ul class="nav pull-right">
-						{{#if auth.signedIn}} 
+						{{#if isAuthenticated}} 
 							{{#link-to 'user' tagName='li' classNames='link'}}{{user}}{{/link-to}} 
-							{{#if App.Auth.user.admin}}
+							{{#if isAdmin}}
 								{{#link-to 'admin' tagName='li' classNames='link'}}Admin{{/link-to}}
 							{{/if}}
+							<button {{action 'logout'}} class="btn-logout">Logout</button>
 						{{else}} 
 							{{#link-to 'sessions.login' tagName='li' classNames='link'}}Login{{/link-to}} 
 						{{/if}}

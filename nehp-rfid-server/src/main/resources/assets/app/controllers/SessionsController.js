@@ -1,86 +1,138 @@
-App.LoginController = Ember.Controller.extend({
-	data: null,
-	
-	init: function(){
-			this._super();
-			if (Ember.$.cookie('access_token')) {
-			    Ember.$.ajaxSetup({
-			      headers: {
-			        'Authorization': 'Bearer ' + Ember.$.cookie('access_token')
-			      }
-			    });
-			}	
-		},
-		
-	// overwriting the default attemptedTransition attribute from the Ember.Controller object
-  	attemptedTransition: null,
-
-  	// create and set the token & current user objects based on the respective cookies
-  	token:               Ember.$.cookie('access_token'),
-  	currentUser:         Ember.$.cookie('auth_user'),
-	
-	tokenChanged: (function() {
-		  if (Ember.isEmpty(this.get('token'))) {
-		    Ember.$.removeCookie('access_token');
-		    Ember.$.removeCookie('auth_user');
-		  } else {
-		    Ember.$.cookie('access_token', this.get('token'));
-		    Ember.$.cookie('auth_user', this.get('currentUser'));
-		  }
-	}).observes('token'),
-	
-	// reset the controller properties and the ajax header
-	reset: function() {
-	  this.setProperties({
-	    username:          null,
-	    password:          null,
-	    token:             null,
-	    currentUser:       null
-	  });
-	  Ember.$.ajaxSetup({
-	    headers: {
-	      'Authorization': 'Bearer none'
-	    }
-	  });
+App.SessionsController = Ember.Controller.extend({
+	init : function() {
+		this._super();
+		if (Ember.$.cookie('access_token')) {
+			Ember.$.ajaxSetup({
+				headers : {
+					'Authorization' : 'Bearer ' + Ember.$.cookie('access_token')
+				}
+			});
+		}
 	},
-	
-	actions: {
-		 		
-		login: function() {
+
+	// overwriting the default attemptedTransition attribute from the
+	// Ember.Controller object
+	attemptedTransition : null,
+
+	// create and set the token & current user objects based on the respective
+	// cookies
+	token : Ember.$.cookie('access_token'),
+	currentUser : Ember.$.cookie('auth_user'),
+
+	// create cookie for administration token
+	admin : Ember.$.cookie('admin_token'),
+
+	tokenChanged : (function() {
+		if (Ember.isEmpty(this.get('token'))) {
+			Ember.$.removeCookie('access_token');
+			Ember.$.removeCookie('auth_user');
+			Ember.$.removeCookie('admin_token');
+		} else {
+			Ember.$.cookie('access_token', this.get('token'));
+			Ember.$.cookie('auth_user', this.get('currentUser'));
+			Ember.$.cookie('admin_token', this.get('admin'));
+		}
+	}).observes('token'),
+
+	// reset the controller properties and the ajax header
+	reset : function() {
+		this.setProperties({
+			username : null,
+			password : null,
+			token : null,
+			currentUser : null
+		});
+		Ember.$.ajaxSetup({
+			headers : {
+				'Authorization' : 'Bearer none'
+			}
+		});
+	},
+
+	actions : {
+
+		login : function() {
 			var _this = this;
 			var attemptedTrans = this.get('attemptedTransition');
-			  		  
-			data = new FormData();
-			data.append('grantType', 'password');
-			data.append('username', this.get('username'));
-			data.append('password', this.get('password'));
-			  
-			Ember.$.post('/service/auth/token', data).then(function(response) {
-				// set the ajax header with the returned access_token object
-				Ember.$.ajaxSetup({
-					headers: {
-						'Authorization': 'Bearer ' + response
-				    }
-				});
+
+			var formData = { "grant_type":"password", "username": this.get('username'), "password": this.get('password')};
 			
-				}, function(error) {
+			Ember.$.ajax({
+				url: '/service/auth/token',
+				data: formData,
+				dataType: 'json',
+				type: 'POST',
+				success: function(response){
+					// test response from server
+					//console.log(JSON.stringify(response));
+
+					// set the ajax header with the returned access_token object
+					Ember.$.ajaxSetup({
+						headers : {
+							'Authorization' : 'Bearer ' + response.api_key[0].access_token.string
+						}
+					});
+					
+					_this.setProperties({
+						username : null,
+						password : null
+					});
+
+					var key = _this.get('store').createRecord('apiKey', {
+						accessToken : response.api_key[0].access_token.string
+					});
+					
+					// testing user_id string
+					//console.log(response.api_key[0].user_id.string);
+				
+				
+					_this.store.find('user', response.api_key[0].user_id.string).then(
+							function(user) {
+								
+								// tests
+								console.log(JSON.stringify(user));
+								console.log(user);
+								
+								// set this controller token & current user
+								// properties
+								// based on the data from the user and
+								// access_token
+								
+								_this.setProperties({
+									token : response.api_key[0].access_token.string,
+									currentUser : user.getProperties('username', 'name', 'email'),
+									admin: user.getProperties('admin')
+								});
+
+								// set the relationship between the User and the
+								// ApiKey
+								// models & save the apiKey object
+								key.set('user', user);
+								key.save();
+
+								user.get('apiKeys').content.push(key);
+
+								// check if there is any attemptedTransition to
+								// retry it
+								// or go to the secret route
+								if (attemptedTrans) {
+									attemptedTrans.retry();
+									_this.set('attemptedTransition', null);
+								} else {
+									_this.transitionToRoute('index');
+								}
+							}
+				    );
+				},
+				error: function(error){
 					if (error.status === 401) {
 						// if there is a authentication error the user is
 						// informed of it to try again
-						alert("wrong user or password, please try again");
-				}
+						alert("Wrong user or password, please try again");
+				    }
+					console.log(error);
+			    }
 			});
-			
-			this.setProperties({
-				username: null,
-				password: null
-			})
-			
-			var key = _this.get('store').createRecord('apiKey', {
-				accessToken: response.api_key.access_token
-			});
-			
-			_this.store.find('user', response)
 		}
 	}
 });

@@ -2,15 +2,16 @@ package com.nehp.rfid_system.server;
 
 import org.joda.time.DateTimeZone;
 
+import com.nehp.rfid_system.server.auth.RestrictedToProvider;
 import com.nehp.rfid_system.server.auth.SimpleAuthenticator;
 import com.nehp.rfid_system.server.core.AccessToken;
 import com.nehp.rfid_system.server.core.Item;
+import com.nehp.rfid_system.server.core.Notification;
 import com.nehp.rfid_system.server.core.User;
 import com.nehp.rfid_system.server.data.AccessTokenDAO;
 import com.nehp.rfid_system.server.data.ItemDAO;
 import com.nehp.rfid_system.server.data.NotificationsDAO;
 import com.nehp.rfid_system.server.data.UserDAO;
-import com.nehp.rfid_system.server.health.TemplateHealthCheck;
 import com.nehp.rfid_system.server.resources.AuthResource;
 import com.nehp.rfid_system.server.resources.ItemResource;
 import com.nehp.rfid_system.server.resources.ListResource;
@@ -20,7 +21,6 @@ import com.nehp.rfid_system.server.resources.UserResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.auth.oauth.OAuthProvider;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -46,7 +46,7 @@ public class MainApp extends Application<MainConfiguration> {
 	}
 	
 	private HibernateBundle<MainConfiguration> hibernate = new HibernateBundle<MainConfiguration>(
-			Item.class, User.class, AccessToken.class) {
+			Item.class, User.class, AccessToken.class, Notification.class) {
 		@Override
 		public DataSourceFactory getDataSourceFactory(MainConfiguration configuration) {
 			return configuration.getDataSourceFactory();
@@ -68,16 +68,11 @@ public class MainApp extends Application<MainConfiguration> {
 		final ItemResource itemResource = new ItemResource(itemDAO);
 		final AuthResource authResource = new AuthResource(
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
-		final UserResource userResource = new UserResource(userDAO);
+		final UserResource userResource = new UserResource(userDAO, accessTokenDAO);
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
 		// test resource
 		final PingResource pingResource = new PingResource();
 		
-		// initialize healthchecks
-		final TemplateHealthCheck healthCheck = new TemplateHealthCheck(
-				configuration.getTemplate());
-		environment.healthChecks().register("template", healthCheck);
-
 		// register resources
 		environment.jersey().setUrlPattern("/service/*");
 		environment.jersey().register(listResource);
@@ -90,7 +85,7 @@ public class MainApp extends Application<MainConfiguration> {
 
 		// register auth provider
 		environment.jersey().register(
-				new OAuthProvider<>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
+				new RestrictedToProvider<>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
 						.getRealm()));
 	}
 }

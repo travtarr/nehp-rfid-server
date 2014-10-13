@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.resources;
 
+import io.dropwizard.auth.Auth;
+
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -32,7 +34,7 @@ public class ListResource {
 	
 	@GET
 	@Timed
-	public List<Item> getList(@PathParam("type") String type){
+	public List<Item> getList(@Auth @PathParam("type") String type){
 		List<Item> list = null;
 
 		

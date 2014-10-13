@@ -1,5 +1,6 @@
-App.Notifications = DS.Model.extend({
+App.Notification = DS.Model.extend({
+  title: DS.attr('string'),
   date: DS.attr('date'),
-  author: DS.attr('string'),
+  created_by: DS.attr('string'),
   message: DS.attr('string')
 });

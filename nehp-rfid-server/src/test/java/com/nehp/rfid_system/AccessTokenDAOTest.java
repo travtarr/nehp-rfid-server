@@ -35,7 +35,7 @@ public class AccessTokenDAOTest extends DAOTest{
 		getSession().beginTransaction();
 		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(ID, time);
 		accessTokenDAO.setLastAccessTime(accessToken.getId(), newTime);
-		assertThat(accessTokenDAO.findAccessTokenById(accessToken.getId()).get().getLastAccessUTC()).isEqualTo(newTime);
+		assertThat(accessTokenDAO.findAccessTokenById(accessToken.getId()).get().getLastAccess()).isEqualTo(newTime);
 		getSession().getTransaction().commit();
 	}
 

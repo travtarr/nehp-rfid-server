@@ -2,12 +2,16 @@ package com.nehp.rfid_system;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.User;
 import com.nehp.rfid_system.server.data.UserDAO;
+import com.nehp.rfid_system.server.helpers.PasswordHelper;
 
 public class UserDAOTest extends DAOTest{
 
@@ -19,7 +23,7 @@ public class UserDAOTest extends DAOTest{
 	}
 	
 	@Test
-	public void testGetUserByUsernameAndPassword(){
+	public void testGetUserByUsernameAndPassword() throws Exception{
 		Long id = 1L;
 		String username = "alpha";
 		String password = "alpha";
@@ -28,14 +32,19 @@ public class UserDAOTest extends DAOTest{
 		DateTime loginDate = new DateTime(2012, 4, 23, 22, 25, 43);
 		DateTime createdDate = new DateTime(2012, 2, 22, 19, 22, 21);
 		
+		User user = new User();
+		
 		getSession().beginTransaction();
-		User user = userDAO.getUserByUsernameAndPassword(username, password).get();
+		Optional<User> optUser = userDAO.getUserByUsernameAndPassword(username, password);
 		getSession().getTransaction().commit();
+		
+		if(optUser != null && optUser.isPresent())
+			user = optUser.get();
 		
 		assertThat(user.getId()).isEqualTo(id);
 		assertThat(user.getEmail()).isEqualTo(email);
 		assertThat(user.getUsername()).isEqualTo(username);
-		assertThat(user.getPassword()).isEqualTo(password);
+		assertThat(PasswordHelper.check(password, user.getPassword())).isTrue();
 		assertThat(user.getLastLoginDate()).isEqualTo(loginDate);
 		assertThat(user.getName()).isEqualTo(name);
 		assertThat(user.getUserCreatedDate()).isEqualTo(createdDate);
@@ -47,10 +56,21 @@ public class UserDAOTest extends DAOTest{
 		String username = "alpha";
 		
 		getSession().beginTransaction();
-		User user = userDAO.getUserById(id);
+		User user = userDAO.getUserById(id).get();
 		getSession().getTransaction().commit();
 		
 		assertThat(user.getId()).isEqualTo(id);
 		assertThat(user.getUsername()).isEqualTo(username);
+	}
+	
+	@Test
+	public void testGetAllUsers(){
+		Long id = 1L;
+		
+		getSession().beginTransaction();
+		List<User> userList = userDAO.getUsersAll();
+		
+		assertThat(userList.get(0).getId()).isEqualTo(id);
+		assertThat(userList.get(1).getId()).isEqualTo(2L);
 	}
 }

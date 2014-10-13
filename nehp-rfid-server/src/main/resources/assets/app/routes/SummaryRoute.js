@@ -1,1 +1,1 @@
-App.SummaryRoute = Ember.Route.extend({});
+App.SummaryRoute = App.AuthenticatedRoute.extend({});

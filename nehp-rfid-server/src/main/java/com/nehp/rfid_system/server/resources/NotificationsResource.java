@@ -1,8 +1,7 @@
 package com.nehp.rfid_system.server.resources;
 
 import io.dropwizard.auth.Auth;
-
-import java.util.List;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,7 +11,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
-import com.nehp.rfid_system.server.core.Notifications;
+import com.nehp.rfid_system.server.core.Notification;
+import com.nehp.rfid_system.server.core.NotificationList;
+import com.nehp.rfid_system.server.core.NotificationWrap;
 import com.nehp.rfid_system.server.data.NotificationsDAO;
 
 @Path("/notifications")
@@ -27,22 +28,30 @@ public class NotificationsResource {
 	
 	@GET
 	@Timed
-	public List<Notifications> getAll(){
-		return notificationsDAO.getAll();
+	@UnitOfWork
+	public NotificationList getAll(){
+		NotificationList list = new NotificationList();
+		list.setNotifications(notificationsDAO.getAll());
+		return list;
 	}
 	
 	@GET
 	@Timed
 	@Path("/{id}")
-	public Notifications getById(@PathParam("id") String id){
-		return notificationsDAO.getNotificationById(Long.getLong(id));
+	@UnitOfWork
+	@Produces(MediaType.APPLICATION_JSON)
+	public NotificationWrap getById(@PathParam("id") String id){
+		NotificationWrap wrap = new NotificationWrap();
+		wrap.setNotification(notificationsDAO.getById(Long.parseLong(id)));
+		return wrap;
 	}
 	
 	@GET
 	@Timed
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String create(@Auth Notifications notification){
+	@UnitOfWork
+	public String create(@Auth Notification notification){
 		Long newId = null;
 		newId = notificationsDAO.create(notification);
 		if(newId != null)

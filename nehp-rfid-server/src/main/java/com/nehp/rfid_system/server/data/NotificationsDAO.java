@@ -7,11 +7,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import com.nehp.rfid_system.server.core.Notifications;
+import com.nehp.rfid_system.server.core.Notification;
 
 import io.dropwizard.hibernate.AbstractDAO;
 
-public class NotificationsDAO extends AbstractDAO<Notifications>{
+public class NotificationsDAO extends AbstractDAO<Notification>{
 	
 	private SessionFactory factory;
 	
@@ -20,19 +20,19 @@ public class NotificationsDAO extends AbstractDAO<Notifications>{
 		factory = sessionFactory;
 	}
 	
-	public Notifications getNotificationById(Long id){
+	public Notification getById(Long id){
 		return get(id);
 	}
 	
-	public List<Notifications> getAll(){
+	public List<Notification> getAll(){
 		return list(namedQuery("notifications.getAll"));
 	}
 	
-	public Long create(Notifications notification){
+	public Long create(Notification notification){
 		return persist(notification).getId();
 	}
 	
-	public boolean delete(Notifications notification){
+	public boolean delete(Notification notification){
 		Boolean result = false;
 		Session session = factory.openSession();
 		Transaction tx = null;

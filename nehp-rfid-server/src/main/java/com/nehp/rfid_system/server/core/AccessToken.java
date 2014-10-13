@@ -33,25 +33,25 @@ public class AccessToken {
 	public AccessToken(UUID id, long userId, DateTime lastAccess){
 		this.id = id;
 		this.userId = userId;
-		this.lastAccessUTC = lastAccess;
+		this.lastAccess = lastAccess;
 	}
 	
 	@Id
 	@JsonProperty
 	@NotNull
-	@Column
+	@Column(name = "id")
 	private UUID id;
 	
 	@JsonProperty
 	@NotNull
-	@Column
+	@Column(name = "userid")
 	private long userId;
 	
 	@JsonProperty
 	@NotNull
-	@Column
+	@Column(name = "last_access")
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime lastAccessUTC;
+	private DateTime lastAccess;
 	
 	@JsonProperty
 	public UUID getId(){
@@ -64,8 +64,8 @@ public class AccessToken {
 	}
 	
 	@JsonProperty
-	public DateTime getLastAccessUTC(){
-		return lastAccessUTC;
+	public DateTime getLastAccess(){
+		return lastAccess;
 	}
 	
 	@JsonProperty
@@ -80,12 +80,12 @@ public class AccessToken {
 	
 	@JsonProperty
 	public void setLastAccessUTC(DateTime lastAccess){
-		this.lastAccessUTC = lastAccess;
+		this.lastAccess = lastAccess;
 	}
 	
 	@JsonProperty
 	public AccessToken withLastAccessUTC(DateTime lastAccess){
-		this.lastAccessUTC = lastAccess;
+		this.lastAccess = lastAccess;
 		return this;
 	}
 }

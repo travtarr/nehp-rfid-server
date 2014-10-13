@@ -9,6 +9,7 @@ import org.hibernate.type.StringType;
 
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.User;
+import com.nehp.rfid_system.server.helpers.PasswordHelper;
 
 public class UserDAO extends AbstractDAO<User> {
 
@@ -19,21 +20,38 @@ public class UserDAO extends AbstractDAO<User> {
 	public Optional<User> getUserByUsernameAndPassword(String username,
 			String password) {
 		Optional<User> user = null;
-
-		user = Optional.of(list(namedQuery("users.getByUsernameAndPassword")
-						.setParameter("username", username,StringType.INSTANCE)
-						.setParameter("password", password,StringType.INSTANCE)).get(0));
-		return user;
+		
+		user = Optional.of(list(namedQuery("users.getByUsername")
+						.setParameter("username", username, StringType.INSTANCE)).get(0));
+		System.out.println(user.get().getPassword());
+		try {
+			if(PasswordHelper.check(password, user.get().getPassword()))
+				return user;
+			else
+				return Optional.absent();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Optional.absent();
+		}
 	}
 
-	public User getUserById(Long id) {
+	public Optional<User> getUserById(Long id) {
 		User user = null;
 		user = get(id);
-		return user;
+		
+		if(user == null)
+			return Optional.absent();
+				
+		return Optional.of(user);
 	}
 
-	public Long create(User user) {
-		return persist(user).getId();
+	public Optional<Long> create(User user) {
+		try {
+			user.setPassword(PasswordHelper.getSaltedHash(user.getPassword()));
+		} catch (Exception e) {
+			return Optional.absent();
+		}
+		return Optional.of(persist(user).getId());
 	}
 
 	public boolean update(User user) {
@@ -51,10 +69,14 @@ public class UserDAO extends AbstractDAO<User> {
 	}
 
 	public List<User> getUsersAll() {
-		return list(namedQuery("user.getAll"));
+		return list(namedQuery("users.getAll"));
 	}
 
 	public boolean delete(User user) {
 		return delete(user);
+	}
+	
+	public boolean isAdmin(Long id){
+		return get(id).getAdmin();
 	}
 }

@@ -2,6 +2,8 @@ package com.nehp.rfid_system.server.resources;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -22,7 +24,6 @@ import com.nehp.rfid_system.server.data.UserDAO;
 import com.sun.jersey.api.Responses;
 
 @Path("/auth/token")
-@Produces(MediaType.APPLICATION_JSON)
 public class AuthResource {
 	private ImmutableList<String> allowedGrantTypes;
 	private AccessTokenDAO accessTokenDAO;
@@ -36,8 +37,9 @@ public class AuthResource {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	public String postForToken(
+	public JsonObject postForToken(
 					@FormParam("grant_type") String grantType,
 					@FormParam("username") String username,
 					@FormParam("password") String password
@@ -59,8 +61,15 @@ public class AuthResource {
 		}
 		
 		// User found, generate token
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(user.get().getId(),  new DateTime());
+		Long userId = user.get().getId();
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId,  new DateTime());
 		
-		return accessToken.getId().toString();
+		JsonObject jo = Json.createObjectBuilder()
+				.add("api_key", Json.createArrayBuilder()
+					.add(Json.createObjectBuilder()
+							.add("access_token", accessToken.getId().toString())
+							.add("user_id", userId.toString()))).build();
+		System.out.println("[AuthResource] Returned Object: " + jo.toString());
+		return jo;
 	}
 }

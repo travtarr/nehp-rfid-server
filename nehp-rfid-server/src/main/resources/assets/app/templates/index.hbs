@@ -3,9 +3,10 @@
 	<h3>Notifications</h3>
 	<div>
 		<ul>
-		{{#each notifications}}
-			<li>Date:{{date}} &nbsp By:{{author}}</li>
+		{{#each notification in notification}}
+			<li>Date:{{date}} &nbsp By:{{created_by}}</li>
 			<li>{{message}}</li>
+			<li>&nbsp</li>
 		{{/each}}
 		</ul>
 	</div>
