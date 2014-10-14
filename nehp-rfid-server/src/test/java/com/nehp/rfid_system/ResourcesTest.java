@@ -68,4 +68,18 @@ public class ResourcesTest {
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 		System.out.println(response.getEntity(String.class));
 	}
+	
+	@Test
+	public void itemsGetByTypeALLReturnsItemsAndStatus200(){
+		ClientResponse response = helper.get("/items?stage=ALL", helper.accessToken());
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		System.out.println(response.getEntity(String.class));
+	}
+	
+	@Test
+	public void itemsGetByTypeKITTINGReturnsItemsAndStatus200(){
+		ClientResponse response = helper.get("/items?stage=KITTING", helper.accessToken());
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		System.out.println(response.getEntity(String.class));
+	}
 }

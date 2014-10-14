@@ -14,6 +14,7 @@ import com.nehp.rfid_system.server.data.NotificationsDAO;
 import com.nehp.rfid_system.server.data.UserDAO;
 import com.nehp.rfid_system.server.resources.AuthResource;
 import com.nehp.rfid_system.server.resources.ItemResource;
+import com.nehp.rfid_system.server.resources.ItemsResource;
 import com.nehp.rfid_system.server.resources.ListResource;
 import com.nehp.rfid_system.server.resources.NotificationsResource;
 import com.nehp.rfid_system.server.resources.PingResource;
@@ -66,6 +67,7 @@ public class MainApp extends Application<MainConfiguration> {
 		// initialize resources
 		final ListResource listResource = new ListResource(itemDAO);
 		final ItemResource itemResource = new ItemResource(itemDAO);
+		final ItemsResource itemsResource = new ItemsResource(itemDAO);
 		final AuthResource authResource = new AuthResource(
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
 		final UserResource userResource = new UserResource(userDAO, accessTokenDAO);
@@ -77,6 +79,7 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().setUrlPattern("/service/*");
 		environment.jersey().register(listResource);
 		environment.jersey().register(itemResource);
+		environment.jersey().register(itemsResource);
 		environment.jersey().register(authResource);
 		environment.jersey().register(userResource);
 		environment.jersey().register(notificationsResource);

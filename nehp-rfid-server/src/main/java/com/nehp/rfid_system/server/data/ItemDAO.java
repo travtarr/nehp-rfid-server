@@ -26,7 +26,9 @@ public class ItemDAO extends AbstractDAO<Item>{
 	}
 	
 	public List<Item> getItemsByStage(String type){
-		return list(namedQuery("items.getByType").setParameter("stage", type, StringType.INSTANCE));
+		if(type.equals("all") || type.equals("ALL"))
+			return getItemsAll();
+		return list(namedQuery("items.getByStage").setParameter("stage", type, StringType.INSTANCE));
 	}
 	
 	public List<Item> getItemsAll(){

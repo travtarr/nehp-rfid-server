@@ -1,6 +1,6 @@
 package com.nehp.rfid_system.server.resources;
 
-import io.dropwizard.auth.Auth;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
+import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
+import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.data.ItemDAO;
 
@@ -34,7 +36,8 @@ public class ListResource {
 	
 	@GET
 	@Timed
-	public List<Item> getList(@Auth @PathParam("type") String type){
+	@UnitOfWork
+	public List<Item> getList(@RestrictedTo(Authority.ROLE_USER) @PathParam("type") String type){
 		List<Item> list = null;
 
 		

@@ -1,12 +1,13 @@
-<span class="light-text"><h1>Welcome!</h1></span>
 <div class="notifications">
-	<h3>Notifications</h3>
-	<div>
+	<div class="title">
+		<span>Notifications</span>
+	</div>
+	<div class="content">
 		<ul>
-		{{#each notification in notification}}
-			<li>Date:{{date}} &nbsp By:{{created_by}}</li>
-			<li>{{message}}</li>
-			<li>&nbsp</li>
+		{{#each}}
+			<li class="header">Date:{{date}} &nbsp By:{{created_by}}</li>
+			<li class="title">{{title}}</li>
+			<li class="message">{{message}}</li>
 		{{/each}}
 		</ul>
 	</div>

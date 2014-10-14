@@ -1,6 +1,5 @@
 package com.nehp.rfid_system.server.resources;
 
-import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.Consumes;
@@ -11,6 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
+import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
+import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Notification;
 import com.nehp.rfid_system.server.core.NotificationList;
 import com.nehp.rfid_system.server.core.NotificationWrap;
@@ -40,7 +41,7 @@ public class NotificationsResource {
 	@Path("/{id}")
 	@UnitOfWork
 	@Produces(MediaType.APPLICATION_JSON)
-	public NotificationWrap getById(@PathParam("id") String id){
+	public NotificationWrap getById(@RestrictedTo(Authority.ROLE_USER) @PathParam("id") String id){
 		NotificationWrap wrap = new NotificationWrap();
 		wrap.setNotification(notificationsDAO.getById(Long.parseLong(id)));
 		return wrap;
@@ -51,7 +52,7 @@ public class NotificationsResource {
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	public String create(@Auth Notification notification){
+	public String create(@RestrictedTo(Authority.ROLE_ADMIN) Notification notification){
 		Long newId = null;
 		newId = notificationsDAO.create(notification);
 		if(newId != null)
