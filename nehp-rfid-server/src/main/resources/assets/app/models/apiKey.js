@@ -1,4 +1,4 @@
 App.ApiKey = DS.Model.extend({
 	accessToken: DS.attr('string'),
-	user:		 DS.belongsTo('user', { async: true})
+	user:		 DS.belongsTo('user')
 });

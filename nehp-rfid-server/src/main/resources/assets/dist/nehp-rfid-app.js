@@ -55,7 +55,10 @@ var config  = {
 	sortAscending: false
 });;App.ListController = Ember.ArrayController.extend({
 	queryParams: ['stage'],
-	stage: null
+	stage: 'ALL',
+	filteredItems: Ember.computed.filterBy('model', 'current_stage', function(){
+		return this.get('stage');
+	})
 });;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
@@ -195,7 +198,7 @@ var config  = {
 	}
 });;;;App.ApiKey = DS.Model.extend({
 	accessToken: DS.attr('string'),
-	user:		 DS.belongsTo('user', { async: true})
+	user:		 DS.belongsTo('user')
 });;App.Item = DS.Model.extend({
     rfid: DS.attr('string'),
     item_id: DS.attr('string'),
@@ -223,57 +226,26 @@ var config  = {
     stage7_date: DS.attr('date'),
     stage0_user: DS.attr('string'),
     stage0_date: DS.attr('date')
-});;App.Item.FIXTURES = [
-  { id: 1,
-	rfid: "232452432",
-	itemId: "232BS4095",
-	description: "HPN2 A54 4in",
-	lastStatusChangeDate: 2014/09/23,
-    currentStage: "modeling",
-    currentRevision: "01B"
-  },
-  { id: 2,
-	rfid: "232452434",
-	itemId: "232BS5395",
-	description: "HPHe A23 0.75in",
-	lastStatusChangeDate: 2014/09/27,
-    currentStage: "shipped",
-    currentRevision: "01"
-  },
-  { id: 3,
-	rfid: "232452533",
-	itemId: "343DFDF232",
-	description: "HPO2 A51 1.5in",
-	lastStatusChangeDate: 2014/08/23,
-    currentStage: "kitting",
-    currentRevision: "01"
-  }
-];
-
-;App.Notification = DS.Model.extend({
+});;App.Notification = DS.Model.extend({
   title: DS.attr('string'),
   date: DS.attr('date'),
   created_by: DS.attr('string'),
   message: DS.attr('string')
-});;App.Session = DS.Model.extend({
-  authToken: DS.attr('string'),
-  account:   DS.belongsTo('App.Account')
 });;App.User = DS.Model.extend({
   username:              DS.attr('string'),
   password:              DS.attr('string'),
   name:                  DS.attr('string'),
   email:                 DS.attr('string'),
-  lastLoginDate:		 DS.attr('string'),
-  userCreatedDate:		 DS.attr('string'),
+  last_login_date:		 DS.attr('string'),
+  user_created_date:	 DS.attr('string'),
   admin:                 DS.attr('boolean'),
   scanner:				 DS.attr('boolean'),
-  apiKeys:               DS.hasMany('apiKey'),
-  errors:                {}
+  apiKeys:               DS.hasMany('apiKey')
 });;App.Router.map(function() {
   this.resource('summary', function(){}); 
   this.resource('status', function() {
-    this.resource('list', { path: 'list:/:stage'});
-    this.resource('item', { path:'/item/:item'});
+    this.resource('list', { path: '/list' });
+    this.resource('item', { path:'/item/:item' });
   });
   this.resource('user', { path:'/user/:user_id' });
   this.resource('admin', function(){});
@@ -322,6 +294,15 @@ var config  = {
 			// transition to the sessions route
 			this.controllerFor('sessions').reset();
 			this.transitionTo('sessions');
+		},
+		error: function(error, transition) {
+			if (error && error.status === 401) {
+				// error substate and parent routes do not handle this error 
+				this.controllerFor('sessions').reset();
+				return this.transitionTo('sessions');
+			}
+			// Return true to bubble this event to any parent route.
+			return true;
 		}
 	}
 });;// create a base object for any authentication protected route
@@ -358,13 +339,8 @@ App.AuthenticatedRoute = Ember.Route.extend({
     return this.store.find('notification');
   }
 });;App.ListRoute = App.AuthenticatedRoute.extend({
-	queryParams: {
-	  category: {
-	    refreshModel: true
-	  }
-	},
-	model: function(params) {
-      return this.store.find("item", params);
+	model: function() {
+      return this.store.find("item");
     }
 });;App.SecretRoute = App.AuthenticatedRoute.extend({
 	model : function() {

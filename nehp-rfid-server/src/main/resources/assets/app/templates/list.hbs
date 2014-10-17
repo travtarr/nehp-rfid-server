@@ -1,0 +1,22 @@
+<table class="tables-items">
+	<thead>
+		<th>Current Stage</th>
+		<th>RFID</th>
+		<th>Item ID</th>
+		<th>Description</th>
+		<th>Last Status Change</th>
+		<th>Revision</th>
+	</thead>
+	<tbody>
+		{{#each filteredItems}}
+			<tr>
+				<td>{{current_stage}}</td>
+				<td>{{rfid}}</td>
+				<td>{{item_id}}</td>
+				<td>{{description}}</td>
+				<td>{{last_status_change}}</td>
+				<td>{{current_revision}}</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

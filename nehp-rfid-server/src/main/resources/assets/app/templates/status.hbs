@@ -4,16 +4,16 @@
 			<ul class="nav nav-inverse dark-list">
 				<li class="nav-header">In-Process</li>
 				{{#link-to 'list' (query-params stage="ALL") tagName='li' classNames='link'}}All{{/link-to}}
-				{{#link-to 'list' 'MODELING' tagName='li' classNames='link'}}Modeling{{/link-to}}
-				{{#link-to 'list' 'KITTING' tagName='li' classNames='link'}}Material Kitting{{/link-to}}
-				{{#link-to 'list' 'MANUFACTURING' tagName='li' classNames='link'}}Manufacturing{{/link-to}}
-				{{#link-to 'list' 'QAQC' tagName='li' classNames='link'}}Quality Check{{/link-to}}
-				{{#link-to 'list' 'SHIPPED' tagName='li' classNames='link'}}Shipped{{/link-to}}
-				{{#link-to 'list' 'ARRIVAL' tagName='li' classNames='link'}}Arrival{{/link-to}}
-				{{#link-to 'list' 'INSTALLED' tagName='li' classNames='link'}}Installed{{/link-to}}
+				{{#link-to 'list' (query-params stage="MODELING") tagName='li' classNames='link'}}Modeling{{/link-to}}
+				{{#link-to 'list' (query-params stage="KITTING") tagName='li' classNames='link'}}Material Kitting{{/link-to}}
+				{{#link-to 'list' (query-params stage="MANUFACTURING") tagName='li' classNames='link'}}Manufacturing{{/link-to}}
+				{{#link-to 'list' (query-params stage="QAQC") tagName='li' classNames='link'}}Quality Check{{/link-to}}
+				{{#link-to 'list' (query-params stage="SHIPPED") tagName='li' classNames='link'}}Shipped{{/link-to}}
+				{{#link-to 'list' (query-params stage="ARRIVAL") tagName='li' classNames='link'}}Arrival{{/link-to}}
+				{{#link-to 'list' (query-params stage="INSTALLED") tagName='li' classNames='link'}}Installed{{/link-to}}
 				<li class="divider"></li>
 				<li class="nav-header">Stopped</li>
-				{{#link-to 'list' 'STOPPED' tagName='li' classNames='link'}}All{{/link-to}}
+				{{#link-to 'list' (query-params stage="STOPPED") tagName='li' classNames='link'}}All{{/link-to}}
 			</ul>
 		</div>
 		<div class="span10">

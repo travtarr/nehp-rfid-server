@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nehp.rfid_system.ResourcesTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.005 sec
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.085 sec
