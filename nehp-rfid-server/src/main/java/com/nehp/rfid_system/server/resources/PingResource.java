@@ -21,7 +21,8 @@ public class PingResource {
 	@GET
 	@Timed
 	@Path("/auth")
-	public String pongAuthenticated(@RestrictedTo(Authority.ROLE_USER) Long userId) {
-		return String.format("{\"answer\": \"authenticated pong for user %d\"}", userId);
+	@RestrictedTo({Authority.ROLE_USER})
+	public String pongAuthenticated() {
+		return String.format("{\"answer\": \"authenticated pong");
 	}
 }

@@ -31,7 +31,8 @@ public class AdminResource {
 	@Timed
 	@Produces(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	public List<User> getAllUsers(@RestrictedTo(Authority.ROLE_ADMIN) User user){
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public List<User> getAllUsers(User user){
 		return userDAO.getUsersAll();
 	}
 	
@@ -40,7 +41,8 @@ public class AdminResource {
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	public String createUser(@RestrictedTo(Authority.ROLE_ADMIN) User user){
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public String createUser(User user){
 		Long userId = null;
 		userId = userDAO.create(user).get();
 		if(userId != null)
@@ -53,7 +55,8 @@ public class AdminResource {
 	@Timed
 	@Path("/{user_id}/delete")
 	@UnitOfWork
-	public String deleteUser(@RestrictedTo(Authority.ROLE_ADMIN) @PathParam("user_id") String userId){
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public String deleteUser(@PathParam("user_id") String userId){
 		User user = userDAO.getUserById(Long.getLong(userId)).get();
 		
 		if(user != null){

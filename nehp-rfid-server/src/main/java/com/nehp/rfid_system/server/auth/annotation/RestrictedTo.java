@@ -26,7 +26,7 @@ import com.nehp.rfid_system.server.core.Authority;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER})
+@Target({ElementType.METHOD})
 public @interface RestrictedTo {
 	Authority[] value() default Authority.ROLE_ADMIN;
 }

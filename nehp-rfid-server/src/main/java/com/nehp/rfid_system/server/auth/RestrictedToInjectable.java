@@ -55,31 +55,35 @@ class RestrictedToInjectable<T> extends AbstractHttpContextInjectable<T> {
 
 	@Override
 	public T getValue(HttpContext httpContext) {
+		log.warn("[RestrictedTo] Inside getValue");
 		final String challenge = String.format(CHALLENGE_FORMAT, realm);
-		try {
-			
-			
+		try {			
 			// Get the Authorization header
-			final String sessionTokenStr = httpContext.getRequest()
+			final String header = httpContext.getRequest()
 					.getHeaderValue(HttpHeaders.AUTHORIZATION);
 			
+			// "Bearer" & "UUID"
+			final String[] tokens = header.split(" ");
+			
 			UUID sessionToken = null;
-			if (sessionTokenStr != null) {
-                final int space = sessionTokenStr.indexOf(' ');
-                if (space > 0) {
-                    final String method = sessionTokenStr.substring(0, space);
-                    if (PREFIX.equalsIgnoreCase(method)) {
-                        final String sessionTokenSplit = sessionTokenStr.substring(space + 1);
-                        sessionToken = UUID.fromString(sessionTokenSplit);
-                        final Credentials credentials = new Credentials(sessionToken,
-        						requiredAuthorities);
-                        final Optional<T> result = authenticator.authenticate(credentials);
-                        if (result.isPresent()) {
-                            return result.get();
-                        }
-                    }
-                }
+			
+			if ( tokens.length != 2 ){
+				throw new WebApplicationException(Response.Status.BAD_REQUEST);
+			}
+			
+			sessionToken = UUID.fromString(tokens[1]);
+			
+			final Credentials credentials = new Credentials(sessionToken,
+					requiredAuthorities);
+			
+			System.out.println(header);
+			System.out.println(tokens.toString());
+			
+            final Optional<T> result = authenticator.authenticate(credentials);
+            if (result.isPresent() && result.get() != null) {
+                return result.get();
             }
+
 			
 		} catch (IllegalArgumentException e) {
 			log.debug("Error decoding credentials", e);

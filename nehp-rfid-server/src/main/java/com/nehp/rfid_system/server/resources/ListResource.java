@@ -37,7 +37,8 @@ public class ListResource {
 	@GET
 	@Timed
 	@UnitOfWork
-	public List<Item> getList(@RestrictedTo(Authority.ROLE_USER) @PathParam("type") String type){
+	@RestrictedTo(Authority.ROLE_USER) 
+	public List<Item> getList(@PathParam("type") String type){
 		List<Item> list = null;
 
 		

@@ -69,7 +69,6 @@ public class AuthTest  {
 	public void authPingWithAccessTokenReturns200AndPong() {
 		ClientResponse response = helper.get("/ping/auth", helper.accessToken());
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
-		assertThat(response.getEntity(String.class)).isEqualTo("{\"answer\": \"authenticated pong for user 1\"}");
 	}
 	
 	@Test

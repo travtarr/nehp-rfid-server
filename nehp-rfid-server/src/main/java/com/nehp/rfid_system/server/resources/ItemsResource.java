@@ -27,7 +27,8 @@ public class ItemsResource {
 	@GET
 	@Timed
 	@UnitOfWork
-	public ItemList getItemList(@RestrictedTo(Authority.ROLE_USER) @QueryParam(value = "stage") String stage){
+	@RestrictedTo(Authority.ROLE_USER) 
+	public ItemList getItemList(@QueryParam(value = "stage") String stage){
 		ItemList list = new ItemList();
 		if(stage.isEmpty() || stage == null || stage.equals(null) || stage.equals("null"))
 			list.setItems(items.getItemsAll());

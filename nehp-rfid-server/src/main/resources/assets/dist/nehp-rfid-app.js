@@ -50,6 +50,12 @@ var config  = {
 	isAuthenticated : (function() {
 		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
 	}).property('controllers.sessions.currentUser')
+});;App.IndexController = Ember.ArrayController.extend({
+	sortProperties: ['date'],
+	sortAscending: false
+});;App.ListController = Ember.ArrayController.extend({
+	queryParams: ['stage'],
+	stage: null
 });;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
@@ -187,16 +193,36 @@ var config  = {
 			});
 		}
 	}
-});;;App.ApiKey = DS.Model.extend({
+});;;;App.ApiKey = DS.Model.extend({
 	accessToken: DS.attr('string'),
 	user:		 DS.belongsTo('user', { async: true})
 });;App.Item = DS.Model.extend({
     rfid: DS.attr('string'),
-    itemId: DS.attr('string'),
+    item_id: DS.attr('string'),
     description: DS.attr('string'),
-    lastStatusChangeDate: DS.attr('date'),
-    currentStage: DS.attr('string'),
-    currentRevision: DS.attr('string')
+    created_by: DS.attr('string'),
+    created_date: DS.attr('date'),
+    current_revision: DS.attr('string'),
+    current_revision_date: DS.attr('date'),
+    current_stage: DS.attr('string'),
+    last_status_change_date: DS.attr('date'),
+    last_status_change_user: DS.attr('string'),
+    stage1_user: DS.attr('string'),
+    stage1_date: DS.attr('date'),
+    stage2_user: DS.attr('string'),
+    stage2_date: DS.attr('date'),
+    stage3_user: DS.attr('string'),
+    stage3_date: DS.attr('date'),
+    stage4_user: DS.attr('string'),
+    stage4_date: DS.attr('date'),
+    stage5_user: DS.attr('string'),
+    stage5_date: DS.attr('date'),
+    stage6_user: DS.attr('string'),
+    stage6_date: DS.attr('date'),
+    stage7_user: DS.attr('string'),
+    stage7_date: DS.attr('date'),
+    stage0_user: DS.attr('string'),
+    stage0_date: DS.attr('date')
 });;App.Item.FIXTURES = [
   { id: 1,
 	rfid: "232452432",
@@ -246,7 +272,7 @@ var config  = {
 });;App.Router.map(function() {
   this.resource('summary', function(){}); 
   this.resource('status', function() {
-    this.resource('list', { path:'/list/:list' });
+    this.resource('list', { path: 'list:/:stage'});
     this.resource('item', { path:'/item/:item'});
   });
   this.resource('user', { path:'/user/:user_id' });
@@ -331,6 +357,15 @@ App.AuthenticatedRoute = Ember.Route.extend({
   model: function() {
     return this.store.find('notification');
   }
+});;App.ListRoute = App.AuthenticatedRoute.extend({
+	queryParams: {
+	  category: {
+	    refreshModel: true
+	  }
+	},
+	model: function(params) {
+      return this.store.find("item", params);
+    }
 });;App.SecretRoute = App.AuthenticatedRoute.extend({
 	model : function() {
 		// instantiate the model for the SecretController as a list of created
@@ -350,8 +385,4 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	model: function(params){
 		return Ember.$.getJSON('service/status/item' + params.item);
 	}
-});;App.StatusListRoute = App.AuthenticatedRoute.extend({
-	model: function(params) {
-      return Ember.$.getJSON('/status/list/' + params.list);
-    }
 });;App.StatusRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});

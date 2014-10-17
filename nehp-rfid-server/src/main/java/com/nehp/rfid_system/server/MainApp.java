@@ -2,23 +2,11 @@ package com.nehp.rfid_system.server;
 
 import org.joda.time.DateTimeZone;
 
-import com.nehp.rfid_system.server.auth.RestrictedToProvider;
+import com.nehp.rfid_system.server.auth.RestrictedToMethodDispatchAdapter;
 import com.nehp.rfid_system.server.auth.SimpleAuthenticator;
-import com.nehp.rfid_system.server.core.AccessToken;
-import com.nehp.rfid_system.server.core.Item;
-import com.nehp.rfid_system.server.core.Notification;
-import com.nehp.rfid_system.server.core.User;
-import com.nehp.rfid_system.server.data.AccessTokenDAO;
-import com.nehp.rfid_system.server.data.ItemDAO;
-import com.nehp.rfid_system.server.data.NotificationsDAO;
-import com.nehp.rfid_system.server.data.UserDAO;
-import com.nehp.rfid_system.server.resources.AuthResource;
-import com.nehp.rfid_system.server.resources.ItemResource;
-import com.nehp.rfid_system.server.resources.ItemsResource;
-import com.nehp.rfid_system.server.resources.ListResource;
-import com.nehp.rfid_system.server.resources.NotificationsResource;
-import com.nehp.rfid_system.server.resources.PingResource;
-import com.nehp.rfid_system.server.resources.UserResource;
+import com.nehp.rfid_system.server.core.*;
+import com.nehp.rfid_system.server.data.*;
+import com.nehp.rfid_system.server.resources.*;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -86,9 +74,13 @@ public class MainApp extends Application<MainConfiguration> {
 		// test resource
 		environment.jersey().register(pingResource);
 
+		// register @RestrictedTo pre-matching
+		environment.jersey().register(new RestrictedToMethodDispatchAdapter<Long>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
+				.getRealm()));
+		
 		// register auth provider
-		environment.jersey().register(
-				new RestrictedToProvider<>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
-						.getRealm()));
+//		environment.jersey().register(
+//				new RestrictedToProvider<Long>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
+//						.getRealm()));
 	}
 }

@@ -18,16 +18,15 @@ public class RestrictedToProvider<T> implements InjectableProvider<RestrictedTo,
 		this.authenticator = authenticator;
 		this.realm = realm;
 	}
+	
+	@Override
+	public ComponentScope getScope() {
+		return ComponentScope.PerRequest;
+	}
 
 	@Override
 	public Injectable<?> getInjectable(ComponentContext ic, RestrictedTo a,
 			Parameter c) {
 		return new RestrictedToInjectable<T>(authenticator, realm, a.value());
 	}
-
-	@Override
-	public ComponentScope getScope() {
-		return ComponentScope.PerRequest;
-	}
-	
 }

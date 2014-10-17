@@ -34,30 +34,34 @@ public class UserResource {
 		this.accessTokenDAO = accessTokenDAO;
 	}
 	
+	
 	@GET
 	@Timed
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{user_id}")
 	@UnitOfWork
-	public UserWrap getUser(@RestrictedTo(Authority.ROLE_USER) @PathParam("user_id") String userId, @Context HttpServletRequest request){
+	@RestrictedTo({Authority.ROLE_USER})
+	public UserWrap getUser( @PathParam("user_id") String userId, @Context HttpServletRequest request ){
 		
 		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
 		UserWrap wrap = new UserWrap();
-		// User can only get information about oneself
-		if((accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId()) == Long.parseLong(userId))
-			wrap.setUser(userDAO.getUserById(Long.parseLong(userId)).get());
+		if(accessTokenUUID != null){
+			// User can only get information about oneself
+			if((accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId()) == Long.parseLong(userId))
+				wrap.setUser(userDAO.getUserById(Long.parseLong(userId)).get());
+		}
 		return wrap;
 	}
+	
 	
 	@POST
 	@Timed
 	@Path("/{user_id}/update")
 	@UnitOfWork
-	public String updateUser(@RestrictedTo(Authority.ROLE_USER) @PathParam("user_id") String userId, User user, @Context HttpServletRequest request){
+	@RestrictedTo({Authority.ROLE_USER})
+	public String updateUser( @PathParam("user_id") String userId, User user, @Context HttpServletRequest request){
 		
 		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
-		
-		
 		
 		// User can only update own information
 		if((accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId()) == Long.getLong(userId)){
@@ -69,6 +73,7 @@ public class UserResource {
 			return "Not allowed to update another user.";
 		}
 	}
+	
 	
 	private UUID getUUID(String accessToken){
 		

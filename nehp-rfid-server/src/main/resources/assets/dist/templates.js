@@ -81,7 +81,7 @@ function program13(depth0,data) {
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "sessions.login", options) : helperMissing.call(depth0, "link-to", "sessions.login", options));
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "sessions", options) : helperMissing.call(depth0, "link-to", "sessions", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" \r\n						");
   return buffer;
@@ -128,21 +128,24 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\r\n			<li>Date:");
+  data.buffer.push("\r\n			<li class=\"header\">Date:");
   stack1 = helpers._triageMustache.call(depth0, "date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" &nbsp By:");
   stack1 = helpers._triageMustache.call(depth0, "created_by", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</li>\r\n			<li>");
+  data.buffer.push("</li>\r\n			<li class=\"title\">");
+  stack1 = helpers._triageMustache.call(depth0, "title", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\r\n			<li class=\"message\">");
   stack1 = helpers._triageMustache.call(depth0, "message", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</li>\r\n			<li>&nbsp</li>\r\n		");
+  data.buffer.push("</li>\r\n		");
   return buffer;
   }
 
-  data.buffer.push("<span class=\"light-text\"><h1>Welcome!</h1></span>\r\n<div class=\"notifications\">\r\n	<h3>Notifications</h3>\r\n	<div>\r\n		<ul>\r\n		");
-  stack1 = helpers.each.call(depth0, "notification", "in", "notification", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  data.buffer.push("<div class=\"notifications\">\r\n	<div class=\"title\">\r\n		<span>Notifications</span>\r\n	</div>\r\n	<div class=\"content\">\r\n		<ul>\r\n		");
+  stack1 = helpers.each.call(depth0, {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n		</ul>\r\n	</div>\r\n</div>");
   return buffer;
@@ -187,7 +190,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["status"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, helper, options, self=this, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
@@ -238,10 +241,13 @@ function program15(depth0,data) {
   }
 
   data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				");
+  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
+    'stage': ("ALL")
+  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "list", "ALL", options) : helperMissing.call(depth0, "link-to", "list", "ALL", options));
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n				");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
@@ -318,22 +324,22 @@ function program1(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\r\n			<tr>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "currentStage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "itemId", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "description", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "lastStatusChange", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "currentRevision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n			</tr>\r\n		");
   return buffer;

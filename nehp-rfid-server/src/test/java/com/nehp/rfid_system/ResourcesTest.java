@@ -7,13 +7,9 @@ import java.io.File;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.nehp.rfid_system.server.MainApp;
 import com.nehp.rfid_system.server.MainConfiguration;
-import com.nehp.rfid_system.server.core.Notification;
-import com.nehp.rfid_system.server.core.User;
-import com.nehp.rfid_system.server.data.UserDAO;
 import com.sun.jersey.api.client.ClientResponse;
 
 
@@ -35,38 +31,49 @@ public class ResourcesTest {
 	TestHelpers helper = new TestHelpers(RULE);
 	
 	@Test
-	public void authGetUserReturns200AndUserObject() {
-		ClientResponse response = helper.get("/users/" + USERID, helper.accessToken());
-		
-		User user = new User();
-		DAOTest daoTest = new DAOTest();
-		UserDAO userDAO = new UserDAO(daoTest.sessionFactory);
-		daoTest.getSession().beginTransaction();
-		Optional<User> optUser = userDAO.getUserById(USERID);
-		if(optUser != null && optUser.isPresent())
-			user = optUser.get();
-		daoTest.getSession().getTransaction().commit();
-		
-		//User resourceUser = response.getEntity(User.class);
-		System.out.println(response.getEntity(String.class));
-		
+	public void getUserReturns200AndUserObject() {
+		ClientResponse response = helper.get("/users/" + USERID, helper.accessToken());		
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
-		//assertThat(user.getName()).isEqualTo(resourceUser.getName());
+	}
+	
+	@Test
+	public void getUserNoTokenReturns401() {
+		ClientResponse response = helper.get("/users/" + USERID);		
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.UNAUTHORIZED.getStatusCode());
 	}
 	
 	@Test
 	public void noficationsGetAllReturnsNotificationsAndStatus200(){
-		
-		ClientResponse response = helper.get("/notifications");
+		ClientResponse response = helper.get("/notifications", helper.accessToken());
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		System.out.println(response.getEntity(String.class));
+	}
+	
+	@Test
+	public void noficationsGetAllBadTokenReturnsStatus401(){
+		ClientResponse response = helper.get("/notifications", "asas");
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.UNAUTHORIZED.getStatusCode());
+		System.out.println(response.getEntity(String.class));
+	}
+	
+	@Test
+	public void noficationsGetAllNoTokenReturnsStatus401(){
+		ClientResponse response = helper.get("/notifications");
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.UNAUTHORIZED.getStatusCode());
 		System.out.println(response.getEntity(String.class));
 	}
 	
 	@Test
 	public void notificationsGetByIdReturnsNotificationsAndStatus200(){
-		ClientResponse response = helper.get("/notifications/1");
+		ClientResponse response = helper.get("/notifications/1", helper.accessToken());
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 		System.out.println(response.getEntity(String.class));
+	}
+	
+	@Test
+	public void notificationsGetByIdBadTokenReturnsStatus401(){
+		ClientResponse response = helper.get("/notifications/1", "ddsdfs");
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.UNAUTHORIZED.getStatusCode());
 	}
 	
 	@Test
