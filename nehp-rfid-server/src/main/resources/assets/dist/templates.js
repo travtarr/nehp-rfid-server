@@ -107,7 +107,7 @@ function program14(depth0,data) {
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("pad-sm link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "status", options) : helperMissing.call(depth0, "link-to", "status", options));
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "items", options) : helperMissing.call(depth0, "link-to", "items", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n					</ul>\r\n					<ul class=\"nav pull-right\">\r\n						");
   stack1 = helpers['if'].call(depth0, "isAuthenticated", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(13, program13, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
@@ -148,6 +148,161 @@ function program1(depth0,data) {
   stack1 = helpers.each.call(depth0, {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n		</ul>\r\n	</div>\r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["item"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1;
+
+
+  data.buffer.push("<div class=\"details\">\r\n	<table>\r\n		<tbody>\r\n			<tr>\r\n				<td class=\"header\">RFID</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td class=\"header\">Item ID</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Created By</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "created_by", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td class=\"header\">Created Date</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "created_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Last Change Date</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td class=\"header\">Last Change User</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Current Revision</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td class=\"header\">Current Revision Date</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_revision_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\" >Current Stage</td><td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Description</td>\r\n				<td colspan=\"3\">");
+  stack1 = helpers._triageMustache.call(depth0, "description", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n</div>\r\n<div class=\"details\">\r\n	<table>\r\n		<tbody>\r\n			<tr class=\"header\">\r\n				<td></td>\r\n				<td>Modeling</td>\r\n				<td>Kitting</td>\r\n				<td>Manufacturing</td>\r\n				<td>QA/QC</td>\r\n				<td>Shipped</td>\r\n				<td>Arrival</td>\r\n				<td>Installed</td>\r\n				<td>Stopped</td>\r\n			</tr>\r\n			<tr>\r\n				<td>User</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage1_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage2_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage3_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage4_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage5_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage6_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage7_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage0_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>Date</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage1_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage2_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage3_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage4_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage5_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage6_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage7_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage0_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["items"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, helper, options;
+  data.buffer.push("\r\n					<tr>\r\n						<td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n						<td>");
+  stack1 = helpers._triageMustache.call(depth0, "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n						<td>");
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["STRING","ID"],data:data},helper ? helper.call(depth0, "item", "", options) : helperMissing.call(depth0, "link-to", "item", "", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n						<td>");
+  stack1 = helpers._triageMustache.call(depth0, "description", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n						<td>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n						<td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n					</tr>\r\n					");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var stack1;
+  stack1 = helpers._triageMustache.call(depth0, "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  else { data.buffer.push(''); }
+  }
+
+  data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ALL", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">All</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "MODELING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Modeling</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "KITTING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Material Kitting</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "MANUFACTURING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Manufacturing</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "QAQC", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">QualityCheck</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "SHIPPED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Shipped</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ARRIVAL", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Arrival</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "INSTALLED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Installed</a></li>\r\n				<li class=\"divider\"></li>\r\n				<li class=\"nav-header\">Stopped</li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "STOPPED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">All</a></li>\r\n			</ul>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<table class=\"tables-items\">\r\n				<thead>\r\n					<th>Current Stage</th>\r\n					<th>RFID</th>\r\n					<th>Item ID</th>\r\n					<th>Description</th>\r\n					<th>Last Change</th>\r\n					<th>Revision</th>\r\n				</thead>\r\n				<tbody>\r\n					");
+  stack1 = helpers.each.call(depth0, "filteredItems", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n	</div>\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span12\">\r\n			<div class=\"content-body\">\r\n				");
+  stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<br>\r\n</div>");
   return buffer;
   
 });
@@ -225,165 +380,13 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
-Ember.TEMPLATES["status"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, self=this;
-
-function program1(depth0,data) {
-  
-  
-  data.buffer.push("All");
-  }
-
-function program3(depth0,data) {
-  
-  
-  data.buffer.push("Modeling");
-  }
-
-function program5(depth0,data) {
-  
-  
-  data.buffer.push("Material Kitting");
-  }
-
-function program7(depth0,data) {
-  
-  
-  data.buffer.push("Manufacturing");
-  }
-
-function program9(depth0,data) {
-  
-  
-  data.buffer.push("Quality Check");
-  }
-
-function program11(depth0,data) {
-  
-  
-  data.buffer.push("Shipped");
-  }
-
-function program13(depth0,data) {
-  
-  
-  data.buffer.push("Arrival");
-  }
-
-function program15(depth0,data) {
-  
-  
-  data.buffer.push("Installed");
-  }
-
-  data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("ALL")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("MODELING")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("KITTING")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("MANUFACTURING")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("QAQC")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("SHIPPED")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("ARRIVAL")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("INSTALLED")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				<li class=\"divider\"></li>\r\n				<li class=\"nav-header\">Stopped</li>\r\n				");
-  stack1 = (helper = helpers['query-params'] || (depth0 && depth0['query-params']),options={hash:{
-    'stage': ("STOPPED")
-  },hashTypes:{'stage': "STRING"},hashContexts:{'stage': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "query-params", options));
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'tagName': ("li"),
-    'classNames': ("link")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","sexpr"],data:data},helper ? helper.call(depth0, "list", stack1, options) : helperMissing.call(depth0, "link-to", "list", stack1, options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n			</ul>\r\n		</div>\r\n		<div class=\"span10\">\r\n			");
-  stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(" \r\n		</div>\r\n	</div>\r\n</div>");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["status/index"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  
-
-
-  data.buffer.push("<span class=\"light-text\">Please choose a stage.</span>");
-  
-});
-
 Ember.TEMPLATES["summary"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("<div class=\"summary\">\r\n	<h3>Summary</h3>\r\n	<div>\r\n	\r\n	</div>\r\n</div>");
+  data.buffer.push("<div class=\"summary\">\r\n	<div class=\"title\"><span>Summary</span></div>\r\n	<div>\r\n	\r\n	</div>\r\n</div>");
   
 });
 

@@ -78,9 +78,5 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().register(new RestrictedToMethodDispatchAdapter<Long>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
 				.getRealm()));
 		
-		// register auth provider
-//		environment.jersey().register(
-//				new RestrictedToProvider<Long>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
-//						.getRealm()));
 	}
 }

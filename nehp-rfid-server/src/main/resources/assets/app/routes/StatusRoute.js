@@ -1,1 +1,0 @@
-App.StatusRoute = App.AuthenticatedRoute.extend({});

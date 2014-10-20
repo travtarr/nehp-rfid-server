@@ -59,6 +59,8 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		User user = (User) session.get(User.class, accessToken.getUserId());
 		if(!user.hasAllAuthorities(credentials.getRequiredAuthorities())) {
 			System.out.println("[Authenticator] Can't find user");
+			session.getTransaction().commit();
+			session.close();
 			return Optional.absent();
 		}
 		
@@ -67,6 +69,8 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		if (period.getMinutes() > ACCESS_TOKEN_EXPIRE_TIME_MIN){
 			// TODO: delete expired accessToken
 			System.out.println("[Authenticator] Passed period duration");
+			session.getTransaction().commit();
+			session.close();
 			return Optional.absent();
 		}
 		

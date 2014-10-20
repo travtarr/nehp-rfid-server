@@ -53,12 +53,27 @@ var config  = {
 });;App.IndexController = Ember.ArrayController.extend({
 	sortProperties: ['date'],
 	sortAscending: false
-});;App.ListController = Ember.ArrayController.extend({
-	queryParams: ['stage'],
+});;App.ItemsController = Ember.ArrayController.extend({
+	sortProperties: ['rfid'],
 	stage: 'ALL',
-	filteredItems: Ember.computed.filterBy('model', 'current_stage', function(){
-		return this.get('stage');
-	})
+	filteredItems: function(){
+		var stage = this.get('stage');
+		var items = this.get('arrangedContent');
+		
+		if(stage == 'ALL')
+			return items;
+		else {
+			return items.filter(function(item) {
+				return item.get('current_stage') == stage;
+			});
+		}
+	}.property('stage', 'arrangedContent'),
+	
+	actions: {
+		setStage: function(stage) {
+			this.set('stage', [stage]);
+		}
+	}
 });;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
@@ -243,9 +258,8 @@ var config  = {
   apiKeys:               DS.hasMany('apiKey')
 });;App.Router.map(function() {
   this.resource('summary', function(){}); 
-  this.resource('status', function() {
-    this.resource('list', { path: '/list' });
-    this.resource('item', { path:'/item/:item' });
+  this.resource('items', function() {
+    this.resource('item', { path:'/:item' });
   });
   this.resource('user', { path:'/user/:user_id' });
   this.resource('admin', function(){});
@@ -337,10 +351,32 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.IndexRoute = App.AuthenticatedRoute.extend({
   model: function() {
     return this.store.find('notification');
-  }
+  },
+  actions : {
+		// create a global logout action
+		logout : function() {
+			// get the sessions controller instance and reset it to then
+			// transition to the sessions route
+			this.controllerFor('sessions').reset();
+			this.transitionTo('sessions');
+		},
+		error: function(error, transition) {
+			if (error && error.status === 401) {
+				// error substate and parent routes do not handle this error 
+				this.controllerFor('sessions').reset();
+				return this.transitionTo('sessions');
+			}
+			// Return true to bubble this event to any parent route.
+			return true;
+		}
+	}
+});;App.ItemsRoute = App.AuthenticatedRoute.extend({
+	model: function(){
+		return this.store.find('item');
+	}
 });;App.ListRoute = App.AuthenticatedRoute.extend({
 	model: function() {
-      return this.store.find("item");
+		return this.store.find("item");
     }
 });;App.SecretRoute = App.AuthenticatedRoute.extend({
 	model : function() {
@@ -357,8 +393,4 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			this.transitionTo('index');
 		}
 	}
-});;App.StatusItemRoute = App.AuthenticatedRoute.extend({
-	model: function(params){
-		return Ember.$.getJSON('service/status/item' + params.item);
-	}
-});;App.StatusRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});
+});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});
