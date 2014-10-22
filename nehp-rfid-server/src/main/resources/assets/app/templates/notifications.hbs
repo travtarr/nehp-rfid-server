@@ -1,0 +1,38 @@
+<div class="span6">
+	<div class="left-col">
+		<div class="row">
+			<div class="header">
+				{{#link-to 'notifications.create' classNames="button"}}<span>Create New Notification</span>{{/link-to}}
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px">
+			<div class="tables-items">
+				<table>
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Created</th>
+							<th>Author</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each}}
+							<tr>
+								<td>{{title}}</td>
+								<td>{{date}}</td>
+								<td>{{created_by}}</td>
+								<td>{{#link-to 'notifications.edit' this}}<img src="assets/images/edit-icon.png" alt="edit icon">{{/link-to}}</td>
+								<td><button {{action 'remove' this}}><img src="assets/images/delete-icon.png" alt="delete icon"></button></td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="span5">
+	{{outlet}}
+</div>

@@ -5,8 +5,11 @@ import java.util.UUID;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +21,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.User;
+import com.nehp.rfid_system.server.core.UserList;
 import com.nehp.rfid_system.server.core.UserWrap;
 import com.nehp.rfid_system.server.data.AccessTokenDAO;
 import com.nehp.rfid_system.server.data.UserDAO;
@@ -34,6 +38,49 @@ public class UserResource {
 		this.accessTokenDAO = accessTokenDAO;
 	}
 	
+	@GET
+	@Timed
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public UserList getAllUsers(){
+		UserList list = new UserList();
+		list.setUsers(userDAO.getUsersAll());
+		return list;
+	}
+	
+	@POST
+	@Timed
+	@Path("/create")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public String createUser(User user){
+		Long userId = null;
+		userId = userDAO.create(user).get();
+		if(userId != null)
+			return "User: " + user.getUsername() + " created successfully with id: " + userId;
+		else
+			return "User: " + user.getUsername() + " was not created";
+	}
+	
+	@DELETE
+	@Timed
+	@Path("/{user_id}")
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_ADMIN) 
+	public String deleteUser(@PathParam("user_id") String userId){
+		User user = userDAO.getUserById(Long.getLong(userId)).get();
+		
+		if(user != null){
+			if(userDAO.delete(user))
+				return "User: " + user.getUsername() + " updated successfully";
+			else
+				return "User: " + user.getUsername() + " was not deleted";
+			
+		} else {	
+			return "UserID: " + userId + " was not deleted";
+		}
+	}
 	
 	@GET
 	@Timed
@@ -54,17 +101,19 @@ public class UserResource {
 	}
 	
 	
-	@POST
+	@PUT
 	@Timed
-	@Path("/{user_id}/update")
+	@Path("/{user_id}")
 	@UnitOfWork
-	@RestrictedTo({Authority.ROLE_USER})
+	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
 	public String updateUser( @PathParam("user_id") String userId, User user, @Context HttpServletRequest request){
 		
 		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
+		Long currentUserId = accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId();
+		User currentUser = userDAO.getUserById(currentUserId).get();
 		
-		// User can only update own information
-		if((accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId()) == Long.getLong(userId)){
+		// User can only update own information, admin can update anyone
+		if((currentUserId == Long.getLong(userId)) || currentUser.getAdmin() == true){
 			if(userDAO.update(user))
 				return "User: " + user.getUsername() + " updated successfully";
 			else

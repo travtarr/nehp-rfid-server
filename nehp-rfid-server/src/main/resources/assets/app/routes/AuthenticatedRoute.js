@@ -1,12 +1,22 @@
 // create a base object for any authentication protected route
-App.AuthenticatedRoute = Ember.Route.extend({
+App.AuthenticatedRoute = Ember.Route.extend({  
   // verify if the token property of the sessions controller is set before
 	// continuing with the request
   // if it is not, redirect to the login route (sessions)
   beforeModel: function(transition) {
-    if (Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
-      return this.redirectToLogin(transition);
-    }
+	// check if time since last request is greater than 10mins (10m x 60s x 1000ms = 600,000)
+	if(Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+		return this.redirectToLogin(transition);
+	} 
+	
+	var currenttime = $.now();
+	var lasttime = this.controllerFor('sessions').get('lastRequest');
+		
+	if(((currenttime - lasttime) > 600000)){
+		return this.redirectToLogin(transition);	
+	} else {
+		this.controllerFor('sessions').set('lastRequest', $.now());
+	}
   },
   // Redirect to the login page and store the current transition so we can
   // run it again after login

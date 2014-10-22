@@ -1,0 +1,13 @@
+<div class="centered-box">
+	<form {{action 'edit' on="submit"}}>
+		<fieldset>
+			<legend>Edit User</legend>
+			<label>Username<br>{{input type='text' value=username disabled="disabled"}}</label>
+			<label>Name<br>{{input type='text' valueBinding='name' required="required" value=name}}</label>
+			<label>Email<br>{{input type='text' valueBinding='email' required="required" value=email}}</label>
+			<label>Admin<br>{{input type='checkbox' valueBinding='admin' checked=admin}}</label>
+			<label>Scanner<br>{{input type='checkbox' valueBinding='scanner' checked=scanner}}</label>
+			<label>{{#link-to 'users' tagName="button"}}Cancel{{/link-to}}{{input type='submit' value="Submit Changes"}}</label>
+		</fieldset>
+	</form>
+</div>

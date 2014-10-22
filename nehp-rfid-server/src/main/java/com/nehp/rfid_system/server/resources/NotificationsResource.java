@@ -4,6 +4,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -50,6 +51,19 @@ public class NotificationsResource {
 	}
 	
 	@PUT
+	@Timed
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@UnitOfWork
+	@RestrictedTo({Authority.ROLE_ADMIN}) 
+	public String update(@PathParam("id") String id, Notification notification){
+		if(notificationsDAO.update(notification))
+			return "Notification: " + notification.getTitle() + " updated successfully";
+		else
+			return "Notification: " + notification.getTitle() + " was not updated";
+	}
+	
+	@POST
 	@Timed
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)

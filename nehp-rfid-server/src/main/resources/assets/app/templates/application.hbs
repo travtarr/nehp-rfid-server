@@ -8,8 +8,10 @@
 					{{#link-to 'index' classNames="pull-left pad-lg link title-link"}}NEHP Worldwide Tracker{{/link-to}}
 					<div class="nav-collapse collapse">
 					<ul class="nav">
-						{{#link-to 'summary' tagName='li' classNames='pad-sm link'}}Summary{{/link-to}}
-						{{#link-to 'items' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
+						{{#if isAuthenticated}} 
+							{{#link-to 'summary' tagName='li' classNames='pad-sm link'}}Summary{{/link-to}}
+							{{#link-to 'items' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
+						{{/if}}
 					</ul>
 					<ul class="nav pull-right">
 						{{#if isAuthenticated}} 

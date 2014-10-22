@@ -7,7 +7,7 @@
 				<li><a {{action 'setStage' 'MODELING'}}>Modeling</a></li>
 				<li><a {{action 'setStage' 'KITTING'}}>Material Kitting</a></li>
 				<li><a {{action 'setStage' 'MANUFACTURING'}}>Manufacturing</a></li>
-				<li><a {{action 'setStage' 'QAQC'}}>QualityCheck</a></li>
+				<li><a {{action 'setStage' 'QA/QC'}}>QualityCheck</a></li>
 				<li><a {{action 'setStage' 'SHIPPED'}}>Shipped</a></li>
 				<li><a {{action 'setStage' 'ARRIVAL'}}>Arrival</a></li>
 				<li><a {{action 'setStage' 'INSTALLED'}}>Installed</a></li>
@@ -17,28 +17,30 @@
 			</ul>
 		</div>
 		<div class="span10">
-			<table class="tables-items">
-				<thead>
-					<th>Current Stage</th>
-					<th>RFID</th>
-					<th>Item ID</th>
-					<th>Description</th>
-					<th>Last Change</th>
-					<th>Revision</th>
-				</thead>
-				<tbody>
-					{{#each filteredItems}}
-					<tr>
-						<td>{{current_stage}}</td>
-						<td>{{rfid}}</td>
-						<td>{{#link-to 'item' this}}{{item_id}}{{/link-to}}</td>
-						<td>{{description}}</td>
-						<td>{{last_status_change}}</td>
-						<td>{{current_revision}}</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
+			<div class="tables-items">
+				<table>
+					<thead>
+						<th><button {{action 'toggleSort' 'current_stage'}}>Current Stage</button></th>
+						<th><button {{action 'toggleSort' 'rfid'}}>RFID</button></th>
+						<th><button {{action 'toggleSort' 'item_id'}}>Item ID</button></th>
+						<th><button {{action 'toggleSort' 'description'}}>Description</button></th>
+						<th><button {{action 'toggleSort' 'last_status_change_date'}}>Last Change</button></th>
+						<th><button {{action 'toggleSort' 'current_revision'}}>Revision</button></th>
+					</thead>
+					<tbody>
+						{{#each filteredItems}}
+						<tr>
+							<td>{{current_stage}}</td>
+							<td>{{rfid}}</td>
+							<td>{{#link-to 'item' this}}{{item_id}}{{/link-to}}</td>
+							<td>{{description}}</td>
+							<td>{{last_status_change_date}}</td>
+							<td>{{current_revision}}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	<div class="row-fluid">

@@ -2,9 +2,8 @@
 	<form {{action 'login' on="submit"}}>
 		<fieldset>
 			<legend>Sign In</legend>
-			<label>User ID:<br>{{input type='text' valueBinding='username'}}</label>
-			<label>Password:<br>{{input type='password' valueBinding='password'}}</label>
-			<label>Remember Me?{{input type='checkbox' valueBinding='remember'}}</label>
+			<label>User ID:<br>{{input type='text' valueBinding='username' required="required"}}</label>
+			<label>Password:<br>{{input type='password' valueBinding='password' required="required"}}</label>
 			<label>{{input type='submit' value="Log In"}}</label>
 		</fieldset>
 	</form>

@@ -1,0 +1,1 @@
+App.SettingsRoute = App.AuthenticatedRoute.extend({});

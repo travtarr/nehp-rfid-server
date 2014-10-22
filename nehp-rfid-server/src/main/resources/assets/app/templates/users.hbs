@@ -1,0 +1,40 @@
+<div class="span6">
+	<div class="left-col">
+		<div class="row">
+			<div class="header">
+				{{#link-to 'users.create'}}<span>Create New User</span>{{/link-to}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="tables-items">
+				<table>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Reset PW</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each}}
+							<tr>
+								<td>{{username}}</td>
+								<td>{{name}}</td>
+								<td>{{email}}</td>
+								<td><button {{action 'resetPW' this}}><img src="assets/images/secrecy-icon.png" style="height: 24px;" alt="reset password icon"></button></td>
+								<td>{{#link-to 'users.edit' this}}<img src="assets/images/edit-icon.png" alt="edit icon">{{/link-to}}</td>
+								<td><button {{action 'remove' this}}><img src="assets/images/delete-icon.png" alt="delete icon"></button></td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="span5">
+	{{outlet}}
+</div>

@@ -1,23 +1,39 @@
 // Application
 window.App = Ember.Application.create({
-		LOG_TRANSITIONS:true, // debugging == true
-		LOG_TRANSITIONS_INTERNAL: true,
-		LOG_ACTIVE_GENERATION: true,
-		LOG_RESOLVER: true,
-		rootElement:'body'
-		});
+	LOG_TRANSITIONS : true, // debugging == true
+	LOG_TRANSITIONS_INTERNAL : true,
+	LOG_ACTIVE_GENERATION : true,
+	LOG_RESOLVER : true,
+	rootElement : 'body'
+});
 
 // Adapter
 App.ApplicationAdapter = DS.RESTAdapter.extend({
-	namespace: "service"
+	namespace : "service"
 });
 
 App.ApiKeyAdapter = DS.LSAdapter.extend({
-	namespace: 'nehp-rfid'
+	namespace : 'nehp-rfid'
 });
 
 // Store
 App.Store = DS.Store.extend({
-  revision:12,
-  adapter: App.ApplicationAdapter.create()
+	revision : 12,
+	adapter : App.ApplicationAdapter.create()
+});
+
+App.SimpledateTransform = DS.Transform.extend({
+	deserialize : function(serialized) {
+		if (serialized) {
+			return moment(serialized).format('MMM Do YY, h:mm:ss a');
+		}
+		return serialized;
+	},
+
+	serialize : function(deserialized) {
+		if (deserialized) {
+			return moment(deserialized).toDate();
+		}
+		return deserialized;
+	}
 });

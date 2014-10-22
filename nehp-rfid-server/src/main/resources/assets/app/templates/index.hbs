@@ -3,12 +3,14 @@
 		<span>Notifications</span>
 	</div>
 	<div class="content">
-		<ul>
 		{{#each}}
-			<li class="header">Date:{{date}} &nbsp By:{{created_by}}</li>
-			<li class="title">{{title}}</li>
-			<li class="message">{{message}}</li>
+			<div class="notify">
+				<ul>
+					<li class="header">Date:{{date}} &nbsp By:{{created_by}}</li>
+					<li class="title">{{title}}</li>
+					<li class="message">{{message}}</li>
+				</ul>
+			</div>
 		{{/each}}
-		</ul>
 	</div>
 </div>

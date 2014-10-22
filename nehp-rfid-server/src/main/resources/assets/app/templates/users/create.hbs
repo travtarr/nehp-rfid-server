@@ -1,0 +1,13 @@
+<div class="centered-box">
+	<form {{action 'create' on="submit"}}>
+		<fieldset>
+			<legend>Create User</legend>
+			<label>Username<br>{{input type='text' valueBinding='username' required="required"}}</label>
+			<label>Name<br>{{input type='text' valueBinding='name' required="required"}}</label>
+			<label>Email<br>{{input type='text' valueBinding='email' required="required"}}</label>
+			<label>Admin<br>{{input type='checkbox' valueBinding='admin'}}</label>
+			<label>Scanner<br>{{input type='checkbox' valueBinding='scanner'}}</label>
+			<label>{{input type='submit' value="Create"}}</label>
+		</fieldset>
+	</form>
+</div>

@@ -18,6 +18,7 @@ App.SessionsController = Ember.Controller.extend({
 	// cookies
 	token : Ember.$.cookie('access_token'),
 	currentUser : Ember.$.cookie('auth_user'),
+	lastRequest : Ember.$.cookie('last_request'),
 
 	// create cookie for administration token
 	admin : Ember.$.cookie('admin_token'),
@@ -100,9 +101,12 @@ App.SessionsController = Ember.Controller.extend({
 								
 								_this.setProperties({
 									token : response.api_key[0].access_token.string,
-									currentUser : user.getProperties('username', 'name', 'email'),
-									admin: user.getProperties('admin')
+									currentUser : JSON.stringify(user.getProperties('username', 'name', 'email')),
+									admin: JSON.stringify(user.getProperties('admin')),
+									lastRequest: $.now()
 								});
+								console.log(user.getProperties('admin'));
+								console.log(JSON.stringify(user.getProperties('admin')));
 
 								// set the relationship between the User and the
 								// ApiKey
