@@ -13,8 +13,6 @@ App.ApplicationRoute = Ember.Route.extend({
 				this.controllerFor('sessions').reset();
 				return this.transitionTo('sessions');
 			}
-			// Return true to bubble this event to any parent route.
-			return true;
 		}
 	}
 });

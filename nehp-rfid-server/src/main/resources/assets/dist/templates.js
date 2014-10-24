@@ -61,19 +61,19 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push(" \r\n							");
+  data.buffer.push(" \r\n								");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("pad-sm link")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "summary", options) : helperMissing.call(depth0, "link-to", "summary", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n							");
+  data.buffer.push("\r\n								");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("pad-sm link")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "items", options) : helperMissing.call(depth0, "link-to", "items", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n						");
+  data.buffer.push("\r\n							");
   return buffer;
   }
 function program4(depth0,data) {
@@ -91,18 +91,18 @@ function program6(depth0,data) {
 function program8(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push(" \r\n							");
+  data.buffer.push(" \r\n								");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("link")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "user", options) : helperMissing.call(depth0, "link-to", "user", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(" \r\n							");
+  data.buffer.push(" \r\n								");
   stack1 = helpers['if'].call(depth0, "isAdmin", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n							<button ");
+  data.buffer.push("\r\n								<button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "logout", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(" class=\"btn-logout\">Logout</button>\r\n						");
+  data.buffer.push(" class=\"btn-logout\">Logout</button>\r\n							");
   return buffer;
   }
 function program9(depth0,data) {
@@ -116,13 +116,13 @@ function program9(depth0,data) {
 function program11(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push("\r\n								");
+  data.buffer.push("\r\n									");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("link")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "admin", options) : helperMissing.call(depth0, "link-to", "admin", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n							");
+  data.buffer.push("\r\n								");
   return buffer;
   }
 function program12(depth0,data) {
@@ -134,13 +134,13 @@ function program12(depth0,data) {
 function program14(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push(" \r\n							");
+  data.buffer.push(" \r\n								");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("link")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "sessions", options) : helperMissing.call(depth0, "link-to", "sessions", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(" \r\n						");
+  data.buffer.push(" \r\n							");
   return buffer;
   }
 function program15(depth0,data) {
@@ -149,21 +149,21 @@ function program15(depth0,data) {
   data.buffer.push("Login");
   }
 
-  data.buffer.push("<div id=\"wrap\">\r\n		<section id=\"rfid\">\r\n		\r\n			<!--  Navigation bar -->\r\n			<div class=\"navbar navbar-inverse navbar-fixed-top\">\r\n				<div class=\"navbar-inner\">\r\n        <div class=\"container\">\r\n					");
+  data.buffer.push("	<div id=\"wrap\">\r\n		<section id=\"rfid\">\r\n		\r\n			<!--  Navigation bar -->\r\n			<div class=\"navbar navbar-inverse navbar-fixed-top\">\r\n				<div class=\"navbar-inner\" style=\"padding-top: 10px;\">\r\n        <div class=\"container-fluid\">\r\n					");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'classNames': ("pull-left pad-lg link title-link")
   },hashTypes:{'classNames': "STRING"},hashContexts:{'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n					<div class=\"nav-collapse collapse\">\r\n					<ul class=\"nav\">\r\n						");
+  data.buffer.push("\r\n					<div>\r\n						<ul class=\"nav navbar-nav\">\r\n							");
   stack1 = helpers['if'].call(depth0, "isAuthenticated", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n					</ul>\r\n					<ul class=\"nav pull-right\">\r\n						");
+  data.buffer.push("\r\n						</ul>\r\n						<ul class=\"nav pull-right\">\r\n							");
   stack1 = helpers['if'].call(depth0, "isAuthenticated", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(14, program14, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n					</ul>\r\n          </div>\r\n        </div>\r\n				</div>\r\n			</div>\r\n			<!-- /Navigation Bar -->\r\n\r\n			<!-- Content -->\r\n			<div class=\"container\">\r\n				<section id=\"content\">\r\n					<!--  Page Contents from Ember -->\r\n					");
+  data.buffer.push("\r\n						</ul>\r\n          </div>\r\n        </div>\r\n				</div>\r\n			</div>\r\n			<!-- /Navigation Bar -->\r\n\r\n			<!-- Content -->\r\n			<div class=\"container-fluid\">\r\n				<section id=\"content\">\r\n					<!--  Page Contents from Ember -->\r\n					");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n				</section>\r\n			</div>\r\n			<!-- /Content -->\r\n\r\n		</section>\r\n	</div>\r\n	<footer class=\"container\">\r\n		<span>NEHP Worldwide, LLC. Copyright 2014.</span>\r\n	</div>");
+  data.buffer.push("\r\n				</section>\r\n			</div>\r\n			<!-- /Content -->\r\n\r\n		</section>\r\n	</div>\r\n	<footer>\r\n		<div class=\"container\" id=\"footer\">\r\n			<span>NEHP Worldwide, LLC. Copyright 2014.</span>\r\n		</div>\r\n	</div>");
   return buffer;
   
 });

@@ -1,29 +1,29 @@
-<div id="wrap">
+	<div id="wrap">
 		<section id="rfid">
 		
 			<!--  Navigation bar -->
 			<div class="navbar navbar-inverse navbar-fixed-top">
-				<div class="navbar-inner">
-        <div class="container">
+				<div class="navbar-inner" style="padding-top: 10px;">
+        <div class="container-fluid">
 					{{#link-to 'index' classNames="pull-left pad-lg link title-link"}}NEHP Worldwide Tracker{{/link-to}}
-					<div class="nav-collapse collapse">
-					<ul class="nav">
-						{{#if isAuthenticated}} 
-							{{#link-to 'summary' tagName='li' classNames='pad-sm link'}}Summary{{/link-to}}
-							{{#link-to 'items' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
-						{{/if}}
-					</ul>
-					<ul class="nav pull-right">
-						{{#if isAuthenticated}} 
-							{{#link-to 'user' tagName='li' classNames='link'}}{{user}}{{/link-to}} 
-							{{#if isAdmin}}
-								{{#link-to 'admin' tagName='li' classNames='link'}}Admin{{/link-to}}
+					<div>
+						<ul class="nav navbar-nav">
+							{{#if isAuthenticated}} 
+								{{#link-to 'summary' tagName='li' classNames='pad-sm link'}}Summary{{/link-to}}
+								{{#link-to 'items' tagName='li' classNames='pad-sm link'}}Status{{/link-to}}
 							{{/if}}
-							<button {{action 'logout'}} class="btn-logout">Logout</button>
-						{{else}} 
-							{{#link-to 'sessions' tagName='li' classNames='link'}}Login{{/link-to}} 
-						{{/if}}
-					</ul>
+						</ul>
+						<ul class="nav pull-right">
+							{{#if isAuthenticated}} 
+								{{#link-to 'user' tagName='li' classNames='link'}}{{user}}{{/link-to}} 
+								{{#if isAdmin}}
+									{{#link-to 'admin' tagName='li' classNames='link'}}Admin{{/link-to}}
+								{{/if}}
+								<button {{action 'logout'}} class="btn-logout">Logout</button>
+							{{else}} 
+								{{#link-to 'sessions' tagName='li' classNames='link'}}Login{{/link-to}} 
+							{{/if}}
+						</ul>
           </div>
         </div>
 				</div>
@@ -31,7 +31,7 @@
 			<!-- /Navigation Bar -->
 
 			<!-- Content -->
-			<div class="container">
+			<div class="container-fluid">
 				<section id="content">
 					<!--  Page Contents from Ember -->
 					{{outlet}}
@@ -41,6 +41,8 @@
 
 		</section>
 	</div>
-	<footer class="container">
-		<span>NEHP Worldwide, LLC. Copyright 2014.</span>
+	<footer>
+		<div class="container" id="footer">
+			<span>NEHP Worldwide, LLC. Copyright 2014.</span>
+		</div>
 	</div>

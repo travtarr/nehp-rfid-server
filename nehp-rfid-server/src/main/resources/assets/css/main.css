@@ -9,7 +9,11 @@ div.container {
 	padding-top: 10px;
 }
 
-footer.container {
+#footer {
+	position: static;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	text-align: center;
 	height: 40px;
 	background: #1b1b1b;
@@ -17,6 +21,14 @@ footer.container {
 	font-weight: bold;
 	width: 100%;
 	color: #B9B9B9;
+}
+@media (max-width: 767px) {
+	#footer {
+		padding-left: 20px;
+		padding-right: 20px;
+		margin-left: -20px;
+		margin-right: -20px;
+	}
 }
 
 .active {
@@ -113,7 +125,7 @@ div.nav-admin .button:hover {
 	background-color: #0088cc;
 }
 .centered-box {
-	width: 300px;
+	max-width: 300px;
 	background-color: #B4B4B4;
 	padding: 20px;
 	margin: auto;

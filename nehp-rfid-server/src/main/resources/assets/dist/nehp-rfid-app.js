@@ -42,97 +42,7 @@ App.SimpledateTransform = DS.Transform.extend({
 
 var config  = {
 	baseURL: "54.85.61.143:8080"
-};;App.Controller = Ember.ArrayController.extend({
-	// requires the sessions controller
-	needs : [ 'sessions' ],
-
-	// creates a computed property called currentUser that will be
-	// binded on the curretUser of the sessions controller and will return its
-	// value
-	currentUser : (function() {
-		return this.get('controllers.sessions.currentUser');
-	}).property('controllers.sessions.currentUser'),
-
-	// creates a computed property called admin that will be binded on
-	// the admin of the sessions controller to verify if the user is
-	// an administrator
-	isAdmin : (function() {
-		return this.get('controllers.sessions.admin');
-	}).property('controllers.sessions.admin'),
-
-	// creates a computed property called isAuthenticated that will be
-	// binded on the curretUser of the sessions controller and will verify if
-	// the object is empty
-	isAuthenticated : (function() {
-		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
-	}).property('controllers.sessions.currentUser')
-});;App.IndexController = Ember.ArrayController.extend({
-	sortProperties: ['date'],
-	sortAscending: false
-});;App.ItemsController = Ember.ArrayController.extend({
-	sortProperties: ['rfid'],
-	stage: 'ALL',
-	sortedColumn: (function() {
-	    var properties = this.get('sortProperties');
-	    if(!properties) return undefined;
-	    return properties.get('firstObject');
-	  }).property('sortProperties.[]'),
-	filteredItems: function(){
-		var stage = this.get('stage');
-		var items = this.get('arrangedContent');
-		
-		if(stage == 'ALL')
-			return items;
-		else {
-			return items.filter(function(item) {
-				return item.get('current_stage') == stage;
-			});
-		}
-	}.property('stage', 'arrangedContent'),
-	toggleSort: function(column) {
-	    if(this.get('sortedColumn') == column) {
-	      this.toggleProperty('sortAscending');
-	    } else {
-	      this.set('sortProperties', [column]);
-	      this.set('sortAscending', true);
-	    }
-	},
-	actions: {
-		setStage: function(stage) {
-			this.set('stage', [stage]);
-		}
-	}
-});;App.NotificationsController = Ember.ArrayController.extend({
-	actions: {
-		create: function() {
-			var _this = this;
-
-			this.store.createRecord('notification', {
-				title: _this.get('title'),
-				message: _this.get('message'),
-				created_by: _this.controllerFor('sessions').get('currentUser'),
-				date: $.now()
-			});
-		},
-		edit: function(id) {
-			var _this = this;
-
-			this.store.find('notification', id).then( function(notification) {
-				notification.set('title',  _this.get('title'));
-				notification.set('message', _this.get('message'));
-				notification.set('created_by', _this.controllerFor('sessions').get('currentUser'));
-				notification.set('date', $.now());
-				
-				notification.save();
-			});
-		},
-		remove: function(id) {
-			this.store.find('notification', id).then(function (notification) {
-				  notification.destroyRecord();
-			});
-		}
-	}
-});;App.SessionsController = Ember.Controller.extend({
+};;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
 		if (Ember.$.cookie('access_token')) {
@@ -273,6 +183,100 @@ var config  = {
 			});
 		}
 	}
+});;App.Controller = Ember.ArrayController.extend({
+	// requires the sessions controller
+	needs : [ 'sessions' ],
+
+	// creates a computed property called currentUser that will be
+	// binded on the curretUser of the sessions controller and will return its
+	// value
+	currentUser : (function() {
+		return this.get('controllers.sessions.currentUser');
+	}).property('controllers.sessions.currentUser'),
+
+	// creates a computed property called admin that will be binded on
+	// the admin of the sessions controller to verify if the user is
+	// an administrator
+	isAdmin : (function() {
+		return this.get('controllers.sessions.admin');
+	}).property('controllers.sessions.admin'),
+
+	// creates a computed property called isAuthenticated that will be
+	// binded on the curretUser of the sessions controller and will verify if
+	// the object is empty
+	isAuthenticated : (function() {
+		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+	}).property('controllers.sessions.currentUser')
+});;App.IndexController = Ember.ArrayController.extend({
+	sortProperties: ['date'],
+	sortAscending: false
+});;App.ItemsController = Ember.ArrayController.extend({
+	sortProperties: ['rfid'],
+	stage: 'ALL',
+	sortedColumn: (function() {
+	    var properties = this.get('sortProperties');
+	    if(!properties) return undefined;
+	    return properties.get('firstObject');
+	  }).property('sortProperties.[]'),
+	filteredItems: function(){
+		var stage = this.get('stage');
+		var items = this.get('arrangedContent');
+		
+		if(stage == 'ALL')
+			return items;
+		else {
+			return items.filter(function(item) {
+				return item.get('current_stage') == stage;
+			});
+		}
+	}.property('stage', 'arrangedContent'),
+	toggleSort: function(column) {
+	    if(this.get('sortedColumn') == column) {
+	      this.toggleProperty('sortAscending');
+	    } else {
+	      this.set('sortProperties', [column]);
+	      this.set('sortAscending', true);
+	    }
+	},
+	actions: {
+		setStage: function(stage) {
+			this.set('stage', [stage]);
+		}
+	}
+});;App.NotificationsController = Ember.ArrayController.extend({
+	actions: {
+		create: function() {
+			var _this = this;
+
+			this.store.createRecord('notification', {
+				title: _this.get('title'),
+				message: _this.get('message'),
+				created_by: _this.controllerFor('sessions').get('currentUser'),
+				date: $.now()
+			});
+		},
+		edit: function(id) {
+			var _this = this;
+
+			this.store.find('notification', id).then( function(notification) {
+				notification.set('title',  _this.get('title'));
+				notification.set('message', _this.get('message'));
+				notification.set('created_by', _this.controllerFor('sessions').get('currentUser'));
+				notification.set('date', $.now());
+				
+				notification.save();
+			});
+		},
+		remove: function(id) {
+			this.store.find('notification', id).then(function (notification) {
+				  notification.destroyRecord();
+			});
+		}
+	}
+});;App.NotificationsCreateController = Emmber.Controller.extend({
+	needs : 'notifications'
+});;App.NotificationsEditController = Emmber.Controller.extend({
+	needs : 'notifications'
 });;;App.UsersController = Ember.ArrayController.extend({
 	actions: {
 		create: function() {
@@ -309,6 +313,10 @@ var config  = {
 			});
 		}
 	}
+});;App.UsersCreateController = Emmber.Controller.extend({
+	needs : 'users'
+});;App.UsersEditController = Emmber.Controller.extend({
+	needs : 'users'
 });;App.ApiKey = DS.Model.extend({
 	accessToken: DS.attr('string'),
 	user:		 DS.belongsTo('user')
@@ -372,58 +380,6 @@ var config  = {
 	  this.resource('settings');
   });
   this.resource('sessions');
-});;App.AdminRoute = Ember.Route.extend({
-	// verify if the token property of the sessions controller is set before
-	// continuing with the request
-	// if it is not, redirect to the home page
-	beforeModel : function(transition) {
-		if (Ember.isEmpty(this.controllerFor('sessions').get('admin'))) {
-			return this.redirectToHome(transition);
-		}
-		if (Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
-			return this.redirectToLogin(transition);
-		}
-	},
-	// Redirect to the home page
-	redirectToHome : function(transition) {
-		return this.transitionTo('index');
-	},
-	redirectToLogin : function(transition) {
-		this.controllerFor('sessions').set('attemptedTransition', transition);
-		return this.transitionTo('sessions');
-	},
-	actions : {
-		// recover from any error that may happen during the transition to this
-		// route
-		error : function(reason, transition) {
-			// if the HTTP status is 401 (unauthorized), redirect to the home
-			// page
-			if (reason.status === 401) {
-				this.redirectToHome(transition);
-			} else {
-				console.log('unknown problem');
-			}
-		}
-	}
-});;App.ApplicationRoute = Ember.Route.extend({
-	actions : {
-		// create a global logout action
-		logout : function() {
-			// get the sessions controller instance and reset it to then
-			// transition to the sessions route
-			this.controllerFor('sessions').reset();
-			this.transitionTo('sessions');
-		},
-		error: function(error, transition) {
-			if (error && error.status === 401) {
-				// error substate and parent routes do not handle this error 
-				this.controllerFor('sessions').reset();
-				return this.transitionTo('sessions');
-			}
-			// Return true to bubble this event to any parent route.
-			return true;
-		}
-	}
 });;// create a base object for any authentication protected route
 App.AuthenticatedRoute = Ember.Route.extend({  
   // verify if the token property of the sessions controller is set before
@@ -437,8 +393,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	
 	var currenttime = $.now();
 	var lasttime = this.controllerFor('sessions').get('lastRequest');
-		
+	console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
 	if(((currenttime - lasttime) > 600000)){
+		this.controllerFor('sessions').reset();
 		return this.redirectToLogin(transition);	
 	} else {
 		this.controllerFor('sessions').set('lastRequest', $.now());
@@ -451,23 +408,21 @@ App.AuthenticatedRoute = Ember.Route.extend({
     return this.transitionTo('sessions');
   },
   actions: {
-	    // recover from any error that may happen during the transition to this
-		// route
-	    error: function(reason, transition) {
-	      // if the HTTP status is 401 (unauthorised), redirect to the login
-			// page
-	      if (reason.status === 401) {
-	        this.redirectToLogin(transition);
-	      } else {
-	        console.log(reason.status);
-	      }
-	    }
+	  // recover from any error that may happen during the transition to this
+	  // route
+	  error: function(reason, transition) {
+		  // if the HTTP status is 401 (unauthorised), redirect to the login
+		  // page
+		  if (reason.status === 401) {
+			  this.controllerFor('sessions').reset();
+			  this.redirectToLogin(transition);
+		  } else {
+			  console.log(reason.status);
+		  }
 	  }
-});;App.IndexRoute = App.AuthenticatedRoute.extend({
-  model: function() {
-    return this.store.find('notification');
-  },
-  actions : {
+  }
+});;App.AdminRoute = App.AuthenticatedRoute.extend({});;App.ApplicationRoute = Ember.Route.extend({
+	actions : {
 		// create a global logout action
 		logout : function() {
 			// get the sessions controller instance and reset it to then
@@ -481,10 +436,26 @@ App.AuthenticatedRoute = Ember.Route.extend({
 				this.controllerFor('sessions').reset();
 				return this.transitionTo('sessions');
 			}
-			// Return true to bubble this event to any parent route.
-			return true;
 		}
 	}
+});;App.IndexRoute = App.AuthenticatedRoute.extend({
+  model: function() {
+    return this.store.find('notification');
+  },
+  actions: {
+	  // recover from any error that may happen during the transition to this
+	  // route
+  error: function(reason, transition) {
+  // if the HTTP status is 401 (unauthorised), redirect to the login
+	  // page
+	  if (reason.status === 401) {
+		  this.controllerFor('sessions').reset();
+		  return this.transitionTo('sessions');
+	  } else {
+		  console.log(reason.status);
+	  }
+  }
+  }
 });;App.ItemsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
 		return this.store.find('item');

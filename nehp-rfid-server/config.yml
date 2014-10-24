@@ -17,7 +17,7 @@ database:
 
   # the JDBC URL
   #url: jdbc:mysql://localhost/test
-  url: jdbc:mysql://ec2-54-85-61-143.compute-1.amazonaws.com/test
+  url: jdbc:mysql://ec2-54-85-61-143.compute-1.amazonaws.com/test?checkConnectionOnBorrow=true
 
   # any properties specific to your JDBC driver:
   properties:

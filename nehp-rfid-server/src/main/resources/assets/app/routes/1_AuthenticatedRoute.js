@@ -11,8 +11,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	
 	var currenttime = $.now();
 	var lasttime = this.controllerFor('sessions').get('lastRequest');
-		
+	console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
 	if(((currenttime - lasttime) > 600000)){
+		this.controllerFor('sessions').reset();
 		return this.redirectToLogin(transition);	
 	} else {
 		this.controllerFor('sessions').set('lastRequest', $.now());
@@ -25,16 +26,17 @@ App.AuthenticatedRoute = Ember.Route.extend({
     return this.transitionTo('sessions');
   },
   actions: {
-	    // recover from any error that may happen during the transition to this
-		// route
-	    error: function(reason, transition) {
-	      // if the HTTP status is 401 (unauthorised), redirect to the login
-			// page
-	      if (reason.status === 401) {
-	        this.redirectToLogin(transition);
-	      } else {
-	        console.log(reason.status);
-	      }
-	    }
+	  // recover from any error that may happen during the transition to this
+	  // route
+	  error: function(reason, transition) {
+		  // if the HTTP status is 401 (unauthorised), redirect to the login
+		  // page
+		  if (reason.status === 401) {
+			  this.controllerFor('sessions').reset();
+			  this.redirectToLogin(transition);
+		  } else {
+			  console.log(reason.status);
+		  }
 	  }
+  }
 });
