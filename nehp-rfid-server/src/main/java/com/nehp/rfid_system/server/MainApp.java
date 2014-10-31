@@ -7,7 +7,6 @@ import com.nehp.rfid_system.server.auth.SimpleAuthenticator;
 import com.nehp.rfid_system.server.core.*;
 import com.nehp.rfid_system.server.data.*;
 import com.nehp.rfid_system.server.resources.*;
-
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -62,9 +61,11 @@ public class MainApp extends Application<MainConfiguration> {
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
 		// test resource
 		final PingResource pingResource = new PingResource();
+			
+		// set jersey properties
+		environment.jersey().setUrlPattern("/service/*");
 		
 		// register resources
-		environment.jersey().setUrlPattern("/service/*");
 		environment.jersey().register(listResource);
 		environment.jersey().register(itemResource);
 		environment.jersey().register(itemsResource);

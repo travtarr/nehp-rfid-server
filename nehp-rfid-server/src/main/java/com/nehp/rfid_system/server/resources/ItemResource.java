@@ -1,6 +1,5 @@
 package com.nehp.rfid_system.server.resources;
 
-import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.Consumes;

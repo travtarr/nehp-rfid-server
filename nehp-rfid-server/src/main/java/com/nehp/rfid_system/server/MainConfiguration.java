@@ -25,6 +25,9 @@ public class MainConfiguration extends Configuration {
 	@JsonProperty("database")
 	private final DataSourceFactory database= new DataSourceFactory();
 	
+	@NotEmpty
+	private String debug;
+	
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }	
@@ -42,5 +45,13 @@ public class MainConfiguration extends Configuration {
 	@JsonProperty
 	public ImmutableList<String> getAllowedGrantTypes(){
 		return allowedGrantTypes;
+	}
+	
+	@JsonProperty
+	public Boolean getDebug(){
+		if(debug.equals("true"))
+			return true;
+		else
+			return false;
 	}
 }

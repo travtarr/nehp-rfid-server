@@ -4,7 +4,10 @@ import io.dropwizard.hibernate.AbstractDAO;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.type.StringType;
 
 import com.google.common.base.Optional;
@@ -12,9 +15,12 @@ import com.nehp.rfid_system.server.core.User;
 import com.nehp.rfid_system.server.helpers.PasswordHelper;
 
 public class UserDAO extends AbstractDAO<User> {
+	
+	SessionFactory factory;
 
 	public UserDAO(SessionFactory sessionFactory) {
 		super(sessionFactory);
+		this.factory = sessionFactory;
 	}
 
 	public Optional<User> getUserByUsernameAndPassword(String username,
@@ -46,12 +52,13 @@ public class UserDAO extends AbstractDAO<User> {
 	}
 
 	public Optional<Long> create(User user) {
+		User newUser = user;
 		try {
-			user.setPassword(PasswordHelper.getSaltedHash(user.getPassword()));
+			newUser.setPassword(PasswordHelper.getSaltedHash(user.getPassword()));
 		} catch (Exception e) {
 			return Optional.absent();
 		}
-		return Optional.of(persist(user).getId());
+		return Optional.of(persist(newUser).getId());
 	}
 
 	public boolean update(User user) {
@@ -71,9 +78,29 @@ public class UserDAO extends AbstractDAO<User> {
 	public List<User> getUsersAll() {
 		return list(namedQuery("users.getAll"));
 	}
+	
+	public boolean deleteById(Long id){
+		return delete(get(id));
+	}
 
 	public boolean delete(User user) {
-		return delete(user);
+		Boolean result = false;
+		Session session = factory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.delete(user);
+			tx.commit();
+			result = true;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return result;
 	}
 	
 	public boolean isAdmin(Long id){

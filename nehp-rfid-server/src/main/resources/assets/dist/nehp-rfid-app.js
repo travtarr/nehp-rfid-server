@@ -36,13 +36,242 @@ App.SimpledateTransform = DS.Transform.extend({
 		}
 		return deserialized;
 	}
+});;App.NotifyAlertComponent = Ember.Component.extend({
+	
+	classNameBindings: [':notify',
+	                    'isOpaque'],
+	
+	/*
+	 * @property {boolean} Should the view be opaque now?
+	 */
+	isOpaque: false,
+	/*
+	 * @property {number} Will be set by 'didInsertElement'.
+	 * Used for clearing the auto-hide timeout
+	 */
+	timeoutId: null,
+	
+	/*
+	 * @property {number} Will be hidden after this many ms.
+	 */
+	hideAfterMs: 5000,
+	
+	/*
+	 * Lifecycle hook - called when the view enters the DOM
+	 */
+	didInsertElement: function(){
+		// Set-up the auto-hide
+		this.set('closed', false);
+		this.set('timeoutId', setTimeout(function(){
+			this.send('close');
+		}.bind(this), this.get('hideAfterMs')));
+		
+		// Fade in the view.
+		Ember.run.later(this, function() {
+			this.set('isOpaque', true);
+		}, 1);
+	},
+	
+	actions: {
+		close: function() {
+			this.set('isOpaque, false');
+			setTimeout(function() {
+				this.set('notification.closed', true);
+				clearTimeout(this.get('timeoutId'));
+			}.bind(this), 300);
+		}
+	}
 });;/**
  * Configuration file
  */
 
 var config  = {
 	baseURL: "54.85.61.143:8080"
-};;App.SessionsController = Ember.Controller.extend({
+};;App.ApplicationController = Ember.Controller.extend({
+	// requires the sessions controller
+	needs : [ 'sessions' ],
+
+	notification: {
+		type: null,
+		title: null,
+		message: null,
+		closed: true
+	},		
+		
+	// creates a computed property called currentUser that will be
+	// binded on the curretUser of the sessions controller and will return its
+	// value
+	currentUser : (function() {
+		return this.get('controllers.sessions.currentUser');
+	}).property('controllers.sessions.currentUser'),
+
+	// creates a computed property called admin that will be binded on
+	// the admin of the sessions controller to verify if the user is
+	// an administrator
+	isAdmin : (function() {
+		return this.get('controllers.sessions.admin');
+	}).property('controllers.sessions.admin'),
+
+	// creates a computed property called isAuthenticated that will be
+	// binded on the curretUser of the sessions controller and will verify if
+	// the object is empty
+	isAuthenticated : (function() {
+		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+	}).property('controllers.sessions.currentUser'),
+
+	actions : {
+		/**
+		 * Action handler for creating a new notification. Could be called from
+		 * elsewhere throughout the application.
+		 * 
+		 * @param type
+		 *            {String} classification; used for which icon to show
+		 * @param title
+		 *            {String} leading text
+		 * @param message
+		 *            {String} supporting text
+		 */
+		setNotification : function(type, title, message) {
+			var notification = {
+				type : type,
+				title : title,
+				message : message,
+				closed : false
+			};
+			this.set('notification', notification);
+		},
+		testNotification : function() {
+			this.send('setNotification', 'success', 'Success', 'Yay you did it.');
+		}
+	}
+});;App.IndexController = Ember.ArrayController.extend({
+	sortProperties: ['date'],
+	sortAscending: false
+});;App.ItemsController = Ember.ArrayController.extend({
+	sortProperties: ['rfid'],
+	stage: 'ALL',
+	sortedColumn: (function() {
+	    var properties = this.get('sortProperties');
+	    if(!properties) return undefined;
+	    return properties.get('firstObject');
+	  }).property('sortProperties.[]'),
+	filteredItems: function(){
+		var stage = this.get('stage');
+		var items = this.get('arrangedContent');
+		
+		if(stage == 'ALL')
+			return items;
+		else {
+			return items.filter(function(item) {
+				return item.get('current_stage') == stage;
+			});
+		}
+	}.property('stage', 'arrangedContent'),
+	toggleSort: function(column) {
+	    if(this.get('sortedColumn') == column) {
+	      this.toggleProperty('sortAscending');
+	    } else {
+	      this.set('sortProperties', [column]);
+	      this.set('sortAscending', true);
+	    }
+	},
+	actions: {
+		setStage: function(stage) {
+			this.set('stage', [stage]);
+		}
+	}
+});;App.NotificationsController = Ember.ArrayController.extend({
+	needs: ['application'],
+	actions: {
+		remove: function(record) {
+			var _this = this;
+			record.deleteRecord();
+			record.save().then(onSuccess, onFail);
+
+			var onSuccess = function() {
+				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+				'Notificaiton deleted.');
+			};
+			
+			var onFail = function(error) {
+				_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+				'Unable to delete this notificatoin.');
+				record.rollback();
+			};
+		}
+	}
+});;App.NotificationsCreateController = Ember.Controller.extend({
+	needs: ['application', 'sessions'],
+	
+	currentUsername : (function() {
+		return this.get('controllers.sessions.currentUser').username;
+	}).property('controllers.sessions.currentUser'),
+		
+	actions: {
+		create: function() {
+			var _this = this;
+
+			var notification = this.store.createRecord('notification', {
+				title: _this.get('newNotification.title'),
+				message: _this.get('newNotification.message'),
+				created_by: _this.get('currentUsername'),
+				date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+			});
+			
+			notification.save().then(onSuccess, onFail);
+			
+			var onSuccess = function(){
+				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+				'Notification created successfully.');
+				_this.transitionToRoute('notifications');
+			};
+			
+			var onFail = function(notification){
+				_this.store.deleteRecord(notification);
+				_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
+				'Unable to create notificatoin.');
+				_this.transitionToRoute('notifications');
+			};
+		},
+		
+		cancel: function() {
+			this.transitionToRoute('notifications');
+		}
+	}
+});;App.NotificationsEditController = Ember.ObjectController.extend({
+	needs : ['application'],
+	actions : {
+		edit: function(id) {
+			var _this = this;
+
+			this.store.find('notification', id).then( function(notification) {
+				notification.set('title',  _this.get('title'));
+				notification.set('message', _this.get('message'));
+				notification.set('created_by', _this.get('controllers.application.currentUser').username);
+				notification.set('date', moment($.now()).format('MMM Do YY, h:mm:ss a'));
+				
+				notification.save().then(onSuccess, onFail);
+				
+				var onSuccess = function(){
+					_this.controllerFor('application').send('setNotification', 'success', 'Success', 
+					'Notification updated successfully.');
+					_this.transitionToRoute('notifications');
+				};
+				
+				var onFail = function(error){
+					notification.rollback();
+					_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
+					'Unable to edit notificatoin.');
+					_this.transitionToRoute('notifications');
+				};
+			});
+		},
+		
+		cancel: function() {
+			this.transitionToRoute('notifications');
+		}
+	}
+});;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
 		if (Ember.$.cookie('access_token')) {
@@ -133,11 +362,7 @@ var config  = {
 				
 					_this.store.find('user', response.api_key[0].user_id.string).then(
 							function(user) {
-								
-								// tests
-								console.log(JSON.stringify(user));
-								console.log(user);
-								
+																
 								// set this controller token & current user
 								// properties
 								// based on the data from the user and
@@ -145,12 +370,15 @@ var config  = {
 								
 								_this.setProperties({
 									token : response.api_key[0].access_token.string,
-									currentUser : JSON.stringify(user.getProperties('username', 'name', 'email')),
-									admin: JSON.stringify(user.getProperties('admin')),
+									currentUser : {
+										id: response.api_key[0].user_id.string,
+										name: user.get('name'),
+										email: user.get('email'),
+										username: user.get('username')
+									},
+									admin: user.get('admin'),
 									lastRequest: $.now()
 								});
-								console.log(user.getProperties('admin'));
-								console.log(JSON.stringify(user.getProperties('admin')));
 
 								// set the relationship between the User and the
 								// ApiKey
@@ -183,114 +411,87 @@ var config  = {
 			});
 		}
 	}
-});;App.Controller = Ember.ArrayController.extend({
-	// requires the sessions controller
-	needs : [ 'sessions' ],
+});;;App.SummaryController = Ember.ArrayController.extend({
+	needs: ['application'],
+	
+	actions: {
+		testNotify: function() {
+			this.get('controllers.application').send('setNotification', 'success', 'Success', 
+			'Notificaiton deleted.');
+		}
+	}
+});;App.UsersController = Ember.ArrayController.extend({
+	needs: ['application'],
+	actions : {
+		resetPW : function(id) {
+			// TODO: add resource method to reset PW
 
-	// creates a computed property called currentUser that will be
-	// binded on the curretUser of the sessions controller and will return its
-	// value
-	currentUser : (function() {
-		return this.get('controllers.sessions.currentUser');
-	}).property('controllers.sessions.currentUser'),
+		},
+		remove : function(record) {
+			var _this = this;
+			record.deleteRecord();
+			record.save().then(onSuccess, onFail);
 
-	// creates a computed property called admin that will be binded on
-	// the admin of the sessions controller to verify if the user is
-	// an administrator
-	isAdmin : (function() {
-		return this.get('controllers.sessions.admin');
-	}).property('controllers.sessions.admin'),
+			var onSuccess = function() {
+				_this.get('controllers.application').send('setNotification',
+						'success', 'Success', 'User deleted.');
+			};
 
-	// creates a computed property called isAuthenticated that will be
-	// binded on the curretUser of the sessions controller and will verify if
-	// the object is empty
-	isAuthenticated : (function() {
-		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
-	}).property('controllers.sessions.currentUser')
-});;App.IndexController = Ember.ArrayController.extend({
-	sortProperties: ['date'],
-	sortAscending: false
-});;App.ItemsController = Ember.ArrayController.extend({
-	sortProperties: ['rfid'],
-	stage: 'ALL',
-	sortedColumn: (function() {
-	    var properties = this.get('sortProperties');
-	    if(!properties) return undefined;
-	    return properties.get('firstObject');
-	  }).property('sortProperties.[]'),
-	filteredItems: function(){
-		var stage = this.get('stage');
-		var items = this.get('arrangedContent');
+			var onFail = function(error) {
+				_this.get('controllers.application').send('setNotification',
+						'failure', 'Failed',
+						'Unable to delete this user.');
+				record.rollback();
+			};
+		}
+	}
+});;App.UsersCreateController = Ember.Controller.extend({
+	needs: ['application'],
+	
+	actions: {
+		create: function() {
+			var _this = this;
+			
+			var user = this.store.createRecord('user', {
+				username: _this.get('newUser.username'),
+				name: _this.get('newUser.name'),
+				email: _this.get('newUser.email'),
+				admin: _this.get('newUser.admin'),
+				scanner: _this.get('newUser.scanner'),
+				user_created_date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+			});
+			
+			user.save().then(onSuccess, onFail);
+			
+			var onSuccess = function(){
+				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+				'User created successfully.');
+				_this.transitionToRoute('users');
+			};
+			
+			var onFail = function(user){
+				_this.store.deleteRecord(user);
+				_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+						'Unable to create this user');
+				_this.transitionToRoute('users');
+			};
+		},
 		
-		if(stage == 'ALL')
-			return items;
-		else {
-			return items.filter(function(item) {
-				return item.get('current_stage') == stage;
+		cancel: function() {
+			this.setProperties({
+				username: null,
+				name: null,
+				email: null,
+				admin: null,
+				scanner: null
 			});
-		}
-	}.property('stage', 'arrangedContent'),
-	toggleSort: function(column) {
-	    if(this.get('sortedColumn') == column) {
-	      this.toggleProperty('sortAscending');
-	    } else {
-	      this.set('sortProperties', [column]);
-	      this.set('sortAscending', true);
-	    }
-	},
-	actions: {
-		setStage: function(stage) {
-			this.set('stage', [stage]);
+			this.transitionToRoute('users');
 		}
 	}
-});;App.NotificationsController = Ember.ArrayController.extend({
-	actions: {
-		create: function() {
-			var _this = this;
-
-			this.store.createRecord('notification', {
-				title: _this.get('title'),
-				message: _this.get('message'),
-				created_by: _this.controllerFor('sessions').get('currentUser'),
-				date: $.now()
-			});
-		},
-		edit: function(id) {
-			var _this = this;
-
-			this.store.find('notification', id).then( function(notification) {
-				notification.set('title',  _this.get('title'));
-				notification.set('message', _this.get('message'));
-				notification.set('created_by', _this.controllerFor('sessions').get('currentUser'));
-				notification.set('date', $.now());
-				
-				notification.save();
-			});
-		},
-		remove: function(id) {
-			this.store.find('notification', id).then(function (notification) {
-				  notification.destroyRecord();
-			});
-		}
-	}
-});;App.NotificationsCreateController = Emmber.Controller.extend({
-	needs : 'notifications'
-});;App.NotificationsEditController = Emmber.Controller.extend({
-	needs : 'notifications'
-});;;App.UsersController = Ember.ArrayController.extend({
-	actions: {
-		create: function() {
-			var _this = this;
-
-			this.store.createRecord('user', {
-				username: _this.get('username'),
-				name: _this.get('name'),
-				email: _this.get('email'),
-				admin: _this.get('admin'),
-				scanner: _this.get('scanner'),
-				user_created_date: $.now()
-			});
-		},
+});;App.UsersEditController = Ember.ObjectController.extend({
+	needs: ['application'],
+	
+	actions : {
 		edit: function(id) {
 			var _this = this;
 
@@ -300,23 +501,27 @@ var config  = {
 				user.set('admin', _this.get('admin'));
 				user.set('scanner', _this.get('scanner'));
 				
-				user.save();
+				user.save().then(onSuccess, onFail);
+				
+				var onSuccess = function(){
+					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+					'User updated successfully.');
+					_this.transitionToRoute('users');
+				};
+				
+				var onFail = function(error){
+					notification.rollback();
+					_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+					'Unable to edit this user.');
+					_this.transitionToRoute('users');
+				};
 			});
 		},
-		resetPW: function(id) {
-			// TODO: add resource method to reset PW
-			
-		},
-		remove: function(id) {
-			store.find('user', id).then(function (user) {
-				  user.destroyRecord();
-			});
+		
+		cancel: function() {
+			this.transitionToRoute('notifications');
 		}
 	}
-});;App.UsersCreateController = Emmber.Controller.extend({
-	needs : 'users'
-});;App.UsersEditController = Emmber.Controller.extend({
-	needs : 'users'
 });;App.ApiKey = DS.Model.extend({
 	accessToken: DS.attr('string'),
 	user:		 DS.belongsTo('user')
@@ -446,7 +651,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	  // recover from any error that may happen during the transition to this
 	  // route
   error: function(reason, transition) {
-  // if the HTTP status is 401 (unauthorised), redirect to the login
+  // if the HTTP status is 401 (unauthorized), redirect to the login
 	  // page
 	  if (reason.status === 401) {
 		  this.controllerFor('sessions').reset();
@@ -464,6 +669,12 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	model: function() {
 		return this.store.find("item");
     }
+});;App.NotificationsCreateRoute = App.AuthenticatedRoute.extend({	
+	setupController: function(controller, model) {
+        controller.set('newNotification', model);
+    }
+});;App.NotificationsEditRoute = App.AuthenticatedRoute.extend({
+	
 });;App.NotificationsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
 		return this.store.find('notification');
@@ -483,7 +694,13 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			this.transitionTo('index');
 		}
 	}
-});;App.SettingsRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});;App.UsersRoute = App.AuthenticatedRoute.extend({
+});;App.SettingsRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});;App.UsersCreateRoute = App.AuthenticatedRoute.extend({
+	setupController: function(controller, model) {
+        controller.set('newUser', model);
+    }
+});;App.UsersEditRoute = App.AuthenticatedRoute.extend({
+
+});;App.UsersRoute = App.AuthenticatedRoute.extend({
 	model : function() {
 		return this.store.find('user');
 	}

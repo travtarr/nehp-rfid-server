@@ -2,9 +2,9 @@
 	<form {{action 'edit' on="submit"}}>
 		<fieldset>
 			<legend>Edit Notification</legend>
-			<label>Title<br>{{input type='text' value=title valueBinding='title' required="required"}}</label>
-			<label>Message<br>{{textarea valueBinding='message' value=message required="required" cols="70" rows="5"}}</label>
-			<label>{{#link-to 'notifications' tagName='button'}}Cancel{{/link-to}}{{input type='submit' value="Submit Changes"}}</label>
+			<label>Title<br>{{input type='text' value=title value=title required="required"}}</label>
+			<label>Message<br>{{textarea value=message value=message required="required" cols="70" rows="5"}}</label>
+			<label><button {{action 'cancel' this}}>Cancel</button>{{input type='submit' value="Submit Changes"}}</label>
 		</fieldset>
 	</form>
 </div>

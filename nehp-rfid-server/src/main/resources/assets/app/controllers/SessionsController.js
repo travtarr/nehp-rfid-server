@@ -89,11 +89,7 @@ App.SessionsController = Ember.Controller.extend({
 				
 					_this.store.find('user', response.api_key[0].user_id.string).then(
 							function(user) {
-								
-								// tests
-								console.log(JSON.stringify(user));
-								console.log(user);
-								
+																
 								// set this controller token & current user
 								// properties
 								// based on the data from the user and
@@ -101,12 +97,15 @@ App.SessionsController = Ember.Controller.extend({
 								
 								_this.setProperties({
 									token : response.api_key[0].access_token.string,
-									currentUser : JSON.stringify(user.getProperties('username', 'name', 'email')),
-									admin: JSON.stringify(user.getProperties('admin')),
+									currentUser : {
+										id: response.api_key[0].user_id.string,
+										name: user.get('name'),
+										email: user.get('email'),
+										username: user.get('username')
+									},
+									admin: user.get('admin'),
 									lastRequest: $.now()
 								});
-								console.log(user.getProperties('admin'));
-								console.log(JSON.stringify(user.getProperties('admin')));
 
 								// set the relationship between the User and the
 								// ApiKey

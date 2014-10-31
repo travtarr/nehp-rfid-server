@@ -4,7 +4,6 @@
 	height: 100%;
 	margin: 0 auto -60px;
 }
-
 div.container {
 	padding-top: 10px;
 }
@@ -48,6 +47,8 @@ div.dark-bg {
 	cursor: pointer;
 	color: #B9B9B9;
 	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .title-link {
@@ -132,6 +133,14 @@ div.nav-admin .button:hover {
 	margin-bottom: 20px;
 	margin-top: 30px;
 }
+.user-box {
+	max-width: 400px;
+	background-color: #B4B4B4;
+	padding: 20px;
+	margin: auto;
+	margin-bottom: 20px;
+	margin-top: 30px;
+}
 
 .btn-logout {
 	margin-left: 10px;
@@ -202,8 +211,8 @@ div.nav-admin .button:hover {
 	margin:0px 0px 20px 0px;
 	padding:0px;
 	width:100%;
-	box-shadow: 5px 5px 2px #888888;
 	border:1px solid #000000;
+	box-shadow: 5px 5px 3px #1A1A1A;
 	max-height: 400px;
 	overflow-y: scroll;
 	-moz-border-radius-bottomleft:0px;
@@ -303,6 +312,7 @@ textarea {
 }
 .left-col {
 	padding-top: 10px;
+	padding-left: 20px;
 }
 .left-col div.header {
 	margin: auto;
@@ -324,9 +334,8 @@ textarea {
 	margin:0px 0px 15px 0px;
 	padding:0px;
 	width:100%;
-	box-shadow: 5px 5px 2px #888888;
 	border:1px solid #000000;
-	
+	box-shadow: 5px 5px 3px #1A1A1A;
 	-moz-border-radius-bottomleft:0px;
 	-webkit-border-bottom-left-radius:0px;
 	border-bottom-left-radius:0px;
@@ -442,7 +451,7 @@ table.double-column td.header {
 	border-color: black;
 	border-style: solid;
 }
-.notify {
+.notification {
 	display: block;
 	color: #090909;
   background: #B3B3B3;
@@ -455,4 +464,74 @@ table.double-column td.header {
   border-radius: 3px;
   margin-bottom: 20px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
+}
+.nav-pointer li a {
+	cursor: pointer;
+}
+
+.notify ul {
+	list-style-type: none;
+	margin: 0;
+}
+
+.notify-container {
+  position: fixed;
+  bottom: 65px;
+  width: 100%;
+  z-index: 999; /*must be highest element on page*/
+}
+
+.notify {
+  opacity: 0;
+  position: relative;
+  width: 300px;
+  height: 65px;
+  padding: 5px 10px 5px 45px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: rgba(50, 50, 50, 0.8);
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgb(0, 0, 0);
+  box-shadow: 0px 0px 15px -5px rgb(0, 0, 0);
+  transition: opacity 0.3s ease-out, top 0.3s ease-out, right 0.3s ease-out;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.is-opaque {
+  opacity: 1;
+}
+
+.notify:hover {
+  border-color: rgb(255, 255, 255);
+}
+
+.notify .icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 26px;
+  background-color: rgba(255,255,255,0);
+  border-color: rgba(255,255,255,0);
+}
+.notify .icon:hover {
+	position: absolute;
+  top: 4px;
+  right: 0px;
+}
+.notify .close-notify{
+  display: none;
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  font-size: 22px;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+.notify:hover .close-notify {
+  display: block;
 }

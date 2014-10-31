@@ -43,6 +43,13 @@ public class NotificationsDAO extends AbstractDAO<Notification> {
 
 		return true;
 	}
+	
+	public boolean deleteById(Long id){
+		if(delete(get(id)))
+			return true;
+		else
+			return false;
+	}
 
 	public boolean delete(Notification notification) {
 		Boolean result = false;

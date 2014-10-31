@@ -15,11 +15,11 @@
 						</ul>
 						<ul class="nav pull-right">
 							{{#if isAuthenticated}} 
-								{{#link-to 'user' tagName='li' classNames='link'}}{{user}}{{/link-to}} 
+								{{#link-to 'user' currentUser.id tagName='li' classNames='link'}}{{currentUser.username}}{{/link-to}} 
 								{{#if isAdmin}}
 									{{#link-to 'admin' tagName='li' classNames='link'}}Admin{{/link-to}}
 								{{/if}}
-								<button {{action 'logout'}} class="btn-logout">Logout</button>
+								<li {{action 'logout'}} class="btn-logout">Logout</li>
 							{{else}} 
 								{{#link-to 'sessions' tagName='li' classNames='link'}}Login{{/link-to}} 
 							{{/if}}
@@ -33,13 +33,18 @@
 			<!-- Content -->
 			<div class="container-fluid">
 				<section id="content">
+					<button {{action 'testNotification'}}>Test</button>
 					<!--  Page Contents from Ember -->
 					{{outlet}}
 				</section>
 			</div>
 			<!-- /Content -->
-
 		</section>
+		{{#unless notification.closed}}
+			<div class="notify-container">
+				{{notify-alert notification=notification}}
+			</div>
+		{{/unless}}
 	</div>
 	<footer>
 		<div class="container" id="footer">

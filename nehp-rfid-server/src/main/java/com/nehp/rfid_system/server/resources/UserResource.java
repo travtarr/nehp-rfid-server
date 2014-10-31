@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,11 +15,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.User;
@@ -25,6 +30,7 @@ import com.nehp.rfid_system.server.core.UserList;
 import com.nehp.rfid_system.server.core.UserWrap;
 import com.nehp.rfid_system.server.data.AccessTokenDAO;
 import com.nehp.rfid_system.server.data.UserDAO;
+import com.sun.jersey.api.Responses;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
@@ -50,17 +56,19 @@ public class UserResource {
 	
 	@POST
 	@Timed
-	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_ADMIN) 
-	public String createUser(User user){
+	public String createUser(UserWrap user){
 		Long userId = null;
-		userId = userDAO.create(user).get();
+		Optional<Long> opt = userDAO.create(user.getUser());
+		if(opt.isPresent()){
+			userId = opt.get();
+		}
 		if(userId != null)
-			return "User: " + user.getUsername() + " created successfully with id: " + userId;
+			return "User: " + user.getUser().getUsername() + " created successfully with id: " + userId;
 		else
-			return "User: " + user.getUsername() + " was not created";
+			return "User: " + user.getUser().getUsername() + " was not created";
 	}
 	
 	@DELETE
@@ -68,17 +76,12 @@ public class UserResource {
 	@Path("/{user_id}")
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_ADMIN) 
-	public String deleteUser(@PathParam("user_id") String userId){
-		User user = userDAO.getUserById(Long.getLong(userId)).get();
-		
-		if(user != null){
-			if(userDAO.delete(user))
-				return "User: " + user.getUsername() + " updated successfully";
-			else
-				return "User: " + user.getUsername() + " was not deleted";
-			
-		} else {	
-			return "UserID: " + userId + " was not deleted";
+	public JsonObject deleteUser(@PathParam("user_id") String userId){
+		if(userDAO.deleteById(Long.parseLong(userId)))
+			return Json.createObjectBuilder().build();
+		else {
+			Response response = Response.status(Responses.NOT_MODIFIED).build();
+			throw new WebApplicationException(response);
 		}
 	}
 	
@@ -106,7 +109,7 @@ public class UserResource {
 	@Path("/{user_id}")
 	@UnitOfWork
 	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
-	public String updateUser( @PathParam("user_id") String userId, User user, @Context HttpServletRequest request){
+	public String updateUser( @PathParam("user_id") String userId, UserWrap user, @Context HttpServletRequest request){
 		
 		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
 		Long currentUserId = accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId();
@@ -114,10 +117,10 @@ public class UserResource {
 		
 		// User can only update own information, admin can update anyone
 		if((currentUserId == Long.getLong(userId)) || currentUser.getAdmin() == true){
-			if(userDAO.update(user))
-				return "User: " + user.getUsername() + " updated successfully";
+			if(userDAO.update(user.getUser()))
+				return "User: " + user.getUser().getUsername() + " updated successfully";
 			else
-				return "User: " + user.getUsername() + " was not updated";
+				return "User: " + user.getUser().getUsername() + " was not updated";
 		} else {
 			return "Not allowed to update another user.";
 		}
