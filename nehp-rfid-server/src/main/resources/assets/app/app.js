@@ -23,16 +23,20 @@ App.Store = DS.Store.extend({
 });
 
 App.SimpledateTransform = DS.Transform.extend({
+		
+	// from server
 	deserialize : function(serialized) {
+		var tz = jstz.determine();
 		if (serialized) {
-			return moment(serialized).format('MMM Do YY, h:mm:ss a');
+			return moment.tz(serialized, tz.name()).format('YYYY-MM-DD HH:mm:ss z');
 		}
 		return serialized;
 	},
-
+	
+	// send to server
 	serialize : function(deserialized) {
 		if (deserialized) {
-			return moment(deserialized).toDate();
+			return moment.utc(deserialized).toDate();
 		}
 		return deserialized;
 	}

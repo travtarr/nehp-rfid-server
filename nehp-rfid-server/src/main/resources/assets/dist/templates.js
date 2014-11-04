@@ -171,9 +171,7 @@ function program17(depth0,data) {
   data.buffer.push("\r\n						</ul>\r\n						<ul class=\"nav pull-right\">\r\n							");
   stack1 = helpers['if'].call(depth0, "isAuthenticated", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(14, program14, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n						</ul>\r\n          </div>\r\n        </div>\r\n				</div>\r\n			</div>\r\n			<!-- /Navigation Bar -->\r\n\r\n			<!-- Content -->\r\n			<div class=\"container-fluid\">\r\n				<section id=\"content\">\r\n					<button ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "testNotification", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(">Test</button>\r\n					<!--  Page Contents from Ember -->\r\n					");
+  data.buffer.push("\r\n						</ul>\r\n          </div>\r\n        </div>\r\n				</div>\r\n			</div>\r\n			<!-- /Navigation Bar -->\r\n\r\n			<!-- Content -->\r\n			<div class=\"container-fluid\">\r\n				<section id=\"content\">\r\n					<!--  Page Contents from Ember -->\r\n					");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n				</section>\r\n			</div>\r\n			<!-- /Content -->\r\n		</section>\r\n		");
@@ -537,9 +535,9 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 
   data.buffer.push("<div class=\"centered-box\">\r\n	<form ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", {hash:{
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", "", {hash:{
     'on': ("submit")
-  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
   data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Edit Notification</legend>\r\n			<label>Title<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
@@ -807,9 +805,9 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 
   data.buffer.push("<div class=\"centered-box\">\r\n	<form ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", {hash:{
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", "", {hash:{
     'on': ("submit")
-  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
   data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Edit User</legend>\r\n			<label>Username<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),

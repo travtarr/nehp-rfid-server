@@ -34,7 +34,7 @@ public class MainApp extends Application<MainConfiguration> {
 	}
 	
 	private HibernateBundle<MainConfiguration> hibernate = new HibernateBundle<MainConfiguration>(
-			Item.class, User.class, AccessToken.class, Notification.class) {
+			Item.class, User.class, AccessToken.class, Notification.class, Setting.class) {
 		@Override
 		public DataSourceFactory getDataSourceFactory(MainConfiguration configuration) {
 			return configuration.getDataSourceFactory();
@@ -50,6 +50,7 @@ public class MainApp extends Application<MainConfiguration> {
 		AccessTokenDAO accessTokenDAO = new AccessTokenDAO(hibernate.getSessionFactory());
 		UserDAO userDAO = new UserDAO(hibernate.getSessionFactory());
 		NotificationsDAO notificationsDAO = new NotificationsDAO(hibernate.getSessionFactory());
+		SettingDAO settingDAO = new SettingDAO(hibernate.getSessionFactory());
 				
 		// initialize resources
 		final ListResource listResource = new ListResource(itemDAO);
@@ -57,8 +58,10 @@ public class MainApp extends Application<MainConfiguration> {
 		final ItemsResource itemsResource = new ItemsResource(itemDAO);
 		final AuthResource authResource = new AuthResource(
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
-		final UserResource userResource = new UserResource(userDAO, accessTokenDAO);
+		final UserResource userResource = new UserResource(userDAO, accessTokenDAO, settingDAO);
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
+		final SettingResource settingResource = new SettingResource(settingDAO); 
+		
 		// test resource
 		final PingResource pingResource = new PingResource();
 			
@@ -72,6 +75,7 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().register(authResource);
 		environment.jersey().register(userResource);
 		environment.jersey().register(notificationsResource);
+		environment.jersey().register(settingResource);
 		// test resource
 		environment.jersey().register(pingResource);
 

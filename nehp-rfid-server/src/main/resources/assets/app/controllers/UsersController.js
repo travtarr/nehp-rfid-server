@@ -8,8 +8,7 @@ App.UsersController = Ember.ArrayController.extend({
 		remove : function(record) {
 			var _this = this;
 			record.deleteRecord();
-			record.save().then(onSuccess, onFail);
-
+			
 			var onSuccess = function() {
 				_this.get('controllers.application').send('setNotification',
 						'success', 'Success', 'User deleted.');
@@ -21,6 +20,8 @@ App.UsersController = Ember.ArrayController.extend({
 						'Unable to delete this user.');
 				record.rollback();
 			};
+			
+			record.save().then(onSuccess, onFail);
 		}
 	}
 });

@@ -1,12 +1,9 @@
 package com.nehp.rfid_system.server.resources;
 
-import java.util.Enumeration;
-
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -17,13 +14,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
+import com.nehp.rfid_system.server.core.Notification;
 import com.nehp.rfid_system.server.core.NotificationList;
 import com.nehp.rfid_system.server.core.NotificationWrap;
 import com.nehp.rfid_system.server.data.NotificationsDAO;
@@ -66,18 +63,16 @@ public class NotificationsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo({Authority.ROLE_ADMIN}) 
-	public String update(@PathParam("id") String id, @Valid NotificationWrap notification, @Context HttpServletRequest request){
-	
-		Enumeration<String> params = request.getParameterNames(); 
-		while(params.hasMoreElements()){
-		 String paramName = (String)params.nextElement();
-		 System.out.println("[NOTIFICATION] Attribute Name - "+paramName+", Value - "+request.getParameter(paramName));
-		}
+	public Response update(@PathParam("id") String id, @Valid NotificationWrap notification){
+		Notification persistedNotification = notification.getNotification();
+		boolean success = notificationsDAO.update(Long.parseLong(id), notification.getNotification());
 		
-		if(notificationsDAO.update(notification.getNotification()))
-			return "Notification: " + notification.getNotification().getTitle() + " updated successfully";
-		else
-			return "Notification: " + notification.getNotification().getTitle() + " was not updated";
+		NotificationWrap wrap = new NotificationWrap();
+		if( success ){
+			wrap.setNotification( persistedNotification );
+			return Response.status( Response.Status.OK ).entity( wrap ).build();
+		} else
+			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 	
 	@POST
@@ -85,13 +80,17 @@ public class NotificationsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo({Authority.ROLE_ADMIN}) 
-	public String create(@Valid NotificationWrap notification){
-		Long newId = null;
-		newId = notificationsDAO.create(notification.getNotification());
-		if(newId != null)
-			return "Notificaiton: " + notification.getNotification().getTitle() + " created successfully";
-		else
-			return "Notification: " + notification.getNotification().getTitle() + " not created";
+	public Response create ( @Valid NotificationWrap notification ){
+		Notification persistedNotification = notification.getNotification();
+		Long newId = notificationsDAO.create( notification.getNotification() );
+		
+		NotificationWrap wrap = new NotificationWrap();
+		if ( newId != null ) {
+			persistedNotification.setId( newId );
+			wrap.setNotification( persistedNotification );
+			return Response.status( Response.Status.CREATED ).entity( wrap ).build();
+		} else
+			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 	
 	@DELETE

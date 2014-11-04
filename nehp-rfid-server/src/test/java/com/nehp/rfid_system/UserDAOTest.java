@@ -24,7 +24,7 @@ public class UserDAOTest extends DAOTest{
 	
 	@Test
 	public void testGetUserByUsernameAndPassword() throws Exception{
-		Long id = 1L;
+		Long id = 2L;
 		String username = "alpha";
 		String password = "alpha";
 		String email = "alpha@alpha.com";
@@ -52,7 +52,7 @@ public class UserDAOTest extends DAOTest{
 	
 	@Test
 	public void testGetUserById(){
-		Long id = 1L;
+		Long id = 2L;
 		String username = "alpha";
 		
 		getSession().beginTransaction();
@@ -65,12 +65,12 @@ public class UserDAOTest extends DAOTest{
 	
 	@Test
 	public void testGetAllUsers(){
-		Long id = 1L;
+		Long id = 2L;
 		
 		getSession().beginTransaction();
 		List<User> userList = userDAO.getUsersAll();
 		
-		assertThat(userList.get(0).getId()).isEqualTo(id);
-		assertThat(userList.get(1).getId()).isEqualTo(2L);
+		assertThat(userList.get(1).getId()).isEqualTo(id);
+		assertThat(userList.get(2).getId()).isEqualTo(3L);
 	}
 }

@@ -9,6 +9,7 @@ import com.nehp.rfid_system.server.core.Notification;
 import com.nehp.rfid_system.server.data.NotificationsDAO;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 public class NotificationsDAOTest extends DAOTest {
 	
@@ -39,7 +40,35 @@ public class NotificationsDAOTest extends DAOTest {
 		Notification notifications = dao.getById(id);
 		getSession().getTransaction().commit();
 		
+		System.out.println(notifications.getDate().toString());
 		assertThat(notifications.getTitle()).isEqualTo(title);
+	}
+	
+	@Test
+	public void createNotification() {
+		String title = "Hello";
+		String msg = "This is another test";
+		String createdBy = "alpha";
+		Notification notification = new Notification();
+		notification.setCreatedBy(createdBy);
+		notification.setTitle(title);
+		notification.setMessage(msg);
 		
+		getSession().beginTransaction();
+		Long newId = dao.create(notification);
+		getSession().getTransaction().commit();
+		
+		getSession().beginTransaction();
+		Notification newNotification = dao.getById(newId);
+		getSession().getTransaction().commit();
+		
+		System.out.println(newNotification.getDate().toString());
+		assertNotNull(newNotification);
+		
+		getSession().beginTransaction();
+		boolean delete = dao.deleteById(newId);
+		getSession().getTransaction().commit();
+		
+		assertThat(delete).isTrue();
 	}
 }

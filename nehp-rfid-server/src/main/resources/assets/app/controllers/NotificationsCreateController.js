@@ -13,10 +13,8 @@ App.NotificationsCreateController = Ember.Controller.extend({
 				title: _this.get('newNotification.title'),
 				message: _this.get('newNotification.message'),
 				created_by: _this.get('currentUsername'),
-				date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+				date: moment($.now()).format('YYYY-MM-DD HH:mm:ss z')
 			});
-			
-			notification.save().then(onSuccess, onFail);
 			
 			var onSuccess = function(){
 				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -30,6 +28,8 @@ App.NotificationsCreateController = Ember.Controller.extend({
 				'Unable to create notificatoin.');
 				_this.transitionToRoute('notifications');
 			};
+			
+			notification.save().then(onSuccess, onFail);
 		},
 		
 		cancel: function() {

@@ -16,8 +16,8 @@ database:
   password: 5FKL0923pyTm4
 
   # the JDBC URL
-  #url: jdbc:mysql://localhost/test
-  url: jdbc:mysql://ec2-54-85-61-143.compute-1.amazonaws.com/test
+  url: jdbc:mysql://localhost/test
+  #url: jdbc:mysql://ec2-54-85-61-143.compute-1.amazonaws.com/test
 
   # any properties specific to your JDBC driver:
   properties:

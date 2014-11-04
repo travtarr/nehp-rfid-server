@@ -2,16 +2,15 @@ App.UsersEditController = Ember.ObjectController.extend({
 	needs: ['application'],
 	
 	actions : {
-		edit: function(id) {
+		edit: function(obj) {
 			var _this = this;
 
-			this.store.find('user', id).then( function(user) {
+			this.store.find('user', obj.id).then( function(user) {
 				user.set('name', _this.get('name'));
 				user.set('email', _this.get('email'));
 				user.set('admin', _this.get('admin'));
 				user.set('scanner', _this.get('scanner'));
 				
-				user.save().then(onSuccess, onFail);
 				
 				var onSuccess = function(){
 					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -25,6 +24,8 @@ App.UsersEditController = Ember.ObjectController.extend({
 					'Unable to edit this user.');
 					_this.transitionToRoute('users');
 				};
+				
+				user.save().then(onSuccess, onFail);
 			});
 		},
 		

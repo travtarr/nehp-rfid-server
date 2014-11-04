@@ -25,10 +25,12 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
+import com.nehp.rfid_system.server.core.Setting;
 import com.nehp.rfid_system.server.core.User;
 import com.nehp.rfid_system.server.core.UserList;
 import com.nehp.rfid_system.server.core.UserWrap;
 import com.nehp.rfid_system.server.data.AccessTokenDAO;
+import com.nehp.rfid_system.server.data.SettingDAO;
 import com.nehp.rfid_system.server.data.UserDAO;
 import com.sun.jersey.api.Responses;
 
@@ -36,12 +38,16 @@ import com.sun.jersey.api.Responses;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 	
+	private final long GLOBAL_SETTINGS_ID = 1L;
+	
 	private final UserDAO userDAO;
 	private final AccessTokenDAO accessTokenDAO;
+	private final SettingDAO settingDAO;
 	
-	public UserResource(UserDAO user, AccessTokenDAO accessTokenDAO){
+	public UserResource(UserDAO user, AccessTokenDAO accessTokenDAO, SettingDAO settingDAO){
 		this.userDAO = user;
 		this.accessTokenDAO = accessTokenDAO;
+		this.settingDAO = settingDAO;
 	}
 	
 	@GET
@@ -59,16 +65,28 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_ADMIN) 
-	public String createUser(UserWrap user){
+	public Response createUser ( UserWrap user ){
+		//User newUser = user.getUser();
 		Long userId = null;
-		Optional<Long> opt = userDAO.create(user.getUser());
+		Optional<Long> opt = userDAO.create( user.getUser() );
 		if(opt.isPresent()){
 			userId = opt.get();
 		}
-		if(userId != null)
-			return "User: " + user.getUser().getUsername() + " created successfully with id: " + userId;
-		else
-			return "User: " + user.getUser().getUsername() + " was not created";
+		if ( userId != null ) {
+			/* Create Settings Profile for new user */
+			// grab global settings profile
+			Setting setting = settingDAO.getById(GLOBAL_SETTINGS_ID);
+			setting.setUser(userId);
+			setting.setUserChanged(false);
+			settingDAO.create(setting);
+			
+			UserWrap wrap = new UserWrap();
+			User newUser = userDAO.getUserById( userId ).get();
+			wrap.setUser( newUser );
+			
+			return Response.status( Response.Status.CREATED ).entity( wrap ).build();
+		} else
+			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 	
 	@DELETE
@@ -109,24 +127,32 @@ public class UserResource {
 	@Path("/{user_id}")
 	@UnitOfWork
 	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
-	public String updateUser( @PathParam("user_id") String userId, UserWrap user, @Context HttpServletRequest request){
+	public Response updateUser( @PathParam("user_id") String userId, UserWrap user, @Context HttpServletRequest request){
 		
 		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
 		Long currentUserId = accessTokenDAO.findAccessTokenById(accessTokenUUID).get().getUserId();
 		User currentUser = userDAO.getUserById(currentUserId).get();
 		
 		// User can only update own information, admin can update anyone
-		if((currentUserId == Long.getLong(userId)) || currentUser.getAdmin() == true){
-			if(userDAO.update(user.getUser()))
-				return "User: " + user.getUser().getUsername() + " updated successfully";
-			else
-				return "User: " + user.getUser().getUsername() + " was not updated";
+		if( ( currentUserId == Long.getLong(userId) ) || currentUser.getAdmin() == true ){
+			if( userDAO.update( user.getUser() ) ){
+				UserWrap wrap = new UserWrap();
+				User updatedUser = userDAO.getUserById( Long.getLong(userId) ).get();
+				wrap.setUser(updatedUser);
+				return Response.status( Response.Status.OK ).entity( wrap ).build();
+			} else {
+				return Response.status( Response.Status.BAD_REQUEST ).build();
+			}
 		} else {
-			return "Not allowed to update another user.";
+			return Response.status( Response.Status.BAD_REQUEST ).build();
 		}
 	}
 	
-	
+	/**
+	 * Gets the UUID from the access token.
+	 * @param accessToken
+	 * @return
+	 */
 	private UUID getUUID(String accessToken){
 		
 		final String PREFIX = "bearer";
@@ -144,4 +170,9 @@ public class UserResource {
 		return null;
 	}
 	
+	
+	@SuppressWarnings("unused")
+	private void sendMail(String senderEmail, String receiverEmail, String message, String title){
+		
+	}
 }

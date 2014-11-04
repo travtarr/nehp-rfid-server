@@ -11,10 +11,8 @@ App.UsersCreateController = Ember.Controller.extend({
 				email: _this.get('newUser.email'),
 				admin: _this.get('newUser.admin'),
 				scanner: _this.get('newUser.scanner'),
-				user_created_date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+				user_created_date: moment($.now()).format('YYYY-MM-DD HH:mm:ss z')
 			});
-			
-			user.save().then(onSuccess, onFail);
 			
 			var onSuccess = function(){
 				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -28,6 +26,8 @@ App.UsersCreateController = Ember.Controller.extend({
 						'Unable to create this user');
 				_this.transitionToRoute('users');
 			};
+			
+			user.save().then(onSuccess, onFail);
 		},
 		
 		cancel: function() {

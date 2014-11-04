@@ -23,16 +23,20 @@ App.Store = DS.Store.extend({
 });
 
 App.SimpledateTransform = DS.Transform.extend({
+		
+	// from server
 	deserialize : function(serialized) {
+		var tz = jstz.determine();
 		if (serialized) {
-			return moment(serialized).format('MMM Do YY, h:mm:ss a');
+			return moment.tz(serialized, tz.name()).format('YYYY-MM-DD HH:mm:ss z');
 		}
 		return serialized;
 	},
-
+	
+	// send to server
 	serialize : function(deserialized) {
 		if (deserialized) {
-			return moment(deserialized).toDate();
+			return moment.utc(deserialized).toDate();
 		}
 		return deserialized;
 	}
@@ -186,18 +190,20 @@ var config  = {
 		remove: function(record) {
 			var _this = this;
 			record.deleteRecord();
-			record.save().then(onSuccess, onFail);
-
+			
 			var onSuccess = function() {
-				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+				console.log("successfully deleted notification");
+				this.get('controllers.application').send('setNotification', 'success', 'Success', 
 				'Notificaiton deleted.');
 			};
 			
 			var onFail = function(error) {
-				_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
-				'Unable to delete this notificatoin.');
+				this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+				'Unable to delete this notification.');
 				record.rollback();
 			};
+			
+			record.save().then(onSuccess, onFail);
 		}
 	}
 });;App.NotificationsCreateController = Ember.Controller.extend({
@@ -215,10 +221,8 @@ var config  = {
 				title: _this.get('newNotification.title'),
 				message: _this.get('newNotification.message'),
 				created_by: _this.get('currentUsername'),
-				date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+				date: moment($.now()).format('YYYY-MM-DD HH:mm:ss z')
 			});
-			
-			notification.save().then(onSuccess, onFail);
 			
 			var onSuccess = function(){
 				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -232,6 +236,8 @@ var config  = {
 				'Unable to create notificatoin.');
 				_this.transitionToRoute('notifications');
 			};
+			
+			notification.save().then(onSuccess, onFail);
 		},
 		
 		cancel: function() {
@@ -241,16 +247,14 @@ var config  = {
 });;App.NotificationsEditController = Ember.ObjectController.extend({
 	needs : ['application'],
 	actions : {
-		edit: function(id) {
+		edit: function(obj) {
 			var _this = this;
 
-			this.store.find('notification', id).then( function(notification) {
+			this.store.find('notification', obj.id).then( function(notification) {
 				notification.set('title',  _this.get('title'));
 				notification.set('message', _this.get('message'));
 				notification.set('created_by', _this.get('controllers.application.currentUser').username);
-				notification.set('date', moment($.now()).format('MMM Do YY, h:mm:ss a'));
-				
-				notification.save().then(onSuccess, onFail);
+				notification.set('date', moment($.now()).format('YYYY-MM-DD HH:mm:ss z'));
 				
 				var onSuccess = function(){
 					_this.controllerFor('application').send('setNotification', 'success', 'Success', 
@@ -264,6 +268,8 @@ var config  = {
 					'Unable to edit notificatoin.');
 					_this.transitionToRoute('notifications');
 				};
+				
+				notification.save().then(onSuccess, onFail);
 			});
 		},
 		
@@ -274,6 +280,7 @@ var config  = {
 });;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
+		Ember.$.cookie.json = true;
 		if (Ember.$.cookie('access_token')) {
 			Ember.$.ajaxSetup({
 				headers : {
@@ -290,11 +297,21 @@ var config  = {
 	// create and set the token & current user objects based on the respective
 	// cookies
 	token : Ember.$.cookie('access_token'),
-	currentUser : Ember.$.cookie('auth_user'),
+	currentUser : (function() { 
+		if(typeof Ember.$.cookie('auth_user') == 'string')
+			return JSON.parse(Ember.$.cookie('auth_user'));
+		else
+			return Ember.$.cookie('auth_user');
+	}).property(),
 	lastRequest : Ember.$.cookie('last_request'),
 
 	// create cookie for administration token
-	admin : Ember.$.cookie('admin_token'),
+	admin : (function() {
+		if(Ember.$.cookie('admin_token') === true)
+			return true;
+		else
+			return false;
+	}).property(),
 
 	tokenChanged : (function() {
 		if (Ember.isEmpty(this.get('token'))) {
@@ -430,8 +447,7 @@ var config  = {
 		remove : function(record) {
 			var _this = this;
 			record.deleteRecord();
-			record.save().then(onSuccess, onFail);
-
+			
 			var onSuccess = function() {
 				_this.get('controllers.application').send('setNotification',
 						'success', 'Success', 'User deleted.');
@@ -443,6 +459,8 @@ var config  = {
 						'Unable to delete this user.');
 				record.rollback();
 			};
+			
+			record.save().then(onSuccess, onFail);
 		}
 	}
 });;App.UsersCreateController = Ember.Controller.extend({
@@ -458,10 +476,8 @@ var config  = {
 				email: _this.get('newUser.email'),
 				admin: _this.get('newUser.admin'),
 				scanner: _this.get('newUser.scanner'),
-				user_created_date: moment($.now()).format('MMM Do YY, h:mm:ss a')
+				user_created_date: moment($.now()).format('YYYY-MM-DD HH:mm:ss z')
 			});
-			
-			user.save().then(onSuccess, onFail);
 			
 			var onSuccess = function(){
 				_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -475,6 +491,8 @@ var config  = {
 						'Unable to create this user');
 				_this.transitionToRoute('users');
 			};
+			
+			user.save().then(onSuccess, onFail);
 		},
 		
 		cancel: function() {
@@ -492,16 +510,15 @@ var config  = {
 	needs: ['application'],
 	
 	actions : {
-		edit: function(id) {
+		edit: function(obj) {
 			var _this = this;
 
-			this.store.find('user', id).then( function(user) {
+			this.store.find('user', obj.id).then( function(user) {
 				user.set('name', _this.get('name'));
 				user.set('email', _this.get('email'));
 				user.set('admin', _this.get('admin'));
 				user.set('scanner', _this.get('scanner'));
 				
-				user.save().then(onSuccess, onFail);
 				
 				var onSuccess = function(){
 					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
@@ -515,6 +532,8 @@ var config  = {
 					'Unable to edit this user.');
 					_this.transitionToRoute('users');
 				};
+				
+				user.save().then(onSuccess, onFail);
 			});
 		},
 		

@@ -41,32 +41,41 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
+	@JsonProperty
 	private long id;
 	
 	@Column(name = "username", unique = true, nullable = false, length = 32)
+	@JsonProperty
 	private String username;
 	
 	@Column(name = "name", nullable = false, length = 32)
+	@JsonProperty
 	private String name;
 	
 	@Column(name = "email", nullable = false, length = 64)
+	@JsonProperty
 	private String email;
 	
 	@Column(name = "password", nullable = false, length = 89)
+	@JsonProperty
 	private String password;
 	
-	@Column(name = "last_login_date", nullable = false)
+	@Column(name = "last_login_date", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	@JsonProperty
 	private DateTime lastLoginDate;
 	
 	@Column(name = "user_created_date", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	@JsonProperty
 	private DateTime userCreatedDate;
 	
 	@Column(name = "admin", nullable = false)
+	@JsonProperty
 	private boolean admin;
 	
 	@Column(name = "scanner", nullable = true)
+	@JsonProperty
 	private boolean scanner;
 	
 	// SETTERS
@@ -99,43 +108,44 @@ public class User {
 	}
 	
 	// GETTERS
-	@JsonProperty
+	
 	public long getId(){
 		return id;
 	}
-	@JsonProperty
+
 	public String getUsername(){
 		return username;
 	}
-	@JsonProperty
+
 	public String getName(){
 		return name;
 	}
-	@JsonProperty
+
 	public String getEmail(){
 		return email;
 	}
-	@JsonProperty
+
 	public String getPassword(){
 		return password;
 	}
-	@JsonProperty
+
 	public DateTime getLastLoginDate(){
 		return lastLoginDate;
 	}
-	@JsonProperty
+
 	public DateTime getUserCreatedDate(){
 		return userCreatedDate;
 	}
-	@JsonProperty
+
 	public boolean getAdmin(){
 		return admin;
 	}
-	@JsonProperty
+
 	public boolean getScanner(){
 		return scanner;
 	}
 	
+	@JsonProperty
 	public boolean hasAllAuthorities(Set<Authority> requiredAuthorities){
 		Set<Authority> authorities = Sets.newHashSet();
 		if(admin)
@@ -148,6 +158,7 @@ public class User {
 		return authorities.containsAll(requiredAuthorities);
 	}
 	
+	@JsonProperty
 	public boolean hasAuthority(Authority authority){
 		return hasAllAuthorities(Sets.newHashSet(authority));
 	}

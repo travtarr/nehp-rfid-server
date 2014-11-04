@@ -1,6 +1,7 @@
 App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
+		Ember.$.cookie.json = true;
 		if (Ember.$.cookie('access_token')) {
 			Ember.$.ajaxSetup({
 				headers : {
@@ -17,11 +18,21 @@ App.SessionsController = Ember.Controller.extend({
 	// create and set the token & current user objects based on the respective
 	// cookies
 	token : Ember.$.cookie('access_token'),
-	currentUser : Ember.$.cookie('auth_user'),
+	currentUser : (function() { 
+		if(typeof Ember.$.cookie('auth_user') == 'string')
+			return JSON.parse(Ember.$.cookie('auth_user'));
+		else
+			return Ember.$.cookie('auth_user');
+	}).property(),
 	lastRequest : Ember.$.cookie('last_request'),
 
 	// create cookie for administration token
-	admin : Ember.$.cookie('admin_token'),
+	admin : (function() {
+		if(Ember.$.cookie('admin_token') === true)
+			return true;
+		else
+			return false;
+	}).property(),
 
 	tokenChanged : (function() {
 		if (Ember.isEmpty(this.get('token'))) {
