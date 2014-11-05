@@ -54,3 +54,11 @@ database:
   # Whether or not connections will be validated after being returned to the pool. 
   # If the connection fails to validate, it will be dropped from the pool.
   checkConnectionOnReturn: true
+  
+# Credentials to connect to third-party smtp server for outgoing mail 
+email:
+	hostName: smtp.gmail.com
+	hostPort: 465
+	emailAddress: travis.tarr@nehp.com
+	emailUser: travis.tarr@nehp.com
+	emailPassword: Katie6574

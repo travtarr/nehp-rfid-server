@@ -48,7 +48,7 @@ public class MainApp extends Application<MainConfiguration> {
 		// intialize DAOs
 		ItemDAO itemDAO = new ItemDAO(hibernate.getSessionFactory());
 		AccessTokenDAO accessTokenDAO = new AccessTokenDAO(hibernate.getSessionFactory());
-		UserDAO userDAO = new UserDAO(hibernate.getSessionFactory());
+		UserDAO userDAO = new UserDAO(hibernate.getSessionFactory(), configuration.getEmailCredentials());
 		NotificationsDAO notificationsDAO = new NotificationsDAO(hibernate.getSessionFactory());
 		SettingDAO settingDAO = new SettingDAO(hibernate.getSessionFactory());
 				

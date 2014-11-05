@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import com.nehp.rfid_system.server.core.EmailCredentials;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
@@ -28,6 +29,10 @@ public class MainConfiguration extends Configuration {
 	@NotEmpty
 	private String debug;
 	
+	@NotNull
+	@JsonProperty("email")
+	private EmailCredentials email = new EmailCredentials();
+	
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }	
@@ -37,21 +42,23 @@ public class MainConfiguration extends Configuration {
 		this.realm = realm;
 	}
 	
-	@JsonProperty
 	public String getRealm(){
 		return realm;
 	}
 	
-	@JsonProperty
 	public ImmutableList<String> getAllowedGrantTypes(){
 		return allowedGrantTypes;
 	}
 	
-	@JsonProperty
 	public Boolean getDebug(){
 		if(debug.equals("true"))
 			return true;
 		else
 			return false;
 	}
+	
+	public EmailCredentials getEmailCredentials(){
+		return email;
+	}
+	
 }

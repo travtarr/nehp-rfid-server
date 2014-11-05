@@ -19,7 +19,7 @@ public class UserDAOTest extends DAOTest{
 	
 	@Before
 	public void initialize() {
-		userDAO = new UserDAO(sessionFactory);
+		userDAO = new UserDAO(sessionFactory, emailCreds);
 	}
 	
 	@Test
@@ -29,8 +29,6 @@ public class UserDAOTest extends DAOTest{
 		String password = "alpha";
 		String email = "alpha@alpha.com";
 		String name = "Alpha";
-		DateTime loginDate = new DateTime(2012, 4, 23, 22, 25, 43);
-		DateTime createdDate = new DateTime(2012, 2, 22, 19, 22, 21);
 		
 		User user = new User();
 		
@@ -45,9 +43,7 @@ public class UserDAOTest extends DAOTest{
 		assertThat(user.getEmail()).isEqualTo(email);
 		assertThat(user.getUsername()).isEqualTo(username);
 		assertThat(PasswordHelper.check(password, user.getPassword())).isTrue();
-		assertThat(user.getLastLoginDate()).isEqualTo(loginDate);
 		assertThat(user.getName()).isEqualTo(name);
-		assertThat(user.getUserCreatedDate()).isEqualTo(createdDate);
 	}
 	
 	@Test
@@ -72,5 +68,40 @@ public class UserDAOTest extends DAOTest{
 		
 		assertThat(userList.get(1).getId()).isEqualTo(id);
 		assertThat(userList.get(2).getId()).isEqualTo(3L);
+	}
+	
+	/**
+	 * Make sure local smtp server is running.
+	 */
+	@Test
+	public void testCreateUser(){
+		// set-up new user
+		User user = new User();
+		user.setAdmin(false);
+		user.setEmail("root@localhost.com");
+		user.setName("root");
+		user.setScanner(false);
+		user.setUsername("root");
+		user.setUserCreatedDate(new DateTime());
+		
+		getSession().beginTransaction();
+		Optional<Long> result = userDAO.create(user);
+		getSession().getTransaction().commit();
+		
+		assertThat(result.isPresent()).isTrue();
+		assertThat(result.get()).isGreaterThan(0L);
+	}
+	
+	/**
+	 * Make sure local smtp server is running.
+	 */
+	@Test
+	public void testResetPassword(){
+		Long userId = 5L;
+		getSession().beginTransaction();
+		boolean password = userDAO.resetPassword(userId);
+		getSession().getTransaction().commit();
+		
+		assertThat(password).isTrue();
 	}
 }

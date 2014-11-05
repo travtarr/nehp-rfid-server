@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
+import com.nehp.rfid_system.server.core.AccessToken;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Setting;
 import com.nehp.rfid_system.server.core.User;
@@ -50,6 +51,7 @@ public class UserResource {
 		this.settingDAO = settingDAO;
 	}
 	
+	
 	@GET
 	@Timed
 	@UnitOfWork
@@ -59,6 +61,7 @@ public class UserResource {
 		list.setUsers(userDAO.getUsersAll());
 		return list;
 	}
+	
 	
 	@POST
 	@Timed
@@ -89,6 +92,38 @@ public class UserResource {
 			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 	
+	
+	@GET
+	@Timed
+	@Path("/{user_id}/pwreset")
+	@UnitOfWork
+	@RestrictedTo({Authority.ROLE_ADMIN, Authority.ROLE_USER})
+	public Response resetPassword( @PathParam("user_id") String userId, String verifyEmail, @Context HttpServletRequest request ){
+		
+		UUID accessTokenUUID = getUUID(request.getHeader(HttpHeaders.AUTHORIZATION));
+		if(accessTokenUUID != null){
+			Long userIdLong = Long.parseLong(userId);
+			
+			// User can only get information about oneself unless user is an admin
+			AccessToken accessToken = accessTokenDAO.findAccessTokenById(accessTokenUUID).get();
+			User user = userDAO.getUserById( userIdLong ).get();
+			
+			// also make sure email given matches user
+			if( ( (accessToken.getUserId()) == userIdLong && user.getEmail().equals(verifyEmail) )
+					|| userDAO.isAdmin( accessToken.getUserId() ) ){
+								
+				if ( userDAO.resetPassword(userIdLong) ){
+					return Response.status( Response.Status.OK ).build();
+				} else {
+					return Response.status( Response.Status.NOT_MODIFIED ).build();
+				}
+			}
+		}
+		// must not have succeeded in verifying identity
+		return Response.status( Response.Status.UNAUTHORIZED ).build();
+	}
+	
+	
 	@DELETE
 	@Timed
 	@Path("/{user_id}")
@@ -102,6 +137,7 @@ public class UserResource {
 			throw new WebApplicationException(response);
 		}
 	}
+	
 	
 	@GET
 	@Timed
@@ -168,11 +204,5 @@ public class UserResource {
             }
 		}
 		return null;
-	}
-	
-	
-	@SuppressWarnings("unused")
-	private void sendMail(String senderEmail, String receiverEmail, String message, String title){
-		
 	}
 }

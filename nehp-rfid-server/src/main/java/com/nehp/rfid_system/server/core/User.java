@@ -60,6 +60,10 @@ public class User {
 	@JsonProperty
 	private String password;
 	
+	@Column(name = "password_reset", nullable = true)
+	@JsonProperty
+	private boolean passwordReset;
+	
 	@Column(name = "last_login_date", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@JsonProperty
@@ -94,6 +98,9 @@ public class User {
 	public void setPassword(String password){
 		this.password = password;
 	}
+	public void setPasswordReset(boolean reset){
+		this.passwordReset = reset;
+	}
 	public void setLastLoginDate(DateTime date){
 		this.lastLoginDate = date;
 	}
@@ -127,6 +134,10 @@ public class User {
 
 	public String getPassword(){
 		return password;
+	}
+	
+	public boolean getPasswordReset(){
+		return passwordReset;
 	}
 
 	public DateTime getLastLoginDate(){
