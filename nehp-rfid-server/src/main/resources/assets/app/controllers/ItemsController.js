@@ -18,17 +18,19 @@ App.ItemsController = Ember.ArrayController.extend({
 			});
 		}
 	}.property('stage', 'arrangedContent'),
-	toggleSort: function(column) {
-	    if(this.get('sortedColumn') == column) {
-	      this.toggleProperty('sortAscending');
-	    } else {
-	      this.set('sortProperties', [column]);
-	      this.set('sortAscending', true);
-	    }
-	},
+	
 	actions: {
 		setStage: function(stage) {
 			this.set('stage', [stage]);
+		},
+		
+		toggleSort: function(column) {
+		    if(this.get('sortedColumn') == column) {
+		      this.toggleProperty('sortAscending');
+		    } else {
+		      this.set('sortProperties', [column]);
+		      this.set('sortAscending', true);
+		    }
 		}
 	}
 });

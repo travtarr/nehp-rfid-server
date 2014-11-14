@@ -1,10 +1,11 @@
 <div class="centered-box">
-	<form {{action 'login' on="submit"}}>
-		<fieldset>
-			<legend>Sign In</legend>
-			<label>User ID:<br>{{input type='text' valueBinding='username' required="required"}}</label>
-			<label>Password:<br>{{input type='password' valueBinding='password' required="required"}}</label>
-			<label>{{input type='submit' value="Log In"}}</label>
-		</fieldset>
-	</form>
+<form {{action 'login' on="submit"}}>
+	<fieldset>
+		<legend>Sign In</legend>
+		<label>User ID:<br>{{input type='text' valueBinding='username' required="required"}}</label>
+		<label>Password:<br>{{input type='password' valueBinding='password' required="required"}}</label>
+		<label>{{input type='submit' value="Log In"}}</label>
+		<label><br>{{#link-to 'reset'}}Forgot your password?{{/link-to}}</label>
+	</fieldset>
+</form>
 </div>

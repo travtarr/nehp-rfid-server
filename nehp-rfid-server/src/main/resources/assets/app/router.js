@@ -1,7 +1,7 @@
 App.Router.map(function() {
   this.resource('summary'); 
   this.resource('items', function() {
-    this.resource('item', { path:'/:item' });
+    this.resource('item', { path:'/:item_id' });
   });
   this.resource('user', { path:'/user/:user_id' });
   this.resource('admin', function(){
@@ -16,4 +16,6 @@ App.Router.map(function() {
 	  this.resource('settings');
   });
   this.resource('sessions');
+  this.route('reset');
+  this.route('change');
 });

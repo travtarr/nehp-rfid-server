@@ -1,12 +1,20 @@
 package com.nehp.rfid_system.server;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.joda.time.DateTimeZone;
 
 import com.nehp.rfid_system.server.auth.RestrictedToMethodDispatchAdapter;
 import com.nehp.rfid_system.server.auth.SimpleAuthenticator;
 import com.nehp.rfid_system.server.core.*;
 import com.nehp.rfid_system.server.data.*;
+import com.nehp.rfid_system.server.filters.HttpsRedirectFilter;
 import com.nehp.rfid_system.server.resources.*;
+
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -24,6 +32,10 @@ public class MainApp extends Application<MainConfiguration> {
 	@Override
 	public String getName() {
 		return "nehp-rfid-server";
+	}
+	
+	void addHttpsForward(ServletContextHandler handler) {
+		handler.addFilter(new FilterHolder(new HttpsRedirectFilter()), "/*", EnumSet.allOf(DispatcherType.class));
 	}
 
 	@Override
@@ -67,6 +79,10 @@ public class MainApp extends Application<MainConfiguration> {
 			
 		// set jersey properties
 		environment.jersey().setUrlPattern("/service/*");
+		
+		// add https forward
+		if (configuration.isHttpsRedirect())
+			addHttpsForward(environment.getApplicationContext());
 		
 		// register resources
 		environment.jersey().register(listResource);

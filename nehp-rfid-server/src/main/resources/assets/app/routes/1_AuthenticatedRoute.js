@@ -11,7 +11,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	
 	var currenttime = $.now();
 	var lasttime = this.controllerFor('sessions').get('lastRequest');
-	console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
+	//console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
 	if(((currenttime - lasttime) > 600000)){
 		this.controllerFor('sessions').reset();
 		return this.redirectToLogin(transition);	

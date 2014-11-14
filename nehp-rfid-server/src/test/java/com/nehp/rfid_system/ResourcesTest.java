@@ -82,4 +82,11 @@ public class ResourcesTest {
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 		System.out.println(response.getEntity(String.class));
 	}
+	
+	@Test
+	public void settingsGetByIdReturnsStatus200(){
+		ClientResponse response = helper.get("/settings/2", helper.accessToken());
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		System.out.println(response.getEntity(String.class));
+	}
 }

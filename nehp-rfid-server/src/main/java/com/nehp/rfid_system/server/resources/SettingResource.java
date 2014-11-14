@@ -14,10 +14,11 @@ import javax.ws.rs.core.MediaType;
 import com.codahale.metrics.annotation.Timed;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
+import com.nehp.rfid_system.server.core.SettingList;
 import com.nehp.rfid_system.server.core.SettingWrap;
 import com.nehp.rfid_system.server.data.SettingDAO;
 
-@Path("/setting")
+@Path("/settings")
 @Produces(MediaType.APPLICATION_JSON)
 public class SettingResource {
 	
@@ -26,15 +27,25 @@ public class SettingResource {
 	public SettingResource(SettingDAO dao){
 		this.settingDAO = dao;
 	}
+	
+	@GET
+	@Timed
+	@UnitOfWork
+	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
+	public SettingList getAll(){
+		SettingList list = new SettingList();
+		list.setSettings(settingDAO.getAll());
+		return list;
+	}
 		
 	@GET
 	@Timed
 	@UnitOfWork
 	@Path("/{id}")
-	@RestrictedTo({Authority.ROLE_USER})
+	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
 	public SettingWrap getById(@PathParam("id") String id){
 		SettingWrap wrap = new SettingWrap();
-		wrap.setSetting(settingDAO.getById(Long.parseLong(id)));
+		wrap.setSetting(settingDAO.getByUserId(Long.parseLong(id)));
 		return wrap;
 	}
 	
@@ -42,7 +53,7 @@ public class SettingResource {
 	@Timed
 	@UnitOfWork
 	@Path("/{id}/ByUserId")
-	@RestrictedTo({Authority.ROLE_USER})
+	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
 	public SettingWrap getByUserId(@PathParam("id") String id){
 		SettingWrap wrap = new SettingWrap();
 		wrap.setSetting(settingDAO.getByUserId(Long.parseLong(id)));
@@ -54,7 +65,7 @@ public class SettingResource {
 	@UnitOfWork
 	@Path("/[id]")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RestrictedTo({Authority.ROLE_USER})
+	@RestrictedTo({Authority.ROLE_USER, Authority.ROLE_ADMIN})
 	public String updateById(@PathParam("id") String id, @Valid SettingWrap setting){
 		if(settingDAO.update(setting.getSetting()))
 			return "Setting updated successfully";

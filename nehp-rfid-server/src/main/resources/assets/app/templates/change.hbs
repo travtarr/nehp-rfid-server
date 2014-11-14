@@ -1,0 +1,10 @@
+<div class="centered-box">
+	<form {{action 'change' on="submit"}}>
+		<fieldset>
+			<legend>Please choose a new password</legend>
+			<label>Password<br>{{input type='password' valueBinding='password' required="required"}}</label>
+			<label>Verify Password<br>{{input type='password' valueBinding='verify-password' required="required"}}</label>
+			<label>{{input type='submit' value="Reset Password"}}</label>
+		</fieldset>
+	</form>
+</div>

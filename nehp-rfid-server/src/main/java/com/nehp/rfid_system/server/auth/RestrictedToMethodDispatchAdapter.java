@@ -112,7 +112,7 @@ public class RestrictedToMethodDispatchAdapter<T> implements
 
 				UUID sessionToken = null;
 
-				System.out.println("[Token array] " + tokens[0] + " , " + tokens[1]);
+				//System.out.println("[Token array] " + tokens[0] + " , " + tokens[1]);
 				
 				if (tokens.length != 2) {
 					throwUnauthorized();
@@ -129,7 +129,7 @@ public class RestrictedToMethodDispatchAdapter<T> implements
 						.authenticate(credentials);
 				
 				if (result.isPresent()) {
-					System.out.println("[RestrictedTo] dispatches successfully");
+					//System.out.println("[RestrictedTo] dispatches successfully");
 					underlying.dispatch(resource, context);
 				} else {
 					System.out.println("Doesn't get credentials authenticated");

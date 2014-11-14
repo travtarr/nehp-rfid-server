@@ -28,7 +28,6 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 			throws AuthenticationException {
 		UUID accessTokenUUID;
 		
-		System.out.println("[Authenticator] Gets inside authenticate");
 		// Check for valid UUID
 		try {
 			accessTokenUUID = credentials.getSessionToken();
@@ -81,7 +80,6 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		session.close();
 		
 		// Return the user's id for processing
-		System.out.println("[Authenticator] leaving successfully from authenticate with id: " + accessTokenOpt.get().getUserId());
 		return Optional.of(accessTokenOpt.get().getUserId());
 	}
 

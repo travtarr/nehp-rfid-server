@@ -62,6 +62,10 @@ App.SessionsController = Ember.Controller.extend({
 	},
 
 	actions : {
+		
+		forgotPW : function(){
+			this.transitionToRoute('reset');
+		},
 
 		login : function() {
 			var _this = this;
@@ -125,15 +129,20 @@ App.SessionsController = Ember.Controller.extend({
 								key.save();
 
 								user.get('apiKeys').content.push(key);
-
-								// check if there is any attemptedTransition to
-								// retry it
-								// or go to the secret route
-								if (attemptedTrans) {
-									attemptedTrans.retry();
-									_this.set('attemptedTransition', null);
+								
+								// force user to update password
+								if( user.get('password_reset') ){
+									_this.transitionToRoute('change');
 								} else {
-									_this.transitionToRoute('index');
+									// check if there is any attemptedTransition to
+									// retry it
+									// or go to the secret route
+									if (attemptedTrans) {
+										attemptedTrans.retry();
+										_this.set('attemptedTransition', null);
+									} else {
+										_this.transitionToRoute('index');
+									}
 								}
 							}
 				    );

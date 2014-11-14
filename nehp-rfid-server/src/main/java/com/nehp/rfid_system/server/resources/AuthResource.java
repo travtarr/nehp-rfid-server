@@ -44,9 +44,9 @@ public class AuthResource {
 					@FormParam("username") String username,
 					@FormParam("password") String password
 	){
-		System.out.println("grant_type=" + grantType);
-		System.out.println("username=" + username);
-		System.out.println("password=" + password);
+		//System.out.println("grant_type=" + grantType);
+		//System.out.println("username=" + username);
+		//System.out.println("password=" + password);
 		
 		// Check if the grant type is allowed
 		if(!allowedGrantTypes.contains(grantType)){
@@ -69,7 +69,7 @@ public class AuthResource {
 					.add(Json.createObjectBuilder()
 							.add("access_token", accessToken.getId().toString())
 							.add("user_id", userId.toString()))).build();
-		System.out.println("[AuthResource] Returned Object: " + jo.toString());
+		//System.out.println("[AuthResource] Returned Object: " + jo.toString());
 		return jo;
 	}
 }

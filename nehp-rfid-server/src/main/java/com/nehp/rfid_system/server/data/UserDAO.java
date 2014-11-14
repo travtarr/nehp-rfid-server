@@ -50,6 +50,22 @@ public class UserDAO extends AbstractDAO<User> {
 			return Optional.absent();
 		}
 	}
+	
+	public Optional<User> getUserByEmail(String email) {
+		Optional<User> user = null;
+		
+		user = Optional.of(list(namedQuery("users.getByEmail")
+						.setParameter("email", email, StringType.INSTANCE)).get(0));
+		return user;
+	}
+	
+	public Optional<User> getUserByUsername(String username) {
+		Optional<User> user = null;
+		
+		user = Optional.of(list(namedQuery("users.getByUsername")
+						.setParameter("username", username, StringType.INSTANCE)).get(0));
+		return user;
+	}
 
 	public Optional<User> getUserById(Long id) {
 		User user = null;
@@ -96,6 +112,16 @@ public class UserDAO extends AbstractDAO<User> {
 		return Optional.of(persist(newUser).getId());
 	}
 	
+	public boolean updatePassword (User user, String newPassword){
+		try {
+			user.setPassword( PasswordHelper.getSaltedHash(newPassword) );
+		} catch (Exception e) {
+			return false;
+		}
+		user.setPasswordReset(false);
+		return true;
+	}
+	
 	
 	/**
 	 * Resets the user's password and sets the password reset flag
@@ -135,7 +161,11 @@ public class UserDAO extends AbstractDAO<User> {
 		return true;
 	}
 	
-
+	/**
+	 * Updates the user's information, including password.
+	 * @param user
+	 * @return
+	 */
 	public boolean update(User user) {
 
 		// Make sure we update the correct user
@@ -145,6 +175,15 @@ public class UserDAO extends AbstractDAO<User> {
 			return false;
 
 		updateUser = user;
+		
+		// make sure we hash the password
+		try {
+			updateUser.setPassword( PasswordHelper.getSaltedHash( user.getPassword() ) );
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		persist(updateUser);
 
 		return true;

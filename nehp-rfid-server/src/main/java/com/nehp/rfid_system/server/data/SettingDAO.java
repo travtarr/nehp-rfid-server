@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.data;
 
+import java.util.List;
+
 import io.dropwizard.hibernate.AbstractDAO;
 
 import org.hibernate.Criteria;
@@ -9,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.LongType;
 
 import com.nehp.rfid_system.server.core.Setting;
 
@@ -21,12 +24,16 @@ public class SettingDAO extends AbstractDAO<Setting>{
 		factory = sessionFactory;
 	}
 	
+	public List<Setting> getAll(){
+		return list(namedQuery("setting.getAll"));
+	}
+	
 	public Setting getById(Long id){
 		return get(id);
 	}
 	
 	public Setting getByUserId(Long id){
-		return list(namedQuery("setting.getByUser").setParameter(0, id)).get(0);
+		return list(namedQuery("setting.getByUser").setParameter("user", id, LongType.INSTANCE)).get(0);
 	}
 	
 	public Long create(Setting setting){

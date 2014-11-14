@@ -29,6 +29,7 @@ import io.dropwizard.jackson.JsonSnakeCase;
 @NamedQueries({
 	@NamedQuery(name = "users.getAll", query = "FROM User"),
 	@NamedQuery(name = "users.getByUsername", query = "FROM User WHERE username = :username"),
+	@NamedQuery(name = "users.getByEmail", query = "FROM User WHERE email = :email"),
 	@NamedQuery(name = "users.updateByUserId", query = "UPDATE User SET name= :name, "
 			+ "email= :email, password= :password, lastLoginDate= :lastLoginDate WHERE id = :userId"),
 	@NamedQuery(name = "users.deleteByUserId", query = "DELETE FROM User WHERE id = :userId")

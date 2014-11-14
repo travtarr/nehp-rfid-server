@@ -1,1 +1,3 @@
 /config.yml
+/mysql-ssl-ca-cert.pem
+/mysql-ssl-ca-cert.crt

@@ -148,10 +148,41 @@ var config  = {
 			this.send('setNotification', 'success', 'Success', 'Yay you did it.');
 		}
 	}
+});;App.ChangeController = Ember.Controller.extend({
+	needs : ['application'],
+	actions : {
+		change : function() {
+			
+			if( this.get('password') == this.get('verifyPassword') ){
+			
+				_this = this;
+				
+				var formData = { "username": this.get('controllers.application.currentUser').username, "password": this.get('password') };	
+			
+				Ember.$.ajax({
+					url: '/service/users/pwchange',
+					data: formData,
+					type: 'POST',
+					success: function(response){
+						_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+						'Thank you for updating your password.');
+						_this.transitionToRoute('index');
+					},
+					error: function(error) {
+						_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+						'Failed to update your password.');
+					}
+				});
+			}
+			_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+			'Passwords are not equal.');
+			
+		}
+	}
 });;App.IndexController = Ember.ArrayController.extend({
 	sortProperties: ['date'],
 	sortAscending: false
-});;App.ItemsController = Ember.ArrayController.extend({
+});;App.ItemController = Ember.ObjectController.extend({});;App.ItemsController = Ember.ArrayController.extend({
 	sortProperties: ['rfid'],
 	stage: 'ALL',
 	sortedColumn: (function() {
@@ -171,17 +202,19 @@ var config  = {
 			});
 		}
 	}.property('stage', 'arrangedContent'),
-	toggleSort: function(column) {
-	    if(this.get('sortedColumn') == column) {
-	      this.toggleProperty('sortAscending');
-	    } else {
-	      this.set('sortProperties', [column]);
-	      this.set('sortAscending', true);
-	    }
-	},
+	
 	actions: {
 		setStage: function(stage) {
 			this.set('stage', [stage]);
+		},
+		
+		toggleSort: function(column) {
+		    if(this.get('sortedColumn') == column) {
+		      this.toggleProperty('sortAscending');
+		    } else {
+		      this.set('sortProperties', [column]);
+		      this.set('sortAscending', true);
+		    }
 		}
 	}
 });;App.NotificationsController = Ember.ArrayController.extend({
@@ -277,6 +310,35 @@ var config  = {
 			this.transitionToRoute('notifications');
 		}
 	}
+});;App.ResetController = Ember.Controller.extend({
+	needs : ['application'],
+	actions : {
+		reset : function() {
+			_this = this;
+			
+			var formData = { "email": this.get('email') };	
+		
+			Ember.$.ajax({
+				url: '/service/users/pwreset-email',
+				data: formData,
+				type: 'POST',
+				success: function(response){
+					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+					'An email will be sent to you shortly to reset your password.');
+					_this.transitionToRoute('sessions');
+				},
+				error: function(error) {
+					_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+					'Password reset failed, please verify your email address.');
+				}
+			});
+			
+		},
+		
+		cancel : function(){
+			this.transitionToRoute('sessions');
+		}
+	}
 });;App.SessionsController = Ember.Controller.extend({
 	init : function() {
 		this._super();
@@ -341,6 +403,10 @@ var config  = {
 	},
 
 	actions : {
+		
+		forgotPW : function(){
+			this.transitionToRoute('reset');
+		},
 
 		login : function() {
 			var _this = this;
@@ -404,15 +470,20 @@ var config  = {
 								key.save();
 
 								user.get('apiKeys').content.push(key);
-
-								// check if there is any attemptedTransition to
-								// retry it
-								// or go to the secret route
-								if (attemptedTrans) {
-									attemptedTrans.retry();
-									_this.set('attemptedTransition', null);
+								
+								// force user to update password
+								if( user.get('password_reset') ){
+									_this.transitionToRoute('change');
 								} else {
-									_this.transitionToRoute('index');
+									// check if there is any attemptedTransition to
+									// retry it
+									// or go to the secret route
+									if (attemptedTrans) {
+										attemptedTrans.retry();
+										_this.set('attemptedTransition', null);
+									} else {
+										_this.transitionToRoute('index');
+									}
 								}
 							}
 				    );
@@ -429,15 +500,43 @@ var config  = {
 		}
 	}
 });;;App.SummaryController = Ember.ArrayController.extend({
-	needs: ['application'],
+	sortProperties: ['rfid'],
+	stage: 'ALL',
 	
+	sortedColumn: (function() {
+	    var properties = this.get('sortProperties');
+	    if(!properties) return undefined;
+	    return properties.get('firstObject');
+	  }).property('sortProperties.[]'),
+	  
+	filteredItems: function(){
+		var stage = this.get('stage');
+		var items = this.get('arrangedContent');
+		
+		if(stage == 'ALL')
+			return items;
+		else {
+			return items.filter(function(item) {
+				return item.get('current_stage') == stage;
+			});
+		}
+	}.property('stage', 'arrangedContent'),
+
 	actions: {
-		testNotify: function() {
-			this.get('controllers.application').send('setNotification', 'success', 'Success', 
-			'Notificaiton deleted.');
+		setStage: function(stage) {
+			this.set('stage', [stage]);
+		},
+		
+		toggleSort: function(column) {
+		    if(this.get('sortedColumn') == column) {
+		      this.toggleProperty('sortAscending');
+		    } else {
+		      this.set('sortProperties', [column]);
+		      this.set('sortAscending', true);
+		    }
 		}
 	}
-});;App.UsersController = Ember.ArrayController.extend({
+});;App.UserController = Ember.Controller.extend({});;App.UsersController = Ember.ArrayController.extend({
 	needs: ['application'],
 	actions : {
 		resetPW : function(id) {
@@ -576,9 +675,21 @@ var config  = {
   date: DS.attr('simpledate'),
   created_by: DS.attr('string'),
   message: DS.attr('string')
+});;App.Setting = DS.Model.extend({
+  user:                 DS.attr('number'),
+  user_changed:         DS.attr('boolean'),
+  stage1:				DS.attr('string'),
+  stage2:				DS.attr('string'),
+  stage3:				DS.attr('string'),
+  stage4:				DS.attr('string'),
+  stage5:				DS.attr('string'),
+  stage6:				DS.attr('string'),
+  stage7:				DS.attr('string'),
+  stage0:				DS.attr('string')
 });;App.User = DS.Model.extend({
   username:              DS.attr('string'),
   password:              DS.attr('string'),
+  password_reset:        DS.attr('boolean'),
   name:                  DS.attr('string'),
   email:                 DS.attr('string'),
   last_login_date:		 DS.attr('simpledate'),
@@ -589,7 +700,7 @@ var config  = {
 });;App.Router.map(function() {
   this.resource('summary'); 
   this.resource('items', function() {
-    this.resource('item', { path:'/:item' });
+    this.resource('item', { path:'/:item_id' });
   });
   this.resource('user', { path:'/user/:user_id' });
   this.resource('admin', function(){
@@ -604,6 +715,8 @@ var config  = {
 	  this.resource('settings');
   });
   this.resource('sessions');
+  this.route('reset');
+  this.route('change');
 });;// create a base object for any authentication protected route
 App.AuthenticatedRoute = Ember.Route.extend({  
   // verify if the token property of the sessions controller is set before
@@ -617,7 +730,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	
 	var currenttime = $.now();
 	var lasttime = this.controllerFor('sessions').get('lastRequest');
-	console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
+	//console.log("current time: [" + currenttime + "] last time: [" + lasttime + "]");	
 	if(((currenttime - lasttime) > 600000)){
 		this.controllerFor('sessions').reset();
 		return this.redirectToLogin(transition);	
@@ -680,6 +793,10 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	  }
   }
   }
+});;App.ItemRoute = App.AuthenticatedRoute.extend({
+	model: function(params) {
+		return this.store.find('item', params.item_id);
+	}
 });;App.ItemsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
 		return this.store.find('item');
@@ -713,7 +830,68 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			this.transitionTo('index');
 		}
 	}
-});;App.SettingsRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({});;App.UserRoute = App.AuthenticatedRoute.extend({});;App.UsersCreateRoute = App.AuthenticatedRoute.extend({
+});;App.SettingsRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({
+	model: function() {
+		// grab settings based upon current user
+		var _this = this;
+		
+		return Ember.$.getJSON('service/settings/' + this.controllerFor('application').get('currentUser.id')).then(function(data){
+			var setting = data.setting;
+			
+			// visible items = (now - stage_date) > stage_date_setting
+			var filtered = _this.store.filter('item', function(item){
+				var curStage = item.get('current_stage');
+				var stage = item.get(curStage + '_date');
+				if( stage !== null){
+					var a = moment($.now());
+					var diff = a.diff(moment(stage), 'days');
+					if( diff > setting[curStage] ){
+						return item;
+					}
+				}
+			});
+			return filtered;
+		});	
+	}
+});;App.UserRoute = App.AuthenticatedRoute.extend({
+	model: function(){
+		return this.store.find('user');
+	},
+	
+	actions: {
+		edit: function(obj) {
+			var _this = this;
+			
+			if( this.get('password') == this.get('verify-password') ){
+				this.store.find('user', obj.id).then( function(user) {
+					user.set('name',  _this.get('name'));
+					user.set('email', _this.get('email'));
+					user.set('password', _this.get('password'));
+					
+					var onSuccess = function(){
+						_this.controllerFor('application').send('setNotification', 'success', 'Success', 
+						'User updated successfully.');
+						_this.transitionToRoute('index');
+					};
+					
+					var onFail = function(error){
+						notification.rollback();
+						_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
+						'Unable to edit user.');
+						_this.transitionToRoute('user');
+					};
+					
+					user.save().then(onSuccess, onFail);
+				});
+			}
+			_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
+			'Unable to edit user. Please verify passwords match.');
+		},
+		cancel: function() {
+			this.transitionToRoute('index');
+		}
+	}
+});;App.UsersCreateRoute = App.AuthenticatedRoute.extend({
 	setupController: function(controller, model) {
         controller.set('newUser', model);
     }
