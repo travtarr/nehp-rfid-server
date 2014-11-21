@@ -1,15 +1,9 @@
-<div class="user-box">
-	<form {{action 'edit' on="submit"}}>
-		<fieldset>
-			<legend>Edit Your Information</legend>
-			<label>Username<br>{{input type='text' value=username disabled="disabled"}}</label>
-			<label>Name<br>{{input type='text' valueBinding='name' required="required"}}</label>
-			<label>Email<br>{{input type='text' valueBinding='email' required="required"}}</label>
-			<label>Password<br>{{input type='password' valueBinding='password' required="required"}}</label>
-			<label>Verify Password<br>{{input type='password' valueBinding='verify-password' required="required"}}</label>
-			<label>Admin<br>{{input type='checkbox' valueBinding='admin' checked=admin disabled="disabled"}}</label>
-			<label>Scanner<br>{{input type='checkbox' valueBinding='scanner' checked=scanner disabled="disabled"}}</label>
-			<label><button {{action 'cancel' this}}>Cancel</button>{{input type='submit' value="Submit Changes"}}</label>
-		</fieldset>
-	</form>
+<div class="nav-admin">
+	<ul>
+		{{#link-to 'user.info' tagName='li' classNames="button"}}My Info{{/link-to}} 
+		{{#link-to 'user.settings' tagName='li' classNames="button"}}My Summary Settings{{/link-to}}
+	</ul>
+</div>
+<div class="row-fluid">
+	{{outlet}}
 </div>

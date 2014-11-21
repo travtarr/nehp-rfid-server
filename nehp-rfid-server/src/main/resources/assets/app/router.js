@@ -3,7 +3,10 @@ App.Router.map(function() {
   this.resource('items', function() {
     this.resource('item', { path:'/:item_id' });
   });
-  this.resource('user', { path:'/user/:user_id' });
+  this.resource('user', { path:'/user/:user_id' }, function(){
+	  this.route('info');
+	  this.route('settings');
+  });
   this.resource('admin', function(){
 	  this.resource('notifications', function(){
 		  this.route('create');
@@ -13,7 +16,7 @@ App.Router.map(function() {
 		  this.route('create');
 		  this.route('edit', { path: '/edit/:id'});
 	  });
-	  this.resource('settings');
+	  this.route('settings');
   });
   this.resource('sessions');
   this.route('reset');

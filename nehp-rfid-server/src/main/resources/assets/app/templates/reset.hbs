@@ -2,8 +2,8 @@
 	<form {{action 'reset' on="submit"}}>
 		<fieldset>
 			<legend>Please verify your email address to reset your password</legend>
-			<label>Email<br>{{input type='text' valueBinding='email' required="required"}}</label>
-			<label><button {{action 'cancel'}}>Cancel</button>{{input type='submit' value="Reset Password"}}</label>
+			<label>Email<br>{{input type='text' value=email required="required"}}</label>
+			<label>{{input type='submit' value="Reset Password"}}</label>
 		</fieldset>
 	</form>
 </div>

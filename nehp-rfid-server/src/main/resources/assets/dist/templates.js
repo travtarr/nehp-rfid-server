@@ -37,12 +37,146 @@ function program5(depth0,data) {
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
     'classNames': ("button")
-  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "settings", options) : helperMissing.call(depth0, "link-to", "settings", options));
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "admin.settings", options) : helperMissing.call(depth0, "link-to", "admin.settings", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n	</ul>\r\n</div>\r\n<div class=\"row-fluid\">\r\n	");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["admin/settings"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+
+  data.buffer.push("<div class=\"user-box\">\r\n	<form ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", "", {hash:{
+    'on': ("submit")
+  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
+  data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Summary Settings - Overdue Limits</legend>\r\n			<label>Modeling<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage1day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage1hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Kitting<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage2day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage2hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Manufacturing<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage3day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage3hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>QA/QC<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage4day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage4hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Shipped<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage5day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage5hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Arrival<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage6day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage6hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Installed<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage7day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage7hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Stopped<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage0day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage0hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label><button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Cancel</button>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("submit"),
+    'value': ("Submit Changes")
+  },hashTypes:{'type': "STRING",'value': "STRING"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("</label>\r\n		</fieldset>\r\n	</form>\r\n</div>");
   return buffer;
   
 });
@@ -137,7 +271,7 @@ function program14(depth0,data) {
   data.buffer.push(" \r\n								");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'tagName': ("li"),
-    'classNames': ("link")
+    'classNames': ("link btn-logout")
   },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "sessions", options) : helperMissing.call(depth0, "link-to", "sessions", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" \r\n							");
@@ -195,15 +329,15 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Please choose a new password</legend>\r\n			<label>Password<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("password"),
-    'valueBinding': ("password"),
+    'value': ("password"),
     'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Verify Password<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("password"),
-    'valueBinding': ("verify-password"),
+    'value': ("verify-password"),
     'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("submit"),
@@ -257,7 +391,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"notifications\">\r\n	<div class=\"title\">\r\n		<span>Notifications</span>\r\n	</div>\r\n	<div class=\"content\">\r\n		");
+  data.buffer.push("<div class=\"notifications\">\r\n	<div class=\"title\">\r\n		<span class=\"light-title\">Notifications</span>\r\n	</div>\r\n	<div class=\"content\">\r\n		");
   stack1 = helpers.each.call(depth0, {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n	</div>\r\n</div>");
@@ -409,7 +543,9 @@ function program2(depth0,data) {
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "INSTALLED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Installed</a></li>\r\n				<li class=\"divider\"></li>\r\n				<li class=\"nav-header\">Stopped</li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "STOPPED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
-  data.buffer.push(">All</a></li>\r\n			</ul>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<div class=\"tables-items\">\r\n				<table>\r\n					<thead>\r\n						<th><button ");
+  data.buffer.push(">All</a></li>\r\n			</ul>\r\n			<button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "allexcel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" class=\"dark-blue\">Export All Data</button>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<div class=\"tables-items\">\r\n				<table>\r\n					<thead>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Current Stage</button></th>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
@@ -467,6 +603,16 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n	</tbody>\r\n</table>");
   return buffer;
+  
+});
+
+Ember.TEMPLATES["loading"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("<div class=\"spinner\">\r\n  <div class=\"spinner-container container1\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n  <div class=\"spinner-container container2\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n  <div class=\"spinner-container container3\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n</div>");
   
 });
 
@@ -618,12 +764,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Please verify your email address to reset your password</legend>\r\n			<label>Email<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
-    'valueBinding': ("email"),
+    'value': ("email"),
     'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("</label>\r\n			<label><button ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(">Cancel</button>");
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("</label>\r\n			<label>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("submit"),
     'value': ("Reset Password")
@@ -660,25 +804,20 @@ function program1(depth0,data) {
     'valueBinding': ("password"),
     'required': ("required")
   },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("</label>\r\n		<label>");
+  data.buffer.push("</label>\r\n		<label>Remember Me?: ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("remember")
+  },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("</label>\r\n	</fieldset>\r\n	");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("submit"),
     'value': ("Log In")
   },hashTypes:{'type': "STRING",'value': "STRING"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("</label>\r\n		<label><br>");
+  data.buffer.push("<br>\r\n	<br>");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "reset", options) : helperMissing.call(depth0, "link-to", "reset", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</label>\r\n	</fieldset>\r\n</form>\r\n</div>\r\n");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["settings"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '';
-
-
+  data.buffer.push("\r\n</form>\r\n</div>\r\n");
   return buffer;
   
 });
@@ -720,7 +859,7 @@ function program2(depth0,data) {
   else { data.buffer.push(''); }
   }
 
-  data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span10\">\r\n			<div class=\"header-summary\">\r\n				<span>Summary of Overdue Items</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list nav-pointer\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				<li><a ");
+  data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span10\">\r\n			<div class=\"header-summary\">\r\n				<span class=\"light-title\">Summary of Overdue Items</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list nav-pointer\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ALL", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">All</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "MODELING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
@@ -761,13 +900,50 @@ function program2(depth0,data) {
 Ember.TEMPLATES["user"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("My Info");
+  }
+
+function program3(depth0,data) {
+  
+  
+  data.buffer.push("My Summary Settings");
+  }
+
+  data.buffer.push("<div class=\"nav-admin\">\r\n	<ul>\r\n		");
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'tagName': ("li"),
+    'classNames': ("button")
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "user.info", options) : helperMissing.call(depth0, "link-to", "user.info", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" \r\n		");
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'tagName': ("li"),
+    'classNames': ("button")
+  },hashTypes:{'tagName': "STRING",'classNames': "STRING"},hashContexts:{'tagName': depth0,'classNames': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "user.settings", options) : helperMissing.call(depth0, "link-to", "user.settings", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n	</ul>\r\n</div>\r\n<div class=\"row-fluid\">\r\n	");
+  stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["user/info"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
   data.buffer.push("<div class=\"user-box\">\r\n	<form ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", {hash:{
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", "", {hash:{
     'on': ("submit")
-  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
   data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Edit Your Information</legend>\r\n			<label>Username<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
@@ -777,49 +953,181 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   data.buffer.push("</label>\r\n			<label>Name<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
-    'valueBinding': ("name"),
+    'value': ("name"),
     'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Email<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
-    'valueBinding': ("email"),
+    'value': ("email"),
     'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Password<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("password"),
-    'valueBinding': ("password"),
-    'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+    'value': ("newpassword"),
+    'required': ("required"),
+    'placeholder': ("Enter new PW")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'placeholder': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Verify Password<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("password"),
-    'valueBinding': ("verify-password"),
-    'required': ("required")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'required': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'required': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+    'value': ("verify-password"),
+    'required': ("required"),
+    'placeholder': ("Enter new PW")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'placeholder': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Admin<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("checkbox"),
-    'valueBinding': ("admin"),
+    'value': ("admin"),
     'checked': ("admin"),
     'disabled': ("disabled")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'checked': "ID",'disabled': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'checked': depth0,'disabled': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'checked': "ID",'disabled': "STRING"},hashContexts:{'type': depth0,'value': depth0,'checked': depth0,'disabled': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n			<label>Scanner<br>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("checkbox"),
-    'valueBinding': ("scanner"),
+    'value': ("scanner"),
     'checked': ("scanner"),
     'disabled': ("disabled")
-  },hashTypes:{'type': "STRING",'valueBinding': "STRING",'checked': "ID",'disabled': "STRING"},hashContexts:{'type': depth0,'valueBinding': depth0,'checked': depth0,'disabled': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("</label>\r\n			<label><button ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", "", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
-  data.buffer.push(">Cancel</button>");
+  },hashTypes:{'type': "STRING",'value': "ID",'checked': "ID",'disabled': "STRING"},hashContexts:{'type': depth0,'value': depth0,'checked': depth0,'disabled': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("</label>\r\n			<label>");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("submit"),
     'value': ("Submit Changes")
   },hashTypes:{'type': "STRING",'value': "STRING"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("</label>\r\n		</fieldset>\r\n	</form>\r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["user/settings"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+
+  data.buffer.push("<div class=\"user-box\">\r\n	<form ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "edit", "", {hash:{
+    'on': ("submit")
+  },hashTypes:{'on': "STRING"},hashContexts:{'on': depth0},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
+  data.buffer.push(">\r\n		<fieldset>\r\n			<legend>Summary Settings - Overdue Limits</legend>\r\n			<label>Modeling<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage1day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage1hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Kitting<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage2day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage2hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Manufacturing<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage3day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage3hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>QA/QC<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage4day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage4hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Shipped<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage5day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage5hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Arrival<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage6day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage6hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Installed<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage7day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage7hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n			<label>Stopped<br>");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage0day"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Day(s)");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("stage0hour"),
+    'required': ("required"),
+    'class': ("small")
+  },hashTypes:{'type': "STRING",'value': "ID",'required': "STRING",'class': "STRING"},hashContexts:{'type': depth0,'value': depth0,'required': depth0,'class': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("Hour(s)</label>\r\n		</fieldset>\r\n		");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("submit"),
+    'value': ("Submit Changes")
+  },hashTypes:{'type': "STRING",'value': "STRING"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\r\n	</form>\r\n</div>");
   return buffer;
   
 });

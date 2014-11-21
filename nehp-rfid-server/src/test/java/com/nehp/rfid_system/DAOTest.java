@@ -11,6 +11,7 @@ import com.nehp.rfid_system.server.core.AccessToken;
 import com.nehp.rfid_system.server.core.EmailCredentials;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.Notification;
+import com.nehp.rfid_system.server.core.Setting;
 import com.nehp.rfid_system.server.core.User;
 
 public class DAOTest {
@@ -20,9 +21,9 @@ public class DAOTest {
 	
 	public DAOTest(){
 		Configuration config = new Configuration();
-		config.setProperty("hibernate.connection.url", "jdbc:mysql://ec2-54-85-61-143.compute-1.amazonaws.com/test");
-		config.setProperty("hibernate.connection.username", "webapp");
-		config.setProperty("hibernate.connection.password", "5FKL0923pyTm4");
+		config.setProperty("hibernate.connection.url", "jdbc:mysql://nehpdbinstance.cn60mfeskrqb.us-east-1.rds.amazonaws.com/test");
+		config.setProperty("hibernate.connection.username", "nehpdb");
+		config.setProperty("hibernate.connection.password", "jdos803ldk23");
 		config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 		config.setProperty("hibernate.current_session_context_class",  "thread");
 		config.setProperty("hibernate.show_sql", "false");
@@ -30,6 +31,7 @@ public class DAOTest {
 		config.addAnnotatedClass(Item.class);
 		config.addAnnotatedClass(AccessToken.class);
 		config.addAnnotatedClass(Notification.class);
+		config.addAnnotatedClass(Setting.class);
 						
 		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties()).build();
 		

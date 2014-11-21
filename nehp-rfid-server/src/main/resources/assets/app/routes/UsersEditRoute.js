@@ -1,3 +1,1 @@
-App.UsersEditRoute = App.AuthenticatedRoute.extend({
-
-});
+App.UsersEditRoute = App.AuthenticatedRoute.extend({});

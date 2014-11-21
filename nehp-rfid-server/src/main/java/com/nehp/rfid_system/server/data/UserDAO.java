@@ -91,16 +91,20 @@ public class UserDAO extends AbstractDAO<User> {
 		user.setPasswordReset(true);
 		
 		// set-up email 
-		String txtMsg = String.format("Your account has been created.  Username: %s, Password: %s", newUser.getUsername(), newPassword);
-		String htmlMsg = "Hello " + user.getName() + ",<br>"
-						+ "Your account has been created. <br>"
+		String txtMsg = String.format("Your account has been created.  Username: %s, Password: %s  Please visit www.nehptracker.com to login.", newUser.getUsername(), newPassword);
+		String htmlMsg =  "<div style=\"background-color: #53535E;\">"
+						+ "<div style=\"background-color: #1b1b1b; color: #0088cc; padding-left: 20px; padding-top: 8px; height: '35px';\"><span>NEHP Worldwide Tracker</span></div>"
+						+ "<div style=\"background-color: #B4B4B4; margin-left: auto; margin-right: auto; width: 400px; height: 500px;\">"
+						+ "<p>Hello " + user.getName() + ",</p>"
+						+ "<p>Your account has been created. <br>"
 						+ "Username: " + user.getUsername() + "<br>"
-						+ "Password: " + newPassword + "<br>"
-						+ "Please login <a href=\"http://www.nehp-tracker.com\">here</a> using the above username and password.<br>"
+						+ "Password: " + newPassword + "</p>"
+						+ "<p>Please login <a href=\"https://www.nehptracker.com\">here</a> using the above username and password.</p>"
 						+ "<p>Upon first-time logging in, you will be asked to change your password.  No access will be given until "
 						+ "this has been completed. </p>"
-						+ "Thank you, <br>"
-						+ "NEHP TRACKER Administrator";
+						+ "<p>Thank you, <br>"
+						+ "NEHP TRACKER Automated Response</p>"
+						+ "</div></div>";
 		String subject = "NEHP TRACKER - Account Creation";
 		
 		// send email
@@ -145,12 +149,15 @@ public class UserDAO extends AbstractDAO<User> {
 		
 		// set-up email 
 		String txtMsg = String.format("Your password has been reset: %s", newPassword);
-		String htmlMsg = "Hello " + user.getName() + ",<br>"
-						+ "Your password has been reset: <br>"
-						+ newPassword + "<br>"
-						+ "Please login <a href=\"http://www.nehp-tracker.com\">here</a> using the above password.<br>"
-						+ "<br> Thank you, <br>"
-						+ "NEHP TRACKER Administrator";
+		String htmlMsg = "<div style=\"background-color: #53535E;\">"
+				+ "<div style=\"background-color: #1b1b1b; color: #0088cc; padding-left: 20px; padding-top: 8px; height: '35px';\"><span>NEHP Worldwide Tracker</span></div>"
+				+ "<div style=\"background-color: #B4B4B4; margin-left: auto; margin-right: auto; width: 400px; height: 500px;\">"
+				+ "<p>Hello " + user.getName() + ",</p>"
+				+ "<p>Your password has been reset: " + newPassword +  "<br>"
+				+ "<p>Please login <a href=\"https://www.nehptracker.com\">here</a> using the above password.</p>"
+				+ "<p>Thank you, <br>"
+				+ "NEHP TRACKER Automated Response</p>"
+				+ "</div></div>";
 		String subject = "NEHP TRACKER - Password Reset";
 		
 		// send email
@@ -174,7 +181,11 @@ public class UserDAO extends AbstractDAO<User> {
 		if (updateUser == null)
 			return false;
 
-		updateUser = user;
+		updateUser.setAdmin(user.getAdmin());
+		updateUser.setLastLoginDate(user.getLastLoginDate());
+		updateUser.setName(user.getName());
+		updateUser.setEmail(user.getEmail());
+		updateUser.setScanner(user.getScanner());
 		
 		// make sure we hash the password
 		try {

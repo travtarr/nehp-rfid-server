@@ -66,7 +66,7 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		// Check if access time is within expiration time
 		Period period = new Period(accessTokenOpt.get().getLastAccess(), new DateTime());
 		if (period.getMinutes() > ACCESS_TOKEN_EXPIRE_TIME_MIN){
-			// TODO: delete expired accessToken
+			session.delete(accessToken);
 			System.out.println("[Authenticator] Passed period duration");
 			session.getTransaction().commit();
 			session.close();

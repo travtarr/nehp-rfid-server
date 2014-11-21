@@ -41,6 +41,14 @@ public class TestHelpers {
 				.get(ClientResponse.class);
 	}
 	
+	protected ClientResponse put(final String endPoint, final String accessToken, final Object entity) {
+		return new Client()
+				.resource(String.format("http://localhost:%d/service%s", RULE.getLocalPort(), endPoint))
+				.header("Authorization", String.format("Bearer %s", accessToken))
+				.entity(entity)
+				.put(ClientResponse.class);
+	}
+	
 	protected String accessToken() {
 		MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 		formData.add("grant_type", acceptedGrantType);

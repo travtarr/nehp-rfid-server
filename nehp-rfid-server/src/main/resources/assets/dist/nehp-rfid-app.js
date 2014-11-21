@@ -120,7 +120,7 @@ var config  = {
 	// binded on the curretUser of the sessions controller and will verify if
 	// the object is empty
 	isAuthenticated : (function() {
-		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+		return !Ember.isEmpty(this.get('controllers.sessions.currentUser.username'));
 	}).property('controllers.sessions.currentUser'),
 
 	actions : {
@@ -153,7 +153,7 @@ var config  = {
 	actions : {
 		change : function() {
 			
-			if( this.get('password') == this.get('verifyPassword') ){
+			if( this.get('password') == this.get('verify-password') ){
 			
 				_this = this;
 				
@@ -173,10 +173,10 @@ var config  = {
 						'Failed to update your password.');
 					}
 				});
+			} else {
+				this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+				'Passwords are not equal.');
 			}
-			_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
-			'Passwords are not equal.');
-			
 		}
 	}
 });;App.IndexController = Ember.ArrayController.extend({
@@ -340,6 +340,7 @@ var config  = {
 		}
 	}
 });;App.SessionsController = Ember.Controller.extend({
+	needs: [ 'application' ],
 	init : function() {
 		this._super();
 		Ember.$.cookie.json = true;
@@ -358,42 +359,65 @@ var config  = {
 
 	// create and set the token & current user objects based on the respective
 	// cookies
-	token : Ember.$.cookie('access_token'),
+	cookiesEnabled: false,
+	rawToken: null,
+	token : (function() {
+		if(Ember.$.cookie('access_token')){
+			return Ember.$.cookie('access_token');
+		} else
+			return this.get('rawToken');
+	}).property('rawToken'),
+	
 	currentUser : (function() { 
-		if(typeof Ember.$.cookie('auth_user') == 'string')
-			return JSON.parse(Ember.$.cookie('auth_user'));
-		else
-			return Ember.$.cookie('auth_user');
+		if(Ember.$.cookie('auth_user')){
+			if(typeof Ember.$.cookie('auth_user') == 'string')
+				return JSON.parse(Ember.$.cookie('auth_user'));
+			else
+				return Ember.$.cookie('auth_user');
+		}
+	}).property('rawToken'),
+	
+	lastRequest : (function() {
+		if(Ember.$.cookie('last_request')){
+			return Ember.$.cookie('last_request');
+		}
 	}).property(),
-	lastRequest : Ember.$.cookie('last_request'),
 
 	// create cookie for administration token
 	admin : (function() {
-		if(Ember.$.cookie('admin_token') === true)
-			return true;
-		else
-			return false;
-	}).property(),
+		if(Ember.$.cookie('admin_token')){
+			if(Ember.$.cookie('admin_token') === true)
+				return true;
+			else
+				return false;
+		} else {
+			return this.get('user.admin');
+		}
+	}).property('user.admin'),
 
 	tokenChanged : (function() {
 		if (Ember.isEmpty(this.get('token'))) {
 			Ember.$.removeCookie('access_token');
 			Ember.$.removeCookie('auth_user');
 			Ember.$.removeCookie('admin_token');
-		} else {
-			Ember.$.cookie('access_token', this.get('token'));
+			Ember.$.removeCookie('last_request');
+		} else if(this.get('cookiesEnabled')) {
+			Ember.$.cookie('access_token', this.get('rawToken'));
 			Ember.$.cookie('auth_user', this.get('currentUser'));
-			Ember.$.cookie('admin_token', this.get('admin'));
-		}
-	}).observes('token'),
+			Ember.$.cookie('admin_token', this.get('user.admin'));
+			Ember.$.cookie('last_request', $.now());
+		} 
+	}).observes('rawToken'),
 
 	// reset the controller properties and the ajax header
 	reset : function() {
 		this.setProperties({
 			username : null,
 			password : null,
-			token : null,
-			currentUser : null
+			rawToken : null,
+			token: null,
+			currentUser : null,
+			cookiesEnabled: false
 		});
 		Ember.$.ajaxSetup({
 			headers : {
@@ -413,6 +437,18 @@ var config  = {
 			var attemptedTrans = this.get('attemptedTransition');
 
 			var formData = { "grant_type":"password", "username": this.get('username'), "password": this.get('password')};
+			
+			// remove cookies if user had previously used them
+			if(!this.get('remember')){
+				if(Ember.$.cookie('access_token'))
+					Ember.$.removeCookie('access_token');
+				if(Ember.$.cookie('auth_user'))
+					Ember.$.removeCookie('auth_user');
+				if(Ember.$.cookie('admin_token'))
+					Ember.$.removeCookie('admin_token');
+				if(Ember.$.cookie('last_request'))
+					Ember.$.removeCookie('last_request');
+			}
 			
 			Ember.$.ajax({
 				url: '/service/auth/token',
@@ -452,15 +488,19 @@ var config  = {
 								// access_token
 								
 								_this.setProperties({
-									token : response.api_key[0].access_token.string,
+									rawToken: response.api_key[0].access_token.string,
+									token: response.api_key[0].access_token.string,
 									currentUser : {
 										id: response.api_key[0].user_id.string,
+										setting: user.get('setting'),
 										name: user.get('name'),
 										email: user.get('email'),
-										username: user.get('username')
+										username: user.get('username'),
+										admin: user.get('admin')
 									},
 									admin: user.get('admin'),
-									lastRequest: $.now()
+									lastRequest: $.now(),
+									cookiesEnabled: _this.get('remember')
 								});
 
 								// set the relationship between the User and the
@@ -492,7 +532,8 @@ var config  = {
 					if (error.status === 401) {
 						// if there is a authentication error the user is
 						// informed of it to try again
-						alert("Wrong user or password, please try again");
+						this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+						'Username and/or Password incorrect. Please try again.');
 				    }
 					console.log(error);
 			    }
@@ -692,6 +733,7 @@ var config  = {
   password_reset:        DS.attr('boolean'),
   name:                  DS.attr('string'),
   email:                 DS.attr('string'),
+  setting:               DS.attr('number'),
   last_login_date:		 DS.attr('simpledate'),
   user_created_date:	 DS.attr('simpledate'),
   admin:                 DS.attr('boolean'),
@@ -702,7 +744,10 @@ var config  = {
   this.resource('items', function() {
     this.resource('item', { path:'/:item_id' });
   });
-  this.resource('user', { path:'/user/:user_id' });
+  this.resource('user', { path:'/user/:user_id' }, function(){
+	  this.route('info');
+	  this.route('settings');
+  });
   this.resource('admin', function(){
 	  this.resource('notifications', function(){
 		  this.route('create');
@@ -712,7 +757,7 @@ var config  = {
 		  this.route('create');
 		  this.route('edit', { path: '/edit/:id'});
 	  });
-	  this.resource('settings');
+	  this.route('settings');
   });
   this.resource('sessions');
   this.route('reset');
@@ -723,6 +768,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	// continuing with the request
   // if it is not, redirect to the login route (sessions)
   beforeModel: function(transition) {
+	
 	// check if time since last request is greater than 10mins (10m x 60s x 1000ms = 600,000)
 	if(Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
 		return this.redirectToLogin(transition);
@@ -758,7 +804,55 @@ App.AuthenticatedRoute = Ember.Route.extend({
 		  }
 	  }
   }
-});;App.AdminRoute = App.AuthenticatedRoute.extend({});;App.ApplicationRoute = Ember.Route.extend({
+});;App.AdminRoute = App.AuthenticatedRoute.extend({});;App.AdminSettingsRoute = App.AuthenticatedRoute.extend({
+	model: function() {
+		return this.store.find('setting', { admin: true }).then(function(settings){
+			var setting = settings.get('content')[0];
+			var obj = {};
+			for (var i = 0; i < 8; i++) {
+				var total = setting.get('stage' + i);
+				// need to round down since hours gets the remainder
+				var days = Math.floor(total / 24);
+				var hours = total % 24;
+				obj["stage" + i + "day"] = days;
+				obj["stage" + i + "hour"] = hours;
+			}
+			return obj;
+		});
+	},
+	actions: {
+		edit: function() {
+			var _this = this;
+
+			this.store.find('setting', { admin: true }).then( function(settings) {
+				var setting = settings.get('content')[0];
+				
+				// Update the model
+				for (var i = 0; i < 8; i++) {
+					var total = (_this.get('stage' + i + 'day') * 24) + _this.get('stage' + i + 'hour');
+					setting.set('stage' + i, total);
+				}
+								
+				Ember.$.ajax({
+					url: '/service/settings/admin',
+					data: setting,
+					dataType: 'json',
+					type: 'PUT',
+					success: function (response) {
+						_this.controllerFor('application').send('setNotification', 'success', 'Success', 
+						'Setting updated successfully.');
+						_this.transitionToRoute('settings');
+					},
+					error: function (error) {
+						_this.controllerFor('application').send('setNotification', 'failure', 'Failed', 
+						'Unable to edit this setting.');
+						_this.transitionToRoute('settings');
+					}
+				});
+			});
+		}
+	}
+});;App.ApplicationRoute = Ember.Route.extend({
 	actions : {
 		// create a global logout action
 		logout : function() {
@@ -800,6 +894,134 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.ItemsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
 		return this.store.find('item');
+	},
+	
+	actions: {
+		/**
+		 * Exports the current visible items in the table to an excel file.
+		 */
+		excel: function(){
+			var excel="<table>";
+			var el = this;
+			// Header
+			$(el).find('thead').find('tr').each(function() {
+				excel += "<tr>";
+				$(this).filter(':visible').find('th').each(function(index,data) {
+					if ($(this).css('display') != 'none'){					
+						if(defaults.ignoreColumn.indexOf(index) == -1){
+							excel += "<td>" + parseString($(this))+ "</td>";
+						}
+					}
+				});	
+				excel += '</tr>';						
+				
+			});					
+			
+			// Row Vs Column
+			var rowCount=1;
+			$(el).find('tbody').find('tr').each(function() {
+				excel += "<tr>";
+				var colCount=0;
+				$(this).filter(':visible').find('td').each(function(index,data) {
+					if ($(this).css('display') != 'none'){	
+						if(defaults.ignoreColumn.indexOf(index) == -1){
+							excel += "<td>"+parseString($(this))+"</td>";
+						}
+					}
+					colCount++;
+				});															
+				rowCount++;
+				excel += '</tr>';
+			});					
+			excel += '</table>';
+			
+			var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+			excelFile += "<head>";
+			excelFile += "<!--[if gte mso 9]>";
+			excelFile += "<xml>";
+			excelFile += "<x:ExcelWorkbook>";
+			excelFile += "<x:ExcelWorksheets>";
+			excelFile += "<x:ExcelWorksheet>";
+			excelFile += "<x:Name>";
+			excelFile += "{worksheet}";
+			excelFile += "</x:Name>";
+			excelFile += "<x:WorksheetOptions>";
+			excelFile += "<x:DisplayGridlines/>";
+			excelFile += "</x:WorksheetOptions>";
+			excelFile += "</x:ExcelWorksheet>";
+			excelFile += "</x:ExcelWorksheets>";
+			excelFile += "</x:ExcelWorkbook>";
+			excelFile += "</xml>";
+			excelFile += "<![endif]-->";
+			excelFile += "</head>";
+			excelFile += "<body>";
+			excelFile += excel;
+			excelFile += "</body>";
+			excelFile += "</html>";
+
+			var base64data = "base64," + $.base64.encode(excelFile);
+			window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+		},
+		/**
+		 * Exports all items loaded from the server into an excel file.
+		 */
+		allexcel: function(){
+			var excel = "<table>";
+			
+			// Header
+			excel += "<tr>";
+			App.Item.eachAttribute(function(name) {
+				excel += "<td>" + name + "</td>";
+			});
+			excel += '</tr>';					
+
+			this.store.find('item').then(function(items){
+				// Each Row
+				items.forEach(function(item){
+					jsonItem = item.toJSON();
+					excel += "<tr>";
+					// Each Column
+					$.each(jsonItem, function(attrib, value){
+						// Filter out null values
+						if (value === null){
+							excel += "<td></td>";
+						} else {
+							excel += "<td>"+ value +"</td>";
+						}
+					});			
+					excel += '</tr>';
+				});
+	
+				excel += '</table>';
+				
+				var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+				excelFile += "<head>";
+				excelFile += "<!--[if gte mso 9]>";
+				excelFile += "<xml>";
+				excelFile += "<x:ExcelWorkbook>";
+				excelFile += "<x:ExcelWorksheets>";
+				excelFile += "<x:ExcelWorksheet>";
+				excelFile += "<x:Name>";
+				excelFile += "{worksheet}";
+				excelFile += "</x:Name>";
+				excelFile += "<x:WorksheetOptions>";
+				excelFile += "<x:DisplayGridlines/>";
+				excelFile += "</x:WorksheetOptions>";
+				excelFile += "</x:ExcelWorksheet>";
+				excelFile += "</x:ExcelWorksheets>";
+				excelFile += "</x:ExcelWorkbook>";
+				excelFile += "</xml>";
+				excelFile += "<![endif]-->";
+				excelFile += "</head>";
+				excelFile += "<body>";
+				excelFile += excel;
+				excelFile += "</body>";
+				excelFile += "</html>";
+	
+				var base64data = "base64," + $.base64.encode(excelFile);
+				window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+			});
+		}
 	}
 });;App.ListRoute = App.AuthenticatedRoute.extend({
 	model: function() {
@@ -815,11 +1037,39 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	model: function(){
 		return this.store.find('notification');
 	}
-});;App.SecretRoute = App.AuthenticatedRoute.extend({
-	model : function() {
-		// instantiate the model for the SecretController as a list of created
-		// users
-		return this.store.find('user');
+});;App.ResetRoute = Ember.Route.extend({
+	actions: {
+		reset: function() {
+			var _this = this;
+			var email = function(){
+				var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+				if (regex.test(_this.get('email'))){
+					return _this.get('email');
+				} else {
+					return "null";
+				}
+			};
+			if( email !== "null" ){
+				var formData = {'email': email};
+				Ember.$.ajax({
+					url: '/service/users/pwreset-email',
+					data: formData,
+					type: 'POST',
+					success: function(response){
+						_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+						'An email should be arriving shortly to update your password.');
+						_this.transitionToRoute('index');
+					},
+					error: function(error) {
+						_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+						'Email not recognized.');
+					}
+				});
+			} else {
+				_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+				'Not a valid email.');
+			}
+		}
 	}
 });;App.SessionsRoute = Ember.Route.extend({
 	beforeModel : function(transition) {
@@ -830,43 +1080,68 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			this.transitionTo('index');
 		}
 	}
-});;App.SettingsRoute = App.AuthenticatedRoute.extend({});;App.SummaryRoute = App.AuthenticatedRoute.extend({
+});;App.SummaryRoute = App.AuthenticatedRoute.extend({
 	model: function() {
 		// grab settings based upon current user
 		var _this = this;
 		
-		return Ember.$.getJSON('service/settings/' + this.controllerFor('application').get('currentUser.id')).then(function(data){
-			var setting = data.setting;
-			
-			// visible items = (now - stage_date) > stage_date_setting
-			var filtered = _this.store.filter('item', function(item){
-				var curStage = item.get('current_stage');
-				var stage = item.get(curStage + '_date');
-				if( stage !== null){
-					var a = moment($.now());
-					var diff = a.diff(moment(stage), 'days');
-					if( diff > setting[curStage] ){
-						return item;
+		return this.store.find('item').then(function(items) {
+			return Ember.$.getJSON('service/settings/' + _this.controllerFor('application').get('currentUser.id')).then(function(data){
+				var setting = data.setting;
+				// visible items = (now - stage_date) > stage_date_setting
+				return _this.store.filter('item', function(item){
+					var curStage = item.get('current_stage');
+					var curStageNum = 0;
+					
+					// get the correct stage #
+					switch(curStage){
+						case 'STOPPED':
+							curStageNum = 0;
+							break;
+						case 'MODELING':
+							curStageNum = 1;
+							break;
+						case 'KITTING':
+							curStageNum = 2;
+							break;
+						case 'MANUFACTURING':
+							curStageNum = 3;
+							break;
+						case 'QA/QC':
+							curStageNum = 4;
+							break;
+						case 'SHIPPED':
+							curStageNum = 5;
+							break;
+						case 'ARRIVAL':
+							curStageNum = 6;
+							break;
+						case 'INSTALLED':
+							curStageNum = 7;
+							break;
 					}
-				}
-			});
-			return filtered;
-		});	
+					var stage = item.get('stage' + curStageNum + '_date');
+					if( stage !== null){
+						var a = moment($.now());
+						var diff = a.diff(moment(stage), 'days');
+						if( diff > setting['stage' + curStageNum] ){
+							return item;
+						}
+					}
+				});
+			});	
+		});
 	}
-});;App.UserRoute = App.AuthenticatedRoute.extend({
-	model: function(){
-		return this.store.find('user');
-	},
-	
+});;App.UserInfoRoute = App.AuthenticatedRoute.extend({
 	actions: {
 		edit: function(obj) {
 			var _this = this;
 			
-			if( this.get('password') == this.get('verify-password') ){
+			if( this.get('newpassword') == this.get('verify-password') ){
 				this.store.find('user', obj.id).then( function(user) {
 					user.set('name',  _this.get('name'));
 					user.set('email', _this.get('email'));
-					user.set('password', _this.get('password'));
+					user.set('password', _this.get('newpassword'));
 					
 					var onSuccess = function(){
 						_this.controllerFor('application').send('setNotification', 'success', 'Success', 
@@ -883,21 +1158,61 @@ App.AuthenticatedRoute = Ember.Route.extend({
 					
 					user.save().then(onSuccess, onFail);
 				});
+			} else {
+				_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
+				'Unable to edit user. Please verify passwords match.');
 			}
-			_this.get('controllers.application').send('setNotification', 'failure', 'Failre', 
-			'Unable to edit user. Please verify passwords match.');
-		},
-		cancel: function() {
-			this.transitionToRoute('index');
+		}
+	}
+});;App.UserRoute = App.AuthenticatedRoute.extend({});;App.UserSettingsRoute = App.AuthenticatedRoute.extend({
+	model: function() {
+		return this.store.find('setting', this.controllerFor('application').get('currentUser.setting') ).then(function(setting){
+			var obj = {};
+			for (var i = 0; i < 8; i++) {
+				var total = setting.get('stage' + i);
+				// need to round down since hours gets the remainder
+				var days = Math.floor(total / 24);
+				var hours = total % 24;
+				obj["stage" + i + "day"] = days;
+				obj["stage" + i + "hour"] = hours;
+			}
+			return obj;
+		});
+	},
+	actions: {
+		edit: function() {	
+			var _this = this;
+
+			this.store.find( 'setting', this.controllerFor('application').get('currentUser.setting') ).then( function(setting) {
+
+				// Update the model
+				for (var i = 0; i < 8; i++) {
+					var total = (parseInt(_this.get('stage' + i + 'day'), 10) * 24) + parseInt(_this.get('stage' + i + 'hour'), 10);
+					setting.set('stage' + i, total);
+				}
+				
+				var onSuccess = function(){
+					_this.controllerFor('application').send('setNotification', 'success', 'Success', 
+					'Setting updated successfully.');
+					_this.transitionToRoute('settings');
+				};
+				
+				var onFail = function(error){
+					setting.rollback();
+					_this.controllerFor('application').send('setNotification', 'failure', 'Failed', 
+					'Unable to edit this setting.');
+					_this.transitionToRoute('settings');
+				};
+				
+				setting.save().then(onSuccess, onFail);
+			});
 		}
 	}
 });;App.UsersCreateRoute = App.AuthenticatedRoute.extend({
 	setupController: function(controller, model) {
         controller.set('newUser', model);
     }
-});;App.UsersEditRoute = App.AuthenticatedRoute.extend({
-
-});;App.UsersRoute = App.AuthenticatedRoute.extend({
+});;App.UsersEditRoute = App.AuthenticatedRoute.extend({});;App.UsersRoute = App.AuthenticatedRoute.extend({
 	model : function() {
 		return this.store.find('user');
 	}

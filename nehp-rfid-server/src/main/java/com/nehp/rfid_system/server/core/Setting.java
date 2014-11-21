@@ -39,7 +39,7 @@ public class Setting {
 	
 	@JsonProperty
 	@Column( name = "user_changed", nullable = false)
-	private boolean userChanged;
+	private boolean user_changed;
 	
 	@JsonProperty
 	@Column( name = "stage1", nullable = false)
@@ -81,7 +81,7 @@ public class Setting {
 		this.user = user;
 	}
 	public void setUserChanged(boolean changed){
-		this.userChanged = changed;
+		this.user_changed = changed;
 	}
 	public void setStage1(String stage){
 		this.stage1 = stage;
@@ -116,7 +116,7 @@ public class Setting {
 		return user;
 	}
 	public boolean getUserChanged(){
-		return userChanged;
+		return user_changed;
 	}
 	public String getStage1(){
 		return stage1;

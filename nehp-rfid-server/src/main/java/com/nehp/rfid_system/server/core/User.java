@@ -31,7 +31,7 @@ import io.dropwizard.jackson.JsonSnakeCase;
 	@NamedQuery(name = "users.getByUsername", query = "FROM User WHERE username = :username"),
 	@NamedQuery(name = "users.getByEmail", query = "FROM User WHERE email = :email"),
 	@NamedQuery(name = "users.updateByUserId", query = "UPDATE User SET name= :name, "
-			+ "email= :email, password= :password, lastLoginDate= :lastLoginDate WHERE id = :userId"),
+			+ "email= :email, password= :password, last_login_date= :last_login_date WHERE id = :userId"),
 	@NamedQuery(name = "users.deleteByUserId", query = "DELETE FROM User WHERE id = :userId")
 })
 public class User {
@@ -57,23 +57,27 @@ public class User {
 	@JsonProperty
 	private String email;
 	
+	@Column(name = "setting")
+	@JsonProperty
+	private long setting;
+	
 	@Column(name = "password", nullable = false, length = 89)
 	@JsonProperty
 	private String password;
 	
 	@Column(name = "password_reset", nullable = true)
 	@JsonProperty
-	private boolean passwordReset;
+	private boolean password_reset;
 	
 	@Column(name = "last_login_date", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@JsonProperty
-	private DateTime lastLoginDate;
+	private DateTime last_login_date;
 	
 	@Column(name = "user_created_date", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@JsonProperty
-	private DateTime userCreatedDate;
+	private DateTime user_created_date;
 	
 	@Column(name = "admin", nullable = false)
 	@JsonProperty
@@ -96,17 +100,20 @@ public class User {
 	public void setEmail(String email){
 		this.email = email;
 	}
+	public void setSetting(long setting){
+		this.setting = setting;
+	}
 	public void setPassword(String password){
 		this.password = password;
 	}
 	public void setPasswordReset(boolean reset){
-		this.passwordReset = reset;
+		this.password_reset = reset;
 	}
 	public void setLastLoginDate(DateTime date){
-		this.lastLoginDate = date;
+		this.last_login_date = date;
 	}
 	public void setUserCreatedDate(DateTime date){
-		this.userCreatedDate = date;
+		this.user_created_date = date;
 	}
 	public void setAdmin(boolean admin){
 		this.admin = admin;
@@ -132,21 +139,25 @@ public class User {
 	public String getEmail(){
 		return email;
 	}
+	
+	public long getSetting(){
+		return setting;
+	}
 
 	public String getPassword(){
 		return password;
 	}
 	
 	public boolean getPasswordReset(){
-		return passwordReset;
+		return password_reset;
 	}
 
 	public DateTime getLastLoginDate(){
-		return lastLoginDate;
+		return last_login_date;
 	}
 
 	public DateTime getUserCreatedDate(){
-		return userCreatedDate;
+		return user_created_date;
 	}
 
 	public boolean getAdmin(){

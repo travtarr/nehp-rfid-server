@@ -27,7 +27,7 @@ App.ApplicationController = Ember.Controller.extend({
 	// binded on the curretUser of the sessions controller and will verify if
 	// the object is empty
 	isAuthenticated : (function() {
-		return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+		return !Ember.isEmpty(this.get('controllers.sessions.currentUser.username'));
 	}).property('controllers.sessions.currentUser'),
 
 	actions : {

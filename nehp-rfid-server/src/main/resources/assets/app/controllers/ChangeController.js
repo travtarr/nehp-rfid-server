@@ -3,7 +3,7 @@ App.ChangeController = Ember.Controller.extend({
 	actions : {
 		change : function() {
 			
-			if( this.get('password') == this.get('verifyPassword') ){
+			if( this.get('password') == this.get('verify-password') ){
 			
 				_this = this;
 				
@@ -23,10 +23,10 @@ App.ChangeController = Ember.Controller.extend({
 						'Failed to update your password.');
 					}
 				});
+			} else {
+				this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
+				'Passwords are not equal.');
 			}
-			_this.get('controllers.application').send('setNotification', 'failure', 'Failure', 
-			'Passwords are not equal.');
-			
 		}
 	}
 });

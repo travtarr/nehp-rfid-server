@@ -36,20 +36,42 @@ public class SettingDAO extends AbstractDAO<Setting>{
 		return list(namedQuery("setting.getByUser").setParameter("user", id, LongType.INSTANCE)).get(0);
 	}
 	
+	public List<Setting> getByUserIdList(Long id){
+		return list(namedQuery("setting.getByUser").setParameter("user", id, LongType.INSTANCE));
+	}
+	
 	public Long create(Setting setting){
 		return persist(setting).getId();
 	}
 	
-	public boolean update(Setting setting){
+	/**
+	 * Updates the setting record.<br>
+	 * 
+	 * NOTE: Only to be used by a resource without the <b>UnitOfWork</b> annotation.
+	 * 
+	 * @param id
+	 * @param setting
+	 * @return
+	 */
+	public boolean update(Long id, Setting setting){
+		
 		// Make sure we update the correct setting
-		Setting update = get(setting.getId());
+		Setting update = getById(id);
 
-		if (update == null)
+		if (update == null){
 			return false;
+		}
 
-		update = setting;
+		update.setStage0(setting.getStage0());
+		update.setStage1(setting.getStage1());
+		update.setStage2(setting.getStage2());
+		update.setStage3(setting.getStage3());
+		update.setStage4(setting.getStage4());
+		update.setStage5(setting.getStage5());
+		update.setStage6(setting.getStage6());
+		update.setStage7(setting.getStage7());
 		persist(update);
-
+		
 		return true;
 	}
 	

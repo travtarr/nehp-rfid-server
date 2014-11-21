@@ -4,6 +4,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	// continuing with the request
   // if it is not, redirect to the login route (sessions)
   beforeModel: function(transition) {
+	
 	// check if time since last request is greater than 10mins (10m x 60s x 1000ms = 600,000)
 	if(Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
 		return this.redirectToLogin(transition);

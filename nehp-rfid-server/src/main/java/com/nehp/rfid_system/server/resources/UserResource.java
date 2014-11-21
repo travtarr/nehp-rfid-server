@@ -44,6 +44,10 @@ public class UserResource {
 	private final UserDAO userDAO;
 	private final AccessTokenDAO accessTokenDAO;
 	private final SettingDAO settingDAO;
+	
+	private static final String EMAIL_PATTERN = 
+			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	public UserResource(UserDAO user, AccessTokenDAO accessTokenDAO,
 			SettingDAO settingDAO) {
@@ -69,7 +73,7 @@ public class UserResource {
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_ADMIN)
 	public Response createUser(UserWrap user) {
-		// User newUser = user.getUser();
+
 		Long userId = null;
 		Optional<Long> opt = userDAO.create(user.getUser());
 		if (opt.isPresent()) {
@@ -81,10 +85,13 @@ public class UserResource {
 			Setting setting = settingDAO.getById(GLOBAL_SETTINGS_ID);
 			setting.setUser(userId);
 			setting.setUserChanged(false);
-			settingDAO.create(setting);
-
-			UserWrap wrap = new UserWrap();
+			Long settingId = settingDAO.create(setting);
+			
 			User newUser = userDAO.getUserById(userId).get();
+			newUser.setSetting(settingId);
+			userDAO.update(newUser);
+			
+			UserWrap wrap = new UserWrap();
 			wrap.setUser(newUser);
 
 			return Response.status(Response.Status.CREATED).entity(wrap)
@@ -135,12 +142,16 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@UnitOfWork
 	public Response resetPasswordByEmail(@FormParam("email") String email) {
-		User user = userDAO.getUserByEmail(email).get();
+		if (email.matches(EMAIL_PATTERN)){
+			User user = userDAO.getUserByEmail(email).get();
 
-		if (userDAO.resetPassword( user.getId() )) {
-			return Response.status(Response.Status.OK).build();
+			if (userDAO.resetPassword( user.getId() )) {
+				return Response.status(Response.Status.OK).build();
+			} else {
+				return Response.status(Response.Status.UNAUTHORIZED).build();
+			}
 		} else {
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 	}
 	
@@ -155,7 +166,7 @@ public class UserResource {
 									@FormParam("password") String password) {
 		User user = userDAO.getUserByUsername(username).get();
 
-		if (userDAO.updatePassword( user, password )) {
+		if (user != null && userDAO.updatePassword( user, password )) {
 			return Response.status(Response.Status.OK).build();
 		} else {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -202,7 +213,8 @@ public class UserResource {
 	@Timed
 	@Path("/{user_id}")
 	@UnitOfWork
-	@RestrictedTo({ Authority.ROLE_USER, Authority.ROLE_ADMIN })
+	@Produces(MediaType.APPLICATION_JSON)
+	@RestrictedTo( {Authority.ROLE_USER} )
 	public Response updateUser(@PathParam("user_id") String userId,
 			UserWrap user, @Context HttpServletRequest request) {
 
@@ -213,20 +225,18 @@ public class UserResource {
 		User currentUser = userDAO.getUserById(currentUserId).get();
 
 		// User can only update own information, admin can update anyone
-		if ((currentUserId == Long.getLong(userId))
-				|| currentUser.getAdmin() == true) {
-
+		if ( currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true) {
 			if (userDAO.update(user.getUser())) {
 				UserWrap wrap = new UserWrap();
-				User updatedUser = userDAO.getUserById(Long.getLong(userId))
+				User updatedUser = userDAO.getUserById( Long.getLong(userId) )
 						.get();
 				wrap.setUser(updatedUser);
-				return Response.status(Response.Status.OK).entity(wrap).build();
+				return Response.status( Response.Status.OK ).entity( wrap ).build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST).build();
+				return Response.status( Response.Status.BAD_REQUEST ).build();
 			}
 		} else {
-			return Response.status(Response.Status.BAD_REQUEST).build();
+			return Response.status( Response.Status.UNAUTHORIZED ).build();
 		}
 	}
 

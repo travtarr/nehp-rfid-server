@@ -4,12 +4,14 @@ import static org.fest.assertions.Assertions.assertThat;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
 import java.io.File;
+
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import com.google.common.io.Resources;
 import com.nehp.rfid_system.server.MainApp;
 import com.nehp.rfid_system.server.MainConfiguration;
+import com.nehp.rfid_system.server.core.UserWrap;
 import com.sun.jersey.api.client.ClientResponse;
 
 
@@ -40,6 +42,13 @@ public class ResourcesTest {
 	public void getUserNoTokenReturns401() {
 		ClientResponse response = helper.get("/users/" + USERID);		
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.UNAUTHORIZED.getStatusCode());
+	}
+	
+	@Test
+	public void updateUserInfoReturns200(){
+		UserWrap user = helper.get("/users/" + USERID, helper.accessToken()).getEntity(UserWrap.class);
+		ClientResponse response = helper.put("/users/" + USERID, helper.accessToken(), user);		
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 	}
 	
 	@Test
