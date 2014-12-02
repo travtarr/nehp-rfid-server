@@ -19,7 +19,7 @@ public class TestHelpers {
 
 	private static final String acceptedGrantType = "password";
 	private static final String acceptedUsername = "alpha";
-	private static final String acceptedPassword = "alpha";
+	private static final String acceptedPassword = "alpha2";
 		
 	@ClassRule
 	public static DropwizardAppRule<MainConfiguration> RULE;
@@ -44,9 +44,17 @@ public class TestHelpers {
 	protected ClientResponse put(final String endPoint, final String accessToken, final Object entity) {
 		return new Client()
 				.resource(String.format("http://localhost:%d/service%s", RULE.getLocalPort(), endPoint))
+				.type(MediaType.APPLICATION_JSON_TYPE)
 				.header("Authorization", String.format("Bearer %s", accessToken))
-				.entity(entity)
-				.put(ClientResponse.class);
+				.put(ClientResponse.class, entity);
+	}
+	
+	protected ClientResponse post(final String endPoint, final String accessToken, final Object entity) {
+		return new Client()
+				.resource(String.format("http://localhost:%d/service%s", RULE.getLocalPort(), endPoint))
+				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+				.header("Authorization", String.format("Bearer %s", accessToken))
+				.post(ClientResponse.class, entity);
 	}
 	
 	protected String accessToken() {

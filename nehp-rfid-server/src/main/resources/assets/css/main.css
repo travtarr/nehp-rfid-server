@@ -19,6 +19,10 @@ button.dark-blue {
 	color: #0088cc;
 	border-color: #3C3A3A;
 }
+button.dark-blue:hover {
+	background-color: #1B65D7;
+	color: #000000;
+}
 input.small {
 	width: 50px;
 }

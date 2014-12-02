@@ -199,11 +199,14 @@ public class UserResource {
 
 		UUID accessTokenUUID = getUUID(request
 				.getHeader(HttpHeaders.AUTHORIZATION));
+		Long currentUserId = accessTokenDAO
+				.findAccessTokenById(accessTokenUUID).get().getUserId();
+		User currentUser = userDAO.getUserById(currentUserId).get();
+		
 		UserWrap wrap = new UserWrap();
 		if (accessTokenUUID != null) {
-			// User can only get information about oneself
-			if ((accessTokenDAO.findAccessTokenById(accessTokenUUID).get()
-					.getUserId()) == Long.parseLong(userId))
+			// User can only get information about oneself unless user is an admin
+			if (currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true)
 				wrap.setUser(userDAO.getUserById(Long.parseLong(userId)).get());
 		}
 		return wrap;
@@ -214,21 +217,23 @@ public class UserResource {
 	@Path("/{user_id}")
 	@UnitOfWork
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@RestrictedTo( {Authority.ROLE_USER} )
 	public Response updateUser(@PathParam("user_id") String userId,
 			UserWrap user, @Context HttpServletRequest request) {
-
+		System.out.println("Inside updateUser");
 		UUID accessTokenUUID = getUUID(request
 				.getHeader(HttpHeaders.AUTHORIZATION));
 		Long currentUserId = accessTokenDAO
 				.findAccessTokenById(accessTokenUUID).get().getUserId();
 		User currentUser = userDAO.getUserById(currentUserId).get();
-
+		
 		// User can only update own information, admin can update anyone
 		if ( currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true) {
+			System.out.println("Found user");
 			if (userDAO.update(user.getUser())) {
 				UserWrap wrap = new UserWrap();
-				User updatedUser = userDAO.getUserById( Long.getLong(userId) )
+				User updatedUser = userDAO.getUserById( Long.parseLong(userId) )
 						.get();
 				wrap.setUser(updatedUser);
 				return Response.status( Response.Status.OK ).entity( wrap ).build();

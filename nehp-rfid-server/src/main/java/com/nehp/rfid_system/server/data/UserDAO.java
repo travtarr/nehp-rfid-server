@@ -39,7 +39,13 @@ public class UserDAO extends AbstractDAO<User> {
 		
 		user = Optional.of(list(namedQuery("users.getByUsername")
 						.setParameter("username", username, StringType.INSTANCE)).get(0));
-		System.out.println(user.get().getPassword());
+		try {
+			System.out.println("EnteredPW: " + PasswordHelper.getSaltedHash(password));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		//System.out.println(user.get().getPassword());
 		try {
 			if(PasswordHelper.check(password, user.get().getPassword()))
 				return user;
@@ -69,6 +75,7 @@ public class UserDAO extends AbstractDAO<User> {
 
 	public Optional<User> getUserById(Long id) {
 		User user = null;
+
 		user = get(id);
 		
 		if(user == null)
@@ -174,7 +181,6 @@ public class UserDAO extends AbstractDAO<User> {
 	 * @return
 	 */
 	public boolean update(User user) {
-
 		// Make sure we update the correct user
 		User updateUser = get(user.getId());
 

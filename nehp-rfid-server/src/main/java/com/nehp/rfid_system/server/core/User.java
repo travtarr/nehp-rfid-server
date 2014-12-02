@@ -185,4 +185,12 @@ public class User {
 	public boolean hasAuthority(Authority authority){
 		return hasAllAuthorities(Sets.newHashSet(authority));
 	}
+	
+	/*@Override
+	public String toString(){
+		return String.format("User [id=%s, username=%s, name=%s, email=%s, "
+				+ "setting=%s, password=%s, password_reset=%s, last_login_date=%s, "
+				+ "user_created_date=%s, admin=%s, scanner=%s]", id, username, name, email, setting,
+				password, password_reset, last_login_date, user_created_date, admin, scanner);
+	}*/
 }

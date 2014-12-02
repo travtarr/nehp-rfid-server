@@ -65,6 +65,7 @@ public class UserDAOTest extends DAOTest{
 		
 		getSession().beginTransaction();
 		List<User> userList = userDAO.getUsersAll();
+		getSession().getTransaction().commit();
 		
 		assertThat(userList.get(1).getId()).isEqualTo(id);
 		assertThat(userList.get(2).getId()).isEqualTo(3L);
@@ -73,7 +74,7 @@ public class UserDAOTest extends DAOTest{
 	/**
 	 * Make sure local smtp server is running.
 	 */
-	@Test
+	//@Test
 	public void testCreateUser(){
 		// set-up new user
 		User user = new User();
@@ -95,7 +96,7 @@ public class UserDAOTest extends DAOTest{
 	/**
 	 * Make sure local smtp server is running.
 	 */
-	@Test
+	//@Test
 	public void testResetPassword(){
 		Long userId = 5L;
 		getSession().beginTransaction();
@@ -103,5 +104,20 @@ public class UserDAOTest extends DAOTest{
 		getSession().getTransaction().commit();
 		
 		assertThat(password).isTrue();
+	}
+	
+	@Test
+	public void testUpdateUser(){
+		Long id = 5L;
+		
+		getSession().beginTransaction();
+		User user = userDAO.getUserById(id).get();
+		getSession().getTransaction().commit();
+		
+		getSession().beginTransaction();
+		boolean success = userDAO.update(user);
+		getSession().getTransaction().commit();
+		
+		assertThat(success).isTrue();
 	}
 }
