@@ -1,14 +1,19 @@
 package com.nehp.rfid_system.server.data;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.Item;
+
 import io.dropwizard.hibernate.AbstractDAO;
 
 public class ItemDAO extends AbstractDAO<Item>{
@@ -20,9 +25,15 @@ public class ItemDAO extends AbstractDAO<Item>{
 		factory = sessionFactory;
 	}
 	
-	public Item getItemById(Long id){
-		return get(id);
+	public Optional<Item> getItemById(Long id){
+		return Optional.of(get(id));
 		//return list(namedQuery("items.getById").setParameter("id", id, StringType.INSTANCE)).get(0);
+	}
+	
+	public Optional<Item> getItemByRFID(Long id){
+		return Optional.of(list(namedQuery("items.getByRFID")
+				.setParameter("rfid", id, LongType.INSTANCE)).get(0));
+		
 	}
 	
 	public List<Item> getItemsByStage(String type){
@@ -33,6 +44,18 @@ public class ItemDAO extends AbstractDAO<Item>{
 	
 	public List<Item> getItemsAll(){
 		return list(namedQuery("items.getAll"));
+	}
+	
+	public List<Item> getMultipleItemsById(List<Long> list){
+		Iterator<Long> iter = list.listIterator();
+		List<Item> filtered = new ArrayList<Item>();
+		while(iter.hasNext()){
+			Item item = get(iter.next());
+			if ( item != null ) {
+				filtered.add(item);
+			}
+		}
+		return filtered;
 	}
 	
 	public Long create(Item item){
@@ -48,9 +71,13 @@ public class ItemDAO extends AbstractDAO<Item>{
 		
 		updateItem = item;
 		persist(updateItem);
-		
+
 		return true;	
 	}
+	
+	// TODO: Create a method to update many items at once
+	// should return an array that tells which items were
+	// successfully updated.
 	
 	public boolean delete(Item item){
 		Boolean result = false;

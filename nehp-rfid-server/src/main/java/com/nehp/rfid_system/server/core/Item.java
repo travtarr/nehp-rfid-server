@@ -25,7 +25,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NamedQueries({
 		@NamedQuery(name = "items.getAll", query = "FROM Item p"),
 		@NamedQuery(name = "items.getByStage", query = "FROM Item p WHERE p.currentStage = :stage"),
-		@NamedQuery(name = "items.getById", query = "FROM Item p WHERE p.id = :id") })
+		@NamedQuery(name = "items.getByRFID", query = "FROM Item p WHERE p.rfid = :rfid") })
 public class Item {
 
 	public Item(){}
