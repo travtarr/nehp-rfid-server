@@ -5,8 +5,8 @@
 			<label>Username<br>{{input type='text' value=newUser.username required="required"}}</label>
 			<label>Name<br>{{input type='text' value=newUser.name required="required"}}</label>
 			<label>Email<br>{{input type='text' value=newUser.email required="required"}}</label>
-			<label>Admin<br>{{input type='checkbox' value=newUser.admin}}</label>
-			<label>Scanner<br>{{input type='checkbox' value=newUser.scanner}}</label>
+			<label>Admin<br>{{input type='checkbox' checked=newUser.admin}}</label>
+			<label>Scanner<br>{{input type='checkbox' checked=newUser.scanner}}</label>
 			<label><button {{action 'cancel' this}}>Cancel</button>{{input type='submit' value="Create"}}</label>
 		</fieldset>
 	</form>

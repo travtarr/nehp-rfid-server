@@ -88,6 +88,8 @@ public class UserDAO extends AbstractDAO<User> {
 		User newUser = user;
 		String newPassword = randomizedPassword();
 		
+		newUser.setSetting(1);
+		
 		try {
 			newUser.setPassword( PasswordHelper.getSaltedHash(newPassword) );
 		} catch (Exception e) {

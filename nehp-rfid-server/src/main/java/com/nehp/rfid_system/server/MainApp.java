@@ -14,6 +14,7 @@ import com.nehp.rfid_system.server.core.*;
 import com.nehp.rfid_system.server.data.*;
 import com.nehp.rfid_system.server.filters.HttpsRedirectFilter;
 import com.nehp.rfid_system.server.resources.*;
+import com.sun.jersey.multipart.MultiPart;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -63,6 +64,7 @@ public class MainApp extends Application<MainConfiguration> {
 		UserDAO userDAO = new UserDAO(hibernate.getSessionFactory(), configuration.getEmailCredentials());
 		NotificationsDAO notificationsDAO = new NotificationsDAO(hibernate.getSessionFactory());
 		SettingDAO settingDAO = new SettingDAO(hibernate.getSessionFactory());
+		SignatureDAO signatureDAO = new SignatureDAO(hibernate.getSessionFactory());
 				
 		// initialize resources
 		final ListResource listResource = new ListResource(itemDAO);
@@ -72,7 +74,9 @@ public class MainApp extends Application<MainConfiguration> {
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
 		final UserResource userResource = new UserResource(userDAO, accessTokenDAO, settingDAO);
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
-		final SettingResource settingResource = new SettingResource(settingDAO); 
+		final SettingResource settingResource = new SettingResource(settingDAO);
+		final SignatureResource signatureResource = new SignatureResource(signatureDAO);
+		final DownloadResource downloadResource = new DownloadResource(configuration.getFilename());
 		
 		// test resource
 		final PingResource pingResource = new PingResource();
@@ -85,6 +89,7 @@ public class MainApp extends Application<MainConfiguration> {
 			addHttpsForward(environment.getApplicationContext());
 		
 		// register resources
+		environment.jersey().register(MultiPart.class);
 		environment.jersey().register(listResource);
 		environment.jersey().register(itemResource);
 		environment.jersey().register(itemsResource);
@@ -92,6 +97,8 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().register(userResource);
 		environment.jersey().register(notificationsResource);
 		environment.jersey().register(settingResource);
+		environment.jersey().register(signatureResource);
+		environment.jersey().register(downloadResource);
 		// test resource
 		environment.jersey().register(pingResource);
 

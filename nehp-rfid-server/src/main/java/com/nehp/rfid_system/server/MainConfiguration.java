@@ -33,6 +33,8 @@ public class MainConfiguration extends Configuration {
 
 	@NotEmpty
 	private String debug;
+	
+	private String filename;
 
 	@NotNull
 	@JsonProperty("email")
@@ -45,6 +47,11 @@ public class MainConfiguration extends Configuration {
 	@JsonProperty
 	public void setRealm(String realm) {
 		this.realm = realm;
+	}
+	
+	@JsonProperty
+	public String getFilename(){
+		return filename;
 	}
 
 	public String getRealm() {
