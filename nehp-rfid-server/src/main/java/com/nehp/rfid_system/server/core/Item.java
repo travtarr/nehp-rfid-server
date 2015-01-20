@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.core;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -36,12 +35,12 @@ public class Item {
 	@JsonProperty
 	private long id;
 	
-	@Column(name = "rfid", nullable = false, length = 32)
+	@Column(name = "rfid", nullable = true, length = 24)
 	@JsonProperty
 	private String rfid;
 	
 	@Column(name = "itemid", nullable = false, length = 64)
-	@JsonProperty
+	@JsonProperty("item_id")
 	private String itemId;
 	
 	@Column(name = "description", nullable = true, length = 128)
@@ -49,106 +48,106 @@ public class Item {
 	private String description;
 	
 	@Column(name = "created_by", nullable = false, length = 32)
-	@JsonProperty
+	@JsonProperty("created_by")
 	private String createdBy;
 	
 	@Column(name = "created_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime createdDate;
+	@JsonProperty("created_date")
+	////@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date createdDate;
 	
 	@Column(name = "current_revision", nullable = true, length = 4)
-	@JsonProperty
+	@JsonProperty("current_revision")
 	private String currentRevision;
 	
 	@Column(name = "current_revision_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime currentRevisionDate;
+	@JsonProperty("current_revision_date")
+	////@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date currentRevisionDate;
 	
-	@Column(name = "current_stage", nullable = false, length = 14)
-	@JsonProperty
+	@Column(name = "current_stage", nullable = true, length = 14)
+	@JsonProperty("current_stage")
 	private String currentStage;
 	
-	@Column(name = "last_status_change_date", nullable = false)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime lastStatusChangeDate;
+	@Column(name = "last_status_change_date", nullable = true)
+	@JsonProperty("last_status_change_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date lastStatusChangeDate;
 	
 	@Column(name = "last_status_change_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("last_status_change_user")
 	private String lastStatusChangeUser;
 	
 	@Column(name = "stage1_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage1Date;
+	@JsonProperty("stage1_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage1Date;
 	
 	@Column(name = "stage1_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage1_user")
 	private String stage1User;
 	
 	@Column(name = "stage2_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage2Date;
+	@JsonProperty("stage2_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage2Date;
 	
 	@Column(name = "stage2_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage2_user")
 	private String stage2User;
 	
 	@Column(name = "stage3_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage3Date;
+	@JsonProperty("stage3_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage3Date;
 	
 	@Column(name = "stage3_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage3_user")
 	private String stage3User;
 	
 	@Column(name = "stage4_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage4Date;
+	@JsonProperty("stage4_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage4Date;
 	
 	@Column(name = "stage4_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage4_user")
 	private String stage4User;
 	
 	@Column(name = "stage5_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage5Date;
+	@JsonProperty("stage5_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage5Date;
 	
 	@Column(name = "stage5_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage5_user")
 	private String stage5User;
 	
 	@Column(name = "stage6_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage6Date;
+	@JsonProperty("stage6_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage6Date;
 	
 	@Column(name = "stage6_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage6_user")
 	private String stage6User;
 	
 	@Column(name = "stage7_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage7Date;
+	@JsonProperty("stage7_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage7Date;
 	
 	@Column(name = "stage7_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage7_user")
 	private String stage7User;
 	
 	@Column(name = "stage0_date", nullable = true)
-	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime stage0Date;
+	@JsonProperty("stage0_date")
+	//@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDate")
+	private Date stage0Date;
 	
 	@Column(name = "stage0_user", nullable = true, length = 32)
-	@JsonProperty
+	@JsonProperty("stage0_user")
 	private String stage0User;
 	
 	/**
@@ -197,11 +196,11 @@ public class Item {
 		this.createdBy = createdBy;
 	}
 	
-	public DateTime getCreatedDate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(DateTime createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
@@ -215,11 +214,11 @@ public class Item {
 	}
 	
 	
-	public DateTime getCurrentRevisionDate() {
+	public Date getCurrentRevisionDate() {
 		return currentRevisionDate;
 	}
 
-	public void setCurrentRevisionDate(DateTime currentRevisionDate) {
+	public void setCurrentRevisionDate(Date currentRevisionDate) {
 		this.currentRevisionDate = currentRevisionDate;
 	}
 	
@@ -241,19 +240,19 @@ public class Item {
 		this.lastStatusChangeUser = lastStatusChangeUser;
 	}
 	
-	public DateTime getLastStatusChangeDate() {
+	public Date getLastStatusChangeDate() {
 		return lastStatusChangeDate;
 	}
 	
-	public void setLastStatusChangeDate(DateTime lastStatusChangeDate) {
+	public void setLastStatusChangeDate(Date lastStatusChangeDate) {
 		this.lastStatusChangeDate = lastStatusChangeDate;
 	}
 
-	public void setStage1Date(DateTime date) {
+	public void setStage1Date(Date date) {
 		this.stage1Date = date;
 	}
 	
-	public DateTime getStage1Date() {
+	public Date getStage1Date() {
 		return stage1Date;
 	}
 
@@ -265,11 +264,11 @@ public class Item {
 		return stage1User;
 	}
 	
-	public void setStage2Date(DateTime date) {
+	public void setStage2Date(Date date) {
 		this.stage2Date = date;
 	}
 	
-	public DateTime getStage2Date() {
+	public Date getStage2Date() {
 		return stage2Date;
 	}
 
@@ -281,11 +280,11 @@ public class Item {
 		return stage2User;
 	}
 
-	public void setStage3Date(DateTime date) {
+	public void setStage3Date(Date date) {
 		this.stage3Date = date;
 	}
 	
-	public DateTime getStage3Date() {
+	public Date getStage3Date() {
 		return stage3Date;
 	}
 
@@ -297,11 +296,11 @@ public class Item {
 		return stage3User;
 	}
 
-	public void setStage4Date(DateTime date) {
+	public void setStage4Date(Date date) {
 		this.stage4Date = date;
 	}
 	
-	public DateTime getStage4Date() {
+	public Date getStage4Date() {
 		return stage4Date;
 	}
 
@@ -313,11 +312,11 @@ public class Item {
 		return stage4User;
 	}
 
-	public void setStage5Date(DateTime date) {
+	public void setStage5Date(Date date) {
 		this.stage5Date = date;
 	}
 	
-	public DateTime getStage5Date() {
+	public Date getStage5Date() {
 		return stage5Date;
 	}
 
@@ -329,11 +328,11 @@ public class Item {
 		return stage5User;
 	}
 
-	public void setStage6Date(DateTime date) {
+	public void setStage6Date(Date date) {
 		this.stage6Date = date;
 	}
 	
-	public DateTime getStage6Date() {
+	public Date getStage6Date() {
 		return stage6Date;
 	}
 
@@ -345,11 +344,11 @@ public class Item {
 		return stage6User;
 	}
 
-	public void setStage7Date(DateTime date) {
+	public void setStage7Date(Date date) {
 		this.stage7Date = date;
 	}
 	
-	public DateTime getStage7Date() {
+	public Date getStage7Date() {
 		return stage7Date;
 	}
 
@@ -361,11 +360,11 @@ public class Item {
 		return stage7User;
 	}
 
-	public void setStage0Date(DateTime date) {
+	public void setStage0Date(Date date) {
 		this.stage0Date = date;
 	}
 	
-	public DateTime getStage0Date() {
+	public Date getStage0Date() {
 		return stage0Date;
 	}
 	

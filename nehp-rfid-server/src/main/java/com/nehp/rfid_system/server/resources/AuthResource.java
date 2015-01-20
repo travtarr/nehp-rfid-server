@@ -59,9 +59,10 @@ public class AuthResource {
 		if (user == null || !user.isPresent()){
 			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).build());
 		}
-		
+				
 		// User found, generate token
 		Long userId = user.get().getId();
+		
 		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId,  new DateTime());
 		
 		JsonObject jo = Json.createObjectBuilder()

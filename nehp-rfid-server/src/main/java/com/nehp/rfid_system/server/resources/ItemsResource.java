@@ -1,5 +1,6 @@
 package com.nehp.rfid_system.server.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.dropwizard.hibernate.UnitOfWork;
@@ -17,11 +18,9 @@ import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.ItemList;
-import com.nehp.rfid_system.server.core.ItemWrap;
 import com.nehp.rfid_system.server.data.ItemDAO;
 
 @Path("items")
-@Produces(MediaType.APPLICATION_JSON)
 public class ItemsResource {
 
 	private final ItemDAO items;
@@ -33,6 +32,7 @@ public class ItemsResource {
 	@GET
 	@Timed
 	@UnitOfWork
+	@Produces(MediaType.APPLICATION_JSON)
 	@RestrictedTo(Authority.ROLE_USER) 
 	public ItemList getItemList(){
 		ItemList list = new ItemList();
@@ -45,6 +45,8 @@ public class ItemsResource {
 	@Path("/multi")
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_USER)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public ItemList getItemListByList(List<Long> longs){
 		// TODO: make sure the resource can interpret the sent list of longs
 		ItemList list = new ItemList();
@@ -57,18 +59,33 @@ public class ItemsResource {
 	@Path("/multi")
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RestrictedTo(Authority.ROLE_SCANNER)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RestrictedTo(Authority.ROLE_USER)
 	public Response updateItems( ItemList itemList ){
 		
-//		boolean updated = items.update(item);
-//		if (updated) {
-//				ItemWrap wrap = new ItemWrap();
-//				Item updatedItem = items.getItemById( Long.parseLong(id) ).get();
-//				wrap.setItem(updatedItem);
-//				return Response.status( Response.Status.OK ).entity( wrap ).build();
-//		} else {
-//			return Response.status( Response.Status.BAD_REQUEST ).build();
-//		}
-		return Response.status( Response.Status.BAD_REQUEST ).build();
+		if (itemList.getItems().size() < 1){
+			System.out.println("Bad list or empty list");
+			return Response.status( Response.Status.BAD_REQUEST ).build();
+		}
+			
+		boolean updated = false;
+		List<Item> failedList = new ArrayList<Item>();
+		for (Item item : itemList.getItems()){
+			updated = items.update(item);
+			if (!updated) {
+				System.out.println("Not updated");
+				failedList.add(item);
+			} else
+				System.out.println("Updated");
+		}
+		if (failedList.size() != 0){
+			ItemList failedItemList = new ItemList();
+			failedItemList.setItems(failedList);
+			return Response.status( Response.Status.OK ).entity( failedItemList ).build();
+		} else { //if (failedList.size() == 0) {
+			return Response.status( Response.Status.OK ).build();
+		}
+		//System.out.println("failedList.size(): " + failedList.size());
+		//return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 }

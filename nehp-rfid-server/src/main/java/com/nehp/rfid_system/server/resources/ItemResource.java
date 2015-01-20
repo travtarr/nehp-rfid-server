@@ -4,6 +4,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,7 +35,39 @@ public class ItemResource {
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_USER) 
 	public Item getItem(@PathParam("id") String id){
-		return items.getItemById(Long.getLong(id)).get();	
+		return items.getItemById(Long.parseLong(id)).get();	
+	}
+	
+	@POST
+	@Timed
+	@Path("/rfid")
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_USER)
+	public Item getItemByRFID(String rfid){
+		if (!rfid.isEmpty() || rfid != "null")
+			return items.getItemByRFID(rfid).get();
+		else
+			return null;
+	}
+	
+	@POST
+	@Timed
+	@Path("/nextStage")
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response sendNextStage(String item){
+		
+		return null;
+	}
+	
+	@POST
+	@Timed
+	@Path("/nextStageMulti")
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response sendNextStageMulti(String items){
+		
+		return null;
 	}
 		
 	@PUT
@@ -83,14 +116,14 @@ public class ItemResource {
 	@Timed
 	@Path("/create")
 	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_SCANNER)
-	public String createItem( Item item ){
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response createItem( Item item ){
 		Long itemId = null;
 		itemId = items.create(item);
 		
 		if(itemId != null)
-			return "Item: " + item.getItemId() + " was created with id: " + itemId;
+			return Response.status( Response.Status.OK ).build();
 		else
-			return "Item: " + item.getItemId() + " was not created";
+			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 }

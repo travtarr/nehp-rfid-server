@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
@@ -7,7 +9,11 @@ import javax.servlet.DispatcherType;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.nehp.rfid_system.server.auth.RestrictedToMethodDispatchAdapter;
 import com.nehp.rfid_system.server.auth.SimpleAuthenticator;
 import com.nehp.rfid_system.server.core.*;
@@ -88,6 +94,9 @@ public class MainApp extends Application<MainConfiguration> {
 		if (configuration.isHttpsRedirect())
 			addHttpsForward(environment.getApplicationContext());
 		
+		environment.getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		//environment.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+				
 		// register resources
 		environment.jersey().register(MultiPart.class);
 		environment.jersey().register(listResource);

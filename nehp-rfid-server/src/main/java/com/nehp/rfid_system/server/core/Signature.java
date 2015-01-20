@@ -42,6 +42,9 @@ public class Signature {
 	private String stage;
 	
 	@JsonProperty
+	private String name;
+	
+	@JsonProperty
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime created;
 	
@@ -58,6 +61,10 @@ public class Signature {
 	
 	public void setStage(String stage){
 		this.stage = stage;
+	}
+	
+	public void setName(String name){
+		this.name = name;
 	}
 	
 	public void setCreated(DateTime created){
@@ -78,6 +85,10 @@ public class Signature {
 	
 	public String getStage(){
 		return stage;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	public DateTime getCreated(){

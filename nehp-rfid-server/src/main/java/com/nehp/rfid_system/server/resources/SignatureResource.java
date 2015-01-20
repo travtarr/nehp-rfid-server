@@ -39,7 +39,8 @@ public class SignatureResource {
 	public Response create(@FormDataParam("file") InputStream file, 
 			@FormDataParam("file") FormDataContentDisposition fileDisp, 
 			@FormDataParam("item") String item, 
-			@FormDataParam("stage") String stage){
+			@FormDataParam("stage") String stage,
+			@FormDataParam("name") String name){
 		
 		boolean success;
 		byte[] image = new byte[(int) fileDisp.getSize()];
@@ -56,6 +57,7 @@ public class SignatureResource {
 			sig.setItem(item);
 			sig.setStage(stage);	
 			sig.setImage(image);
+			sig.setName(name);
 			sig.setCreated(DateTime.now());
 			Long newId = dao.create(sig);
 			

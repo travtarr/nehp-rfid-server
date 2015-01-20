@@ -1,10 +1,8 @@
 package com.nehp.rfid_system.server.resources;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.*;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
@@ -33,14 +31,17 @@ public class DownloadResource {
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_SCANNER)
 	public Response download(){
-		final InputStream input;
 		StreamingOutput stream = null;
-		try {
-			input = new FileInputStream(filename);
+
+			final java.nio.file.Path path = Paths.get(filename);
+
+			if ( !Files.isReadable(path) )
+				return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
 			
+			// get the file size so the mobile unit knows its progress
+			long fileSize = 0;
 			try {
-				if ( input.available() == 0 || input.available() == -1 )
-					return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
+				fileSize = Files.size(path);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -49,23 +50,17 @@ public class DownloadResource {
 				@Override
 				public void write(OutputStream output) throws IOException,
 						WebApplicationException {
-					int bytes;
 					try {
-						while ( (bytes = input.read()) != -1) {
-							output.write(bytes);
-						}
+						Files.copy(path, output);
+
 					} catch (Exception e) {
 						throw new WebApplicationException(e);
 					} finally {
 						if (output != null) output.close();
-						if (input != null) input.close();
 					}
 				}
 			};
-		} catch (FileNotFoundException e1) {
-			return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
-		}
 		
-		return Response.ok(stream).build();
+		return Response.ok(stream).header("Content-Length", String.valueOf(fileSize)).build();
 	}
 }

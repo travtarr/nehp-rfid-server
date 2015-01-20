@@ -36,16 +36,15 @@ public class UserDAO extends AbstractDAO<User> {
 	public Optional<User> getUserByUsernameAndPassword(String username,
 			String password) {
 		Optional<User> user = null;
-		
+
 		user = Optional.of(list(namedQuery("users.getByUsername")
 						.setParameter("username", username, StringType.INSTANCE)).get(0));
-		try {
-			System.out.println("EnteredPW: " + PasswordHelper.getSaltedHash(password));
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		//System.out.println(user.get().getPassword());
+//		try {
+//			System.out.println("EnteredPW: " + PasswordHelper.getSaltedHash(password));
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
+
 		try {
 			if(PasswordHelper.check(password, user.get().getPassword()))
 				return user;

@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<dropwizard.version>0.7.0</dropwizard.version>
+		<dropwizard.version>0.7.1</dropwizard.version>
 	</properties>
 
 	<dependencies>
@@ -61,12 +61,21 @@
 			<groupId>io.dropwizard</groupId>
 			<artifactId>dropwizard-jersey</artifactId>
 			<version>${dropwizard.version}</version>
+		</dependency><dependency>
+			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-jackson</artifactId>
+			<version>${dropwizard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-multipart</artifactId>
+			<version>1.18.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.4</version>
+			<version>2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -109,15 +118,11 @@
 			<version>1.9</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey.contribs</groupId>
-			<artifactId>jersey-multipart</artifactId>
-			<version>1.17</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
 
 	</dependencies>
 

@@ -30,9 +30,9 @@ public class ItemDAO extends AbstractDAO<Item>{
 		//return list(namedQuery("items.getById").setParameter("id", id, StringType.INSTANCE)).get(0);
 	}
 	
-	public Optional<Item> getItemByRFID(Long id){
+	public Optional<Item> getItemByRFID(String id){
 		return Optional.of(list(namedQuery("items.getByRFID")
-				.setParameter("rfid", id, LongType.INSTANCE)).get(0));
+				.setParameter("rfid", id, StringType.INSTANCE)).get(0));
 		
 	}
 	
@@ -69,7 +69,29 @@ public class ItemDAO extends AbstractDAO<Item>{
 		if(updateItem == null)
 			return false;
 		
-		updateItem = item;
+		updateItem.setCurrentStage(item.getCurrentStage());
+		updateItem.setCurrentRevision(item.getCurrentRevision());
+		updateItem.setCurrentRevisionDate(item.getCurrentRevisionDate());
+		updateItem.setDescription(item.getDescription());
+		updateItem.setRFID(item.getRFID());
+		updateItem.setLastStatusChangeDate(item.getLastStatusChangeDate());
+		updateItem.setLastStatusChangeUser(item.getLastStatusChangeUser());
+		updateItem.setStage0Date(item.getStage0Date());
+		updateItem.setStage0User(item.getStage0User());
+		updateItem.setStage1Date(item.getStage1Date());
+		updateItem.setStage1User(item.getStage1User());
+		updateItem.setStage2Date(item.getStage2Date());
+		updateItem.setStage2User(item.getStage2User());
+		updateItem.setStage3Date(item.getStage3Date());
+		updateItem.setStage3User(item.getStage3User());
+		updateItem.setStage4Date(item.getStage4Date());
+		updateItem.setStage4User(item.getStage4User());
+		updateItem.setStage5Date(item.getStage5Date());
+		updateItem.setStage5User(item.getStage5User());
+		updateItem.setStage6Date(item.getStage6Date());
+		updateItem.setStage6User(item.getStage6User());
+		updateItem.setStage7Date(item.getStage7Date());
+		updateItem.setStage7User(item.getStage7User());
 		persist(updateItem);
 
 		return true;	
