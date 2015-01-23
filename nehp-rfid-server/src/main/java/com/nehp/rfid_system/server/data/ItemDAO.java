@@ -1,6 +1,7 @@
 package com.nehp.rfid_system.server.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,11 +9,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.Item;
+import com.nehp.rfid_system.server.helpers.Stages;
 
 import io.dropwizard.hibernate.AbstractDAO;
 
@@ -33,6 +34,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 	public Optional<Item> getItemByRFID(String id){
 		return Optional.of(list(namedQuery("items.getByRFID")
 				.setParameter("rfid", id, StringType.INSTANCE)).get(0));
+		
+	}
+	
+	public Optional<Item> getItemByItemId(String id){
+		return Optional.of(list(namedQuery("items.getByItemId")
+				.setParameter("item", id, StringType.INSTANCE)).get(0));
 		
 	}
 	
@@ -63,8 +70,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 	}
 	
 	public boolean update(Item item){
-		// Make sure we update the correct user
-		Item updateItem = get(item.getId());
+		// Make sure we update the correct item
+		Item updateItem;
+		if (item.getId() > 0)
+			updateItem = get(item.getId());
+		else 
+			updateItem = this.getItemByItemId(item.getItemId()).get();
 		
 		if(updateItem == null)
 			return false;
@@ -95,6 +106,77 @@ public class ItemDAO extends AbstractDAO<Item>{
 		persist(updateItem);
 
 		return true;	
+	}
+	
+	public boolean updateGroup(Item item){
+		// Make sure we update the correct item
+				Item updateItem;
+				if (item.getId() > 0)
+					updateItem = get(item.getId());
+				else 
+					updateItem = this.getItemByItemId(item.getItemId()).get();
+				
+				if(updateItem == null)
+					return false;
+				
+				updateItem.setGroup(item.getGroup());
+				persist(updateItem);
+
+				return true;	
+	}
+	
+	public boolean sendNextStage(Item item, String user){
+		boolean updated = false;
+		switch (item.getCurrentStage().toUpperCase()){
+			case Stages.MODELING:
+				item.setStage1Date(new Date());
+				item.setStage1User(user);
+				item.setCurrentStage(Stages.KITTING);
+				updated = true;
+				break;
+			case Stages.KITTING:
+				item.setStage2Date(new Date());
+				item.setStage2User(user);
+				item.setCurrentStage(Stages.MANUFACTURING);
+				updated = true;
+				break;
+			case Stages.MANUFACTURING:
+				item.setStage3Date(new Date());
+				item.setStage3User(user);
+				item.setCurrentStage(Stages.QAQC);
+				updated = true;
+				break;
+			case Stages.QAQC:
+				item.setStage4Date(new Date());
+				item.setStage4User(user);
+				item.setCurrentStage(Stages.SHIPPED);
+				updated = true;
+				break;
+			case Stages.SHIPPED:
+				item.setStage5Date(new Date());
+				item.setStage5User(user);
+				item.setCurrentStage(Stages.ARRIVED);
+				updated = true;
+				break;
+			case Stages.ARRIVED:
+				item.setStage6Date(new Date());
+				item.setStage6User(user);
+				item.setCurrentStage(Stages.INSTALLED);
+				updated = true;
+				break;
+			case Stages.INSTALLED:
+				item.setStage7Date(new Date());
+				item.setStage7User(user);
+				// if installed, don't change stage description
+				updated = true;
+				break;
+		}
+		
+		// now finally update the database
+		if (!this.update(item))
+			updated = false;
+		
+		return updated;
 	}
 	
 	// TODO: Create a method to update many items at once

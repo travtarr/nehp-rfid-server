@@ -2,11 +2,10 @@ package com.nehp.rfid_system.server.data;
 
 import io.dropwizard.hibernate.AbstractDAO;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.hibernate.SessionFactory;
-import org.joda.time.DateTime;
-
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.AccessToken;
 
@@ -26,13 +25,13 @@ public class AccessTokenDAO extends AbstractDAO<AccessToken>{
 		return Optional.of(accessToken);
 	}
 
-	public AccessToken generateNewAccessToken(final long userId, final DateTime dateTime) {
+	public AccessToken generateNewAccessToken(final long userId, final Date dateTime) {
 		AccessToken accessToken = new AccessToken(UUID.randomUUID(), userId, dateTime);
 		persist(accessToken);
 		return accessToken;
 	}
 
-	public void setLastAccessTime(final UUID accessTokenUUID, final DateTime dateTime) {
+	public void setLastAccessTime(final UUID accessTokenUUID, final Date dateTime) {
 		AccessToken accessToken = get(accessTokenUUID);
 		AccessToken updatedAccessToken = accessToken.withLastAccessUTC(dateTime);
 		persist(updatedAccessToken);

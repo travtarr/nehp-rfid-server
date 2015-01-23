@@ -52,23 +52,18 @@ public class ItemResource {
 	
 	@POST
 	@Timed
-	@Path("/nextStage")
+	@Path("/nextStage/{user}")
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_USER)
-	public Response sendNextStage(String item){
+	public Response sendNextStage( @PathParam("user") String user, String rfid ){
+		Item item = items.getItemByRFID(rfid).get();
 		
-		return null;
+		if (items.sendNextStage(item, user))
+			return Response.status( Response.Status.OK ).build();
+		else
+			return Response.status( Response.Status.NOT_MODIFIED ).build();
 	}
-	
-	@POST
-	@Timed
-	@Path("/nextStageMulti")
-	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_USER)
-	public Response sendNextStageMulti(String items){
-		
-		return null;
-	}
+
 		
 	@PUT
 	@Timed
@@ -88,7 +83,7 @@ public class ItemResource {
 				wrap.setItem(updatedItem);
 				return Response.status( Response.Status.OK ).entity( wrap ).build();
 		} else {
-			return Response.status( Response.Status.BAD_REQUEST ).build();
+			return Response.status( Response.Status.NOT_MODIFIED ).build();
 		}
 	}
 	

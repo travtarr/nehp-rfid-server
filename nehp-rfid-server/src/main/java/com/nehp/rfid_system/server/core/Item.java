@@ -24,7 +24,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NamedQueries({
 		@NamedQuery(name = "items.getAll", query = "FROM Item p"),
 		@NamedQuery(name = "items.getByStage", query = "FROM Item p WHERE p.currentStage = :stage"),
-		@NamedQuery(name = "items.getByRFID", query = "FROM Item p WHERE p.rfid = :rfid") })
+		@NamedQuery(name = "items.getByRFID", query = "FROM Item p WHERE p.rfid = :rfid"),
+		@NamedQuery(name = "items.getByItemId", query = "FROM Item p WHERE p.itemId = :id") })
 public class Item {
 
 	public Item(){}
@@ -39,13 +40,17 @@ public class Item {
 	@JsonProperty
 	private String rfid;
 	
-	@Column(name = "itemid", nullable = false, length = 64)
+	@Column(name = "itemId", nullable = false, length = 64)
 	@JsonProperty("item_id")
 	private String itemId;
 	
 	@Column(name = "description", nullable = true, length = 128)
 	@JsonProperty
 	private String description;
+	
+	@Column(name = "group", nullable = true)
+	@JsonProperty
+	private Long group;
 	
 	@Column(name = "created_by", nullable = false, length = 32)
 	@JsonProperty("created_by")
@@ -169,7 +174,6 @@ public class Item {
 	public void setRFID(String rfid) {
 		this.rfid = rfid;
 	}
-
 	
 	public String getItemId() {
 		return itemId;
@@ -177,6 +181,14 @@ public class Item {
 
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
+	}
+	
+	public Long getGroup() {
+		return group;
+	}
+	
+	public void setGroup(Long group) {
+		this.group = group;
 	}
 	
 	public String getDescription() {

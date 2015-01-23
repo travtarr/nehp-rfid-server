@@ -3,6 +3,7 @@ package com.nehp.rfid_system.server.core;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -70,14 +71,12 @@ public class User {
 	private boolean password_reset;
 	
 	@Column(name = "last_login_date", nullable = true)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@JsonProperty
-	private DateTime last_login_date;
+	private Date last_login_date;
 	
 	@Column(name = "user_created_date", nullable = true)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@JsonProperty
-	private DateTime user_created_date;
+	private Date user_created_date;
 	
 	@Column(name = "admin", nullable = false)
 	@JsonProperty
@@ -109,10 +108,10 @@ public class User {
 	public void setPasswordReset(boolean reset){
 		this.password_reset = reset;
 	}
-	public void setLastLoginDate(DateTime date){
+	public void setLastLoginDate(Date date){
 		this.last_login_date = date;
 	}
-	public void setUserCreatedDate(DateTime date){
+	public void setUserCreatedDate(Date date){
 		this.user_created_date = date;
 	}
 	public void setAdmin(boolean admin){
@@ -152,11 +151,11 @@ public class User {
 		return password_reset;
 	}
 
-	public DateTime getLastLoginDate(){
+	public Date getLastLoginDate(){
 		return last_login_date;
 	}
 
-	public DateTime getUserCreatedDate(){
+	public Date getUserCreatedDate(){
 		return user_created_date;
 	}
 

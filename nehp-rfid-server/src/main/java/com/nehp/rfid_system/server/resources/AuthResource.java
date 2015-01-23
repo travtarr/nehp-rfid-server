@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.resources;
 
+import java.util.Date;
+
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.json.Json;
@@ -12,8 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.joda.time.DateTime;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -63,7 +63,7 @@ public class AuthResource {
 		// User found, generate token
 		Long userId = user.get().getId();
 		
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId,  new DateTime());
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId, new Date());
 		
 		JsonObject jo = Json.createObjectBuilder()
 				.add("api_key", Json.createArrayBuilder()

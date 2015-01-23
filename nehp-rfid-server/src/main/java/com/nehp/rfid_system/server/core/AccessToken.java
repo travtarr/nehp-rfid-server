@@ -1,6 +1,7 @@
 package com.nehp.rfid_system.server.core;
 
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -10,10 +11,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-//import org.joda.time.contrib.hibernate.PersistentDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -30,7 +27,7 @@ public class AccessToken {
 	
 	public AccessToken(){}
 	
-	public AccessToken(UUID id, long userId, DateTime lastAccess){
+	public AccessToken(UUID id, long userId, Date lastAccess){
 		this.id = id;
 		this.userId = userId;
 		this.lastAccess = lastAccess;
@@ -50,8 +47,7 @@ public class AccessToken {
 	@JsonProperty
 	@NotNull
 	@Column(name = "last_access")
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime lastAccess;
+	private Date lastAccess;
 
 	public UUID getId(){
 		return id;
@@ -61,7 +57,7 @@ public class AccessToken {
 		return userId;
 	}
 
-	public DateTime getLastAccess(){
+	public Date getLastAccess(){
 		return lastAccess;
 	}
 	
@@ -73,11 +69,11 @@ public class AccessToken {
 		this.userId = userId;
 	}
 	
-	public void setLastAccessUTC(DateTime lastAccess){
+	public void setLastAccessUTC(Date lastAccess){
 		this.lastAccess = lastAccess;
 	}
 	
-	public AccessToken withLastAccessUTC(DateTime lastAccess){
+	public AccessToken withLastAccessUTC(Date lastAccess){
 		this.lastAccess = lastAccess;
 		return this;
 	}

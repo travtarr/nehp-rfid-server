@@ -1,5 +1,6 @@
 package com.nehp.rfid_system.server.auth;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.hibernate.Session;
@@ -64,7 +65,7 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		}
 		
 		// Check if access time is within expiration time
-		Period period = new Period(accessTokenOpt.get().getLastAccess(), new DateTime());
+		Period period = new Period(new DateTime(accessTokenOpt.get().getLastAccess()), new DateTime());
 		if (period.getMinutes() > ACCESS_TOKEN_EXPIRE_TIME_MIN){
 			session.delete(accessToken);
 			System.out.println("[Authenticator] Passed period duration");
@@ -74,7 +75,7 @@ public class SimpleAuthenticator implements Authenticator<Credentials, Long>{
 		}
 		
 		// Update the access time for the token
-		AccessToken updatedAccessToken = accessTokenOpt.get().withLastAccessUTC(new DateTime());
+		AccessToken updatedAccessToken = accessTokenOpt.get().withLastAccessUTC(new Date());
 		session.saveOrUpdate(updatedAccessToken);
 		session.getTransaction().commit();
 		session.close();

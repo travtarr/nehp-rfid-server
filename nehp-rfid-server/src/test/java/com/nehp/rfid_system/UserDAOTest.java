@@ -2,9 +2,9 @@ package com.nehp.rfid_system;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,7 +83,7 @@ public class UserDAOTest extends DAOTest{
 		user.setName("root");
 		user.setScanner(false);
 		user.setUsername("root");
-		user.setUserCreatedDate(new DateTime());
+		user.setUserCreatedDate(new Date());
 		
 		getSession().beginTransaction();
 		Optional<Long> result = userDAO.create(user);

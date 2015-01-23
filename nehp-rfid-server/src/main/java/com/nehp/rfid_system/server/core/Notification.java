@@ -2,15 +2,14 @@ package com.nehp.rfid_system.server.core;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -43,8 +42,7 @@ public class Notification {
 	
 	@JsonProperty
 	@Column( name = "date", nullable = true)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime date;
+	private Date date;
 	
 	@JsonProperty
 	@Column( name = "created_by", nullable = false)
@@ -60,7 +58,7 @@ public class Notification {
 	public void setMessage(String message){
 		this.message = message;
 	}
-	public void setDate(DateTime date){
+	public void setDate(Date date){
 		this.date = date;
 	}
 	public void setCreatedBy(String createdBy){
@@ -80,7 +78,7 @@ public class Notification {
 		return message;
 	}
 	
-	public DateTime getDate(){
+	public Date getDate(){
 		return date;
 	}
 	

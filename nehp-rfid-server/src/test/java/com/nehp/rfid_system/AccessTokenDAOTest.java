@@ -1,6 +1,7 @@
 package com.nehp.rfid_system;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,21 +22,19 @@ public class AccessTokenDAOTest extends DAOTest{
 	
 	@Test
 	public void testGenerateAccessTokenAndFindById(){
-		DateTime time = new DateTime(2014, 6, 18, 14, 52);
 		getSession().beginTransaction();
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(ID, time);
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(ID, new Date());
 		assertThat(accessToken.getId()).isEqualTo(accessTokenDAO.findAccessTokenById(accessToken.getId()).get().getId());
 		getSession().getTransaction().commit();
 	}
 	
 	@Test
 	public void testSetLastAccessTime(){
-		DateTime time = new DateTime(2014, 6, 18, 14, 52);
-		DateTime newTime = new DateTime(2014, 7, 18, 14, 52);
 		getSession().beginTransaction();
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(ID, time);
-		accessTokenDAO.setLastAccessTime(accessToken.getId(), newTime);
-		assertThat(accessTokenDAO.findAccessTokenById(accessToken.getId()).get().getLastAccess()).isEqualTo(newTime);
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(ID, new Date());
+		Date date = new Date();
+		accessTokenDAO.setLastAccessTime(accessToken.getId(), date);
+		assertThat(accessTokenDAO.findAccessTokenById(accessToken.getId()).get().getLastAccess()).isEqualTo(date);
 		getSession().getTransaction().commit();
 	}
 

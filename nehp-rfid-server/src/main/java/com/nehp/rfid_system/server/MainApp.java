@@ -71,11 +71,12 @@ public class MainApp extends Application<MainConfiguration> {
 		NotificationsDAO notificationsDAO = new NotificationsDAO(hibernate.getSessionFactory());
 		SettingDAO settingDAO = new SettingDAO(hibernate.getSessionFactory());
 		SignatureDAO signatureDAO = new SignatureDAO(hibernate.getSessionFactory());
+		GroupDAO groupDAO = new GroupDAO(hibernate.getSessionFactory());
 				
 		// initialize resources
 		final ListResource listResource = new ListResource(itemDAO);
 		final ItemResource itemResource = new ItemResource(itemDAO);
-		final ItemsResource itemsResource = new ItemsResource(itemDAO);
+		final ItemsResource itemsResource = new ItemsResource(itemDAO, groupDAO);
 		final AuthResource authResource = new AuthResource(
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
 		final UserResource userResource = new UserResource(userDAO, accessTokenDAO, settingDAO);
