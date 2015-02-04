@@ -28,7 +28,10 @@ import com.nehp.rfid_system.server.data.ItemDAO;
 @Path("items")
 public class ItemsResource {
 	
-	private final static String NOT_PRINTED = "NOT-PRINTED";
+	private final static String NOT_PRINTED = "NOT PRINTED";
+	private final static int ON_HOLD_STAGE_NUM = 0;
+	private final static String ON_HOLD_STAGE = "ON HOLD";
+	private final static String ON_HOLD_REASON_NEW_REVISION = "New Revision";
 
 	private final ItemDAO items;
 	private final GroupDAO groups;
@@ -111,6 +114,7 @@ public class ItemsResource {
 		for (Item item : itemArray) {
 			// If this is a new revision, need to remove the group id from old
 			// revisions and add it to this new revision
+			// Also need to set
 			Long group = null;
 			Optional<List<Item>> revList = items.getItemsByItemId(item.getItemId());
 			if (revList.isPresent() && revList.get().size() > 0){
@@ -120,6 +124,9 @@ public class ItemsResource {
 						revItem.setGroup(null);
 						items.update(revItem);
 					}
+					revItem.setCurrentStageNum(ON_HOLD_STAGE_NUM);
+					revItem.setCurrentStage(ON_HOLD_STAGE);
+					revItem.setReason(ON_HOLD_REASON_NEW_REVISION);
 				}
 			}
 			
