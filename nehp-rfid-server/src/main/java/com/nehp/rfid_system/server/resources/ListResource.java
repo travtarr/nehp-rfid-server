@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Item;
@@ -38,42 +39,12 @@ public class ListResource {
 	@Timed
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_USER) 
-	public List<Item> getList(@PathParam("type") String type){
+	public List<Item> getList(@PathParam("type") String stage){
 		List<Item> list = null;
 
-		
-		// figure out which list to give client
-		switch(ListType.valueOf(type)){
-		case ALL:
-			list = items.getItemsAll();
-			break;
-		case ARRIVAL:
-			list = items.getItemsByStage(type);
-			break;
-		case INSTALLED:
-			list = items.getItemsByStage(type);
-			break;
-		case KITTING:
-			list = items.getItemsByStage(type);
-			break;
-		case MANUFACTURING:
-			list = items.getItemsByStage(type);
-			break;
-		case QAQC:
-			list = items.getItemsByStage(type);
-			break;
-		case MODELING:
-			list = items.getItemsByStage(type);
-			break;
-		case SHIPPED:
-			list = items.getItemsByStage(type);
-			break;
-		case STOPPED:
-			list = items.getItemsByStage(type);
-			break;
-		default:
-			break;
-		}
+		Optional<List<Item>> retrievedList = items.getItemsByStage(stage);
+		if (retrievedList.isPresent())
+			list = retrievedList.get();
 				
 		return list;
 	}

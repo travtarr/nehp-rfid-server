@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Group;
@@ -26,6 +27,8 @@ import com.nehp.rfid_system.server.data.ItemDAO;
 
 @Path("items")
 public class ItemsResource {
+	
+	private final static String NOT_PRINTED = "NOT-PRINTED";
 
 	private final ItemDAO items;
 	private final GroupDAO groups;
@@ -42,9 +45,30 @@ public class ItemsResource {
 	@RestrictedTo(Authority.ROLE_USER)
 	public ItemList getItemList() {
 		ItemList list = new ItemList();
-		list.setItems(items.getItemsAll());
+		Optional<List<Item>> retrievedList = items.getItemsAll();
+		if (retrievedList.isPresent())
+			list.setItems(retrievedList.get());
 		return list;
 	}
+	
+	@GET
+	@Timed
+	@Path("/printed/{isPrinted}")
+	@UnitOfWork
+	@Produces(MediaType.APPLICATION_JSON)
+	@RestrictedTo(Authority.ROLE_USER)
+	public ItemList getItemListByPrinted(@PathParam("isPrinted") String isPrinted) {
+		Boolean printed = false;
+		if (isPrinted.equals("true"))
+			printed = true;
+			
+		ItemList list = new ItemList();
+		Optional<List<Item>> retrievedList = items.getItemsByPrinted(printed);
+		if (retrievedList.isPresent())
+			list.setItems(retrievedList.get());
+		return list;
+	}
+	
 
 	@GET
 	@Timed
@@ -78,21 +102,48 @@ public class ItemsResource {
 	public Response createItem(ItemList itemList) {
 
 		if (itemList == null) {
+			System.out.println("createItem: itemList is null");
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
+	
 		List<Item> itemArray = itemList.getItems();
-		List<Item> updatedItems = new ArrayList<Item>();
+		List<Item> duplicatedItems = new ArrayList<Item>();
 		for (Item item : itemArray) {
-			long id = items.create(item);
-			if (id > 0)
-				updatedItems.add(items.getItemById(id).get());
+			// If this is a new revision, need to remove the group id from old
+			// revisions and add it to this new revision
+			Long group = null;
+			Optional<List<Item>> revList = items.getItemsByItemId(item.getItemId());
+			if (revList.isPresent() && revList.get().size() > 0){
+				for (Item revItem : revList.get()){
+					if (revItem.getGroup() != null){
+						group = revItem.getGroup();
+						revItem.setGroup(null);
+						items.update(revItem);
+					}
+				}
+			}
+			
+			item.setId(null);
+			item.setCurrentStage(NOT_PRINTED);
+			if (group != null)
+				item.setGroup(group);
+			
+			// Make sure this item is not already created
+			if (!items.getItemByItemIdAndRev(item.getItemId(), item.getCurrentRevision()).isPresent()) {
+				items.create(item);
+			} else {
+				duplicatedItems.add(item);
+			}
 		}
 
-		if (updatedItems.size() > 0)
-			return Response.status(Response.Status.OK).entity(updatedItems)
+		if (duplicatedItems.size() > 0) {
+			// Send the items that are duplicates back to the client
+			return Response.status(Response.Status.OK).entity(duplicatedItems)
 					.build();
-		else
-			return Response.status(Response.Status.BAD_REQUEST).build();
+		} else {
+			return Response.status(Response.Status.OK).build();
+		}
+		
 	}
 	
 	/**
@@ -185,33 +236,5 @@ public class ItemsResource {
 		} else {
 			return Response.status(Response.Status.OK).build();
 		}
-	}
-
-	/**
-	 * Updates a list of items to indicate they are off to the next stage.
-	 * 
-	 * @param user
-	 * @param rfid
-	 * @return an array of ints in the same order that the rfid array was in 0 -
-	 *         failure, 1 - success
-	 */
-	@POST
-	@Timed
-	@Path("/nextStage/{user}")
-	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_USER)
-	public Response sendNextStageMulti(@PathParam("user") String user,
-			String[] rfid) {
-		int[] status = new int[rfid.length];
-		for (int i = 0; i < rfid.length; i++) {
-			Item item = items.getItemByRFID(rfid[i]).get();
-
-			if (items.sendNextStage(item, user))
-				status[i] = 1;
-			else
-				status[i] = 0;
-		}
-
-		return Response.status(Response.Status.OK).entity(status).build();
 	}
 }

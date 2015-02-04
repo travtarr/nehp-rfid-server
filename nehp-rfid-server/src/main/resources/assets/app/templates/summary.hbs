@@ -11,16 +11,16 @@
 			<ul class="nav nav-inverse dark-list nav-pointer">
 				<li class="nav-header">In-Process</li>
 				<li><a {{action 'setStage' 'ALL'}}>All</a></li>
-				<li><a {{action 'setStage' 'MODELING'}}>Modeling</a></li>
-				<li><a {{action 'setStage' 'KITTING'}}>Material Kitting</a></li>
-				<li><a {{action 'setStage' 'MANUFACTURING'}}>Manufacturing</a></li>
-				<li><a {{action 'setStage' 'QA/QC'}}>QualityCheck</a></li>
+				<li><a {{action 'setStage' 'INTEGRATION START'}}>Integration Start</a></li>
+				<li><a {{action 'setStage' 'INTEGRATION COMPLETE'}}>Integration Complete</a></li>
+				<li><a {{action 'setStage' 'PARTS ALLOCATED'}}>Parts Allocated</a></li>
+				<li><a {{action 'setStage' 'MANUFACTURING BEGIN'}}>Manufacturing Begin</a></li>
+				<li><a {{action 'setStage' 'MANUFACTURING COMPLETE'}}>Manufacturing Complete</a></li>
+				<li><a {{action 'setStage' 'QA/QC COMPLETE'}}>QA/QC Complete</a></li>
 				<li><a {{action 'setStage' 'SHIPPED'}}>Shipped</a></li>
-				<li><a {{action 'setStage' 'ARRIVAL'}}>Arrival</a></li>
-				<li><a {{action 'setStage' 'INSTALLED'}}>Installed</a></li>
 				<li class="divider"></li>
-				<li class="nav-header">Stopped</li>
-				<li><a {{action 'setStage' 'STOPPED'}}>All</a></li>
+				<li class="nav-header">On Hold</li>
+				<li><a {{action 'setStage' 'ON_HOLD'}}>All</a></li>
 			</ul>
 		</div>
 		<div class="span10">
@@ -30,7 +30,7 @@
 						<th><button {{action 'toggleSort' 'current_stage'}}>Current Stage</button></th>
 						<th><button {{action 'toggleSort' 'rfid'}}>RFID</button></th>
 						<th><button {{action 'toggleSort' 'item_id'}}>Item ID</button></th>
-						<th><button {{action 'toggleSort' 'description'}}>Description</button></th>
+						<th><button {{action 'toggleSort' 'group'}}>Group</button></th>
 						<th><button {{action 'toggleSort' 'last_status_change_date'}}>Last Change</button></th>
 						<th><button {{action 'toggleSort' 'current_revision'}}>Revision</button></th>
 					</thead>
@@ -40,7 +40,7 @@
 							<td>{{current_stage}}</td>
 							<td>{{rfid}}</td>
 							<td>{{#link-to 'item' this}}{{item_id}}{{/link-to}}</td>
-							<td>{{description}}</td>
+							<td>{{group}}</td>
 							<td>{{last_status_change_date}}</td>
 							<td>{{current_revision}}</td>
 						</tr>

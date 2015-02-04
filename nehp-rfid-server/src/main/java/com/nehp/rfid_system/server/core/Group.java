@@ -18,10 +18,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @JsonSnakeCase
 @Entity
-@Table(name = "group")
+@Table(name = "groups")
 @JsonRootName("group")
 @NamedQueries({
-	@NamedQuery(name = "group.getAll", query = "FROM Group p")
+	@NamedQuery(name = "groups.getAll", query = "FROM Group p")
 })
 public class Group {
 	

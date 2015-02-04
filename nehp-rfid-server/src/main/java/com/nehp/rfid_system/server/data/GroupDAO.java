@@ -16,7 +16,7 @@ public class GroupDAO extends AbstractDAO<Group> {
 	}
 	
 	public List<Group> getGroupsAll(){
-		return list(namedQuery("group.getAll"));
+		return list(namedQuery("groups.getAll"));
 	}
 	
 	public Long create(Group group){

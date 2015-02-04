@@ -38,6 +38,15 @@ public class ItemResource {
 		return items.getItemById(Long.parseLong(id)).get();	
 	}
 	
+	@GET
+	@Timed
+	@Path("/item-rev/{item_id}/{rev}")
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_USER)
+	public Item getItem(@PathParam("item_id") String itemId, @PathParam("rev") String rev){
+		return items.getItemByItemIdAndRev(itemId, rev).get();
+	}
+	
 	@POST
 	@Timed
 	@Path("/rfid")
@@ -50,27 +59,13 @@ public class ItemResource {
 			return null;
 	}
 	
-	@POST
-	@Timed
-	@Path("/nextStage/{user}")
-	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_USER)
-	public Response sendNextStage( @PathParam("user") String user, String rfid ){
-		Item item = items.getItemByRFID(rfid).get();
-		
-		if (items.sendNextStage(item, user))
-			return Response.status( Response.Status.OK ).build();
-		else
-			return Response.status( Response.Status.NOT_MODIFIED ).build();
-	}
-
 		
 	@PUT
 	@Timed
-	@Path("/{id}/update")
+	@Path("/{id}")
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RestrictedTo(Authority.ROLE_SCANNER)
+	@RestrictedTo(Authority.ROLE_USER)
 	public Response updateItem( @PathParam("id") String id, Item item ){
 		// Verify IDs match
 		if (Long.parseLong(id) != item.getId())
