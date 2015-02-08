@@ -9,13 +9,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
+import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.Signature;
+import com.nehp.rfid_system.server.data.ItemDAO;
 import com.nehp.rfid_system.server.data.SignatureDAO;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -26,21 +28,23 @@ import io.dropwizard.hibernate.UnitOfWork;
 public class SignatureResource {
 	
 	private final SignatureDAO dao;
+	private final ItemDAO itemDAO;
 	
-	public SignatureResource(SignatureDAO dao){
+	public SignatureResource(SignatureDAO dao, ItemDAO items){
 		this.dao = dao;
+		this.itemDAO = items;
 	}
      
 	@POST
 	@Timed
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_SCANNER)
+	@RestrictedTo(Authority.ROLE_USER)
 	public Response create(@FormDataParam("file") InputStream file, 
 			@FormDataParam("file") FormDataContentDisposition fileDisp, 
-			@FormDataParam("item") String item, 
-			@FormDataParam("stage") String stage,
-			@FormDataParam("name") String name){
+			@FormDataParam("item") String itemid, 
+			@FormDataParam("name") String name,
+			@FormDataParam("revision") String revision ){
 		
 		boolean success;
 		byte[] image = new byte[(int) fileDisp.getSize()];
@@ -53,22 +57,29 @@ public class SignatureResource {
 		}
 		// make sure the image was copied before creating the record
 		if( success ) {
-			Signature sig = new Signature();
-			sig.setItem(item);
-			sig.setStage(stage);	
-			sig.setImage(image);
-			sig.setName(name);
-			sig.setCreated(DateTime.now());
-			Long newId = dao.create(sig);
+			Item item = null;
+			Optional<Item> optItem = itemDAO.getItemByItemIdAndRev(itemid, revision);
+			if (optItem.isPresent())
+				item = optItem.get();
 			
-			if ( newId != null ){
-				return Response.status( Response.Status.OK ).entity( newId ).build();
-			} else {
-				return Response.status( Response.Status.BAD_REQUEST ).build();
+			if (item != null) {
+				Signature sig = new Signature();
+				sig.setItem(item.getId());
+				sig.setStage(item.getCurrentStageNum() + 1);	
+				sig.setImage(image);
+				sig.setAuthor(name);
+				Long newId = dao.create(sig);
+				
+				if ( newId != null ){
+					return Response.status( Response.Status.OK ).entity( newId ).build();
+				} else {
+					return Response.status( Response.Status.BAD_REQUEST ).build();
+				}
 			}
-		} else {
-			return Response.status( Response.Status.BAD_REQUEST ).build();
-		}
+		} 
+			
+		return Response.status( Response.Status.BAD_REQUEST ).build();
+		
 	}
 	
 	@POST
@@ -76,11 +87,11 @@ public class SignatureResource {
 	@Path("/multi")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@UnitOfWork
-	@RestrictedTo(Authority.ROLE_SCANNER)
+	@RestrictedTo(Authority.ROLE_USER)
 	public Response createMulti(@FormDataParam("file") InputStream file, 
 			@FormDataParam("file") FormDataContentDisposition fileDisp, 
-			@FormDataParam("items") JSONArray items, 
-			@FormDataParam("stage") String stage){
+			@FormDataParam("item") String itemList, 
+			@FormDataParam("name") String name ){
 		
 		boolean success;
 		byte[] image = new byte[(int) fileDisp.getSize()];
@@ -93,25 +104,42 @@ public class SignatureResource {
 		}
 		// make sure the image was copied before creating the records
 		if( success ) {
-			Long[] newList = new Long[items.length()];
-			// go through each item in JSONArray
-			for (int i = 0; i < items.length(); i++){				
-				Signature sig = new Signature();
-				sig.setItem(items.getString(i));
-				sig.setStage(stage);	
-				sig.setImage(image);
-				sig.setCreated(DateTime.now());
-				newList[i] = dao.create(sig);
-				
+			System.out.println("Image copied success");
+			String[] itemArray = itemList.split(":");
+			Long[] newList = new Long[itemArray.length];
+			// go through each item
+			for (int i = 0; i < itemArray.length; i++){
+				System.out.println("item: " + itemArray[i]);
+				if (itemArray[i] != "") {
+					Item item = null;
+					Optional<Item> optItem = itemDAO.getItemById(Long.parseLong(itemArray[i]));
+					if (optItem.isPresent())
+						item = optItem.get();
+					
+					if (item != null) {
+						System.out.println("Item not null");
+						Signature sig = new Signature();
+						sig.setItem(item.getId());
+						sig.setStage(item.getCurrentStageNum() + 1);	
+						sig.setImage(image);
+						sig.setAuthor(name);
+						newList[i] = dao.create(sig);
+						System.out.println("new sig id: "+ newList[i]);
+					}
+					System.out.println("Item not found");
+				}
 			}
 			
 			// just check the first one, may need to check all in the future
-			if ( newList[0] != null ){
+			if ( newList[0] > 0 ){
+				System.out.println("Success: 200");
 				return Response.status( Response.Status.OK ).entity( new JSONArray(newList) ).build();
 			} else {
+				System.out.println("No signatures created: 400");
 				return Response.status( Response.Status.BAD_REQUEST ).build();
 			}
 		} else {
+			System.out.println("Image copied failed: 400");
 			return Response.status( Response.Status.BAD_REQUEST ).build();
 		}
 	}

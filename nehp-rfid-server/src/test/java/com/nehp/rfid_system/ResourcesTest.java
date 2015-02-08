@@ -148,13 +148,39 @@ public class ResourcesTest {
 	}
 	
 	@Test
-	public void putItemListNoChanges(){
+	public void updateItemListNoChanges(){
 		ClientResponse response = helper.get("/items", helper.accessToken());
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 		ItemList getList = response.getEntity(ItemList.class);
 		//assertThat(getList.getItems().get(0).getCreatedDate()).isNull();
 		assertThat(getList.getItems().size()).isGreaterThan(0);
-		ClientResponse response2 = helper.put("/items/multi", helper.accessToken(), getList);
+		ClientResponse response2 = helper.postJSON("/items/multi", helper.accessToken(), getList);
+		assertThat(response2.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+	}
+	
+	@Test
+	public void updateItemNoChanges(){
+		ClientResponse response = helper.get("/items", helper.accessToken());
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		ItemList getList = response.getEntity(ItemList.class);
+		//assertThat(getList.getItems().get(0).getCreatedDate()).isNull();
+		assertThat(getList.getItems().size()).isGreaterThan(0);
+		Item item = getList.getItems().get(0);
+		ClientResponse response2 = helper.put("/item/" + item.getId(), helper.accessToken(), item);
+		assertThat(response2.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+	}
+	
+	@Test
+	public void updateItemSomeChanges(){
+		ClientResponse response = helper.get("/items", helper.accessToken());
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		ItemList getList = response.getEntity(ItemList.class);
+		//assertThat(getList.getItems().get(0).getCreatedDate()).isNull();
+		assertThat(getList.getItems().size()).isGreaterThan(0);
+		Item item = getList.getItems().get(0);
+		item.setCurrentStage("ON HOLD");
+		item.setRFID("AB02302948272372939102129FDE20292382323242323");
+		ClientResponse response2 = helper.put("/item/" + item.getId(), helper.accessToken(), item);
 		assertThat(response2.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 	}
 	

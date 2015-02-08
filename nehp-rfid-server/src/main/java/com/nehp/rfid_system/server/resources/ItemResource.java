@@ -68,8 +68,10 @@ public class ItemResource {
 	@RestrictedTo(Authority.ROLE_USER)
 	public Response updateItem( @PathParam("id") String id, Item item ){
 		// Verify IDs match
-		if (Long.parseLong(id) != item.getId())
+		if (Long.parseLong(id) != item.getId()) {
+			System.out.println("IDs do not match");
 			return Response.status( Response.Status.BAD_REQUEST ).build();
+		}
 		
 		boolean updated = items.update(item);
 		if (updated) {

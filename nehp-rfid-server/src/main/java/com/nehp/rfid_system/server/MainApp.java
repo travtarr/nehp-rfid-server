@@ -77,7 +77,7 @@ public class MainApp extends Application<MainConfiguration> {
 		final UserResource userResource = new UserResource(userDAO, accessTokenDAO, settingDAO);
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
 		final SettingResource settingResource = new SettingResource(settingDAO);
-		final SignatureResource signatureResource = new SignatureResource(signatureDAO);
+		final SignatureResource signatureResource = new SignatureResource(signatureDAO, itemDAO);
 		final DownloadResource downloadResource = new DownloadResource(configuration.getFilename());
 		
 		// test resource

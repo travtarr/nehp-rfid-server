@@ -22,15 +22,17 @@ import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Group;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.ItemList;
+import com.nehp.rfid_system.server.core.ItemMin;
+import com.nehp.rfid_system.server.core.ItemMinList;
 import com.nehp.rfid_system.server.data.GroupDAO;
 import com.nehp.rfid_system.server.data.ItemDAO;
+import com.nehp.rfid_system.server.helpers.Stages;
 
 @Path("items")
 public class ItemsResource {
 	
-	private final static String NOT_PRINTED = "NOT PRINTED";
-	private final static int ON_HOLD_STAGE_NUM = 0;
-	private final static String ON_HOLD_STAGE = "ON HOLD";
+	private final static int ON_HOLD_STAGE_NUM = Stages.STAGE0_NUM;
+	private final static String ON_HOLD_STAGE = Stages.STAGE0;
 	private final static String ON_HOLD_REASON_NEW_REVISION = "New Revision";
 
 	private final ItemDAO items;
@@ -131,7 +133,8 @@ public class ItemsResource {
 			}
 			
 			item.setId(null);
-			item.setCurrentStage(NOT_PRINTED);
+			item.setCurrentStageNum(Stages.STAGE_NOT_SET_NUM);
+			item.setCreatedDate(new Date());
 			if (group != null)
 				item.setGroup(group);
 			
@@ -228,6 +231,7 @@ public class ItemsResource {
 		boolean updated = false;
 		List<Item> failedList = new ArrayList<Item>();
 		for (Item item : itemList.getItems()) {
+			item.setLastStatusChangeDate(new Date());
 			updated = items.update(item);
 			if (!updated) {
 				System.out.println("Not updated");
@@ -238,6 +242,62 @@ public class ItemsResource {
 		if (failedList.size() != 0) {
 			ItemList failedItemList = new ItemList();
 			failedItemList.setItems(failedList);
+			return Response.status(Response.Status.OK).entity(failedItemList)
+					.build();
+		} else {
+			return Response.status(Response.Status.OK).build();
+		}
+	}
+	
+	/**
+	 * Sends the given items to the next stage.
+	 * 
+	 * @param itemList
+	 * @return only items that fail to update are returned
+	 */
+	@POST
+	@Timed
+	@Path("/nextStage")
+	@UnitOfWork
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response sendNextStage(ItemMinList list) {
+
+		if (list.getItemMins().size() < 1) {
+			System.out.println("Bad list or empty list");
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
+		List<ItemMin> failedList = new ArrayList<ItemMin>();
+		boolean updated = false;
+		for (ItemMin itemMin : list.getItemMins()) {
+			Item item = null;
+			if (itemMin.getRfid().length() > 0){
+				Optional<Item> opt = items.getItemByRFID(itemMin.getRfid());
+				if (opt.isPresent())
+					item = opt.get();
+			}
+			
+			if (item == null) {
+				Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
+				if (opt.isPresent())
+					item = opt.get();
+			}
+			
+			if (item != null) {
+				updated = items.sendNextStage(item, itemMin.getModifier());
+			}
+			
+			if (!updated) {
+				System.out.println("Not updated");
+				failedList.add(itemMin);
+			} else
+				System.out.println("Updated");
+		}
+		if (failedList.size() != 0) {
+			ItemMinList failedItemList = new ItemMinList();
+			failedItemList.setItemMins(failedList);
 			return Response.status(Response.Status.OK).entity(failedItemList)
 					.build();
 		} else {

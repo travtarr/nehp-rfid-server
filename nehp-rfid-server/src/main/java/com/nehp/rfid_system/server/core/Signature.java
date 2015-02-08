@@ -1,5 +1,7 @@
 package com.nehp.rfid_system.server.core;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,7 +10,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -33,20 +34,19 @@ public class Signature {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@JsonProperty
-	private long id;
+	private Long id;
 	
 	@JsonProperty
-	private String item;
+	private Long item;
 	
 	@JsonProperty
-	private String stage;
+	private Integer stage;
 	
 	@JsonProperty
-	private String name;
+	private String author;
 	
 	@JsonProperty
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime created;
+	private Date created;
 	
 	@Type(type="binary")
 	private byte[] image;
@@ -55,19 +55,19 @@ public class Signature {
 		this.id = id;
 	}
 	
-	public void setItem(String item){
+	public void setItem(Long item){
 		this.item = item;
 	}
 	
-	public void setStage(String stage){
+	public void setStage(Integer stage){
 		this.stage = stage;
 	}
 	
-	public void setName(String name){
-		this.name = name;
+	public void setAuthor(String name){
+		this.author = name;
 	}
 	
-	public void setCreated(DateTime created){
+	public void setCreated(Date created){
 		this.created = created;
 	}
 	
@@ -79,19 +79,19 @@ public class Signature {
 		return id;
 	}
 	
-	public String getItem(){
+	public Long getItem(){
 		return item;
 	}
 	
-	public String getStage(){
+	public Integer getStage(){
 		return stage;
 	}
 	
-	public String getName(){
-		return name;
+	public String getAuthor(){
+		return author;
 	}
 	
-	public DateTime getCreated(){
+	public Date getCreated(){
 		return created;
 	}
 	

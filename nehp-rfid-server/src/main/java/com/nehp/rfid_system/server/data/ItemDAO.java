@@ -1,6 +1,7 @@
 package com.nehp.rfid_system.server.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import org.hibernate.type.StringType;
 
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.Item;
+import com.nehp.rfid_system.server.helpers.Stages;
+
 import io.dropwizard.hibernate.AbstractDAO;
 
 public class ItemDAO extends AbstractDAO<Item>{
@@ -149,6 +152,69 @@ public class ItemDAO extends AbstractDAO<Item>{
 
 		return true;	
 	}
+	
+	public boolean sendNextStage(Item item, String modifier){
+
+		boolean status = true;
+		switch (item.getCurrentStageNum()){
+		
+			case Stages.STAGE_NOT_SET_NUM:
+				item.setCurrentStageNum(Stages.STAGE1_NUM);
+				item.setCurrentStage(Stages.STAGE1);
+				item.setStage1Date(new Date());
+				item.setStage1User(modifier);
+				break;
+			case Stages.STAGE1_NUM:
+				item.setCurrentStageNum(Stages.STAGE2_NUM);
+				item.setCurrentStage(Stages.STAGE2);
+				item.setStage2Date(new Date());
+				item.setStage2User(modifier);
+				break;
+			case Stages.STAGE2_NUM:
+				item.setCurrentStageNum(Stages.STAGE3_NUM);
+				item.setCurrentStage(Stages.STAGE3);
+				item.setStage3Date(new Date());
+				item.setStage3User(modifier);
+				break;
+			case Stages.STAGE3_NUM:
+				item.setCurrentStageNum(Stages.STAGE4_NUM);
+				item.setCurrentStage(Stages.STAGE4);
+				item.setStage4Date(new Date());
+				item.setStage4User(modifier);
+				break;
+			case Stages.STAGE4_NUM:
+				item.setCurrentStageNum(Stages.STAGE5_NUM);
+				item.setCurrentStage(Stages.STAGE5);
+				item.setStage5Date(new Date());
+				item.setStage5User(modifier);
+				break;
+			case Stages.STAGE5_NUM:
+				item.setCurrentStageNum(Stages.STAGE6_NUM);
+				item.setCurrentStage(Stages.STAGE6);
+				item.setStage6Date(new Date());
+				item.setStage6User(modifier);
+				break;
+			case Stages.STAGE6_NUM:
+				item.setCurrentStageNum(Stages.STAGE7_NUM);
+				item.setCurrentStage(Stages.STAGE7);
+				item.setStage7Date(new Date());
+				item.setStage7User(modifier);
+				break;
+			case Stages.STAGE7_NUM:
+				status = false;
+				break;
+			case Stages.STAGE0_NUM:
+				status = false;
+				break;
+		}
+		boolean updated = false;
+		if (status) {
+			updated = this.update(item);
+		}
+		
+		return updated;
+	}
+	
 	
 	public boolean updateGroup(Item item){
 		// Make sure we update the correct item

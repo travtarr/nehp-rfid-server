@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.nehp.rfid_system.server.helpers.CustomDateDeserializer;
 
 import io.dropwizard.jackson.JsonSnakeCase;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -38,7 +40,7 @@ public class Item {
 	@JsonProperty
 	private Long id;
 	
-	@Column(name = "rfid", nullable = true, length = 24)
+	@Column(name = "rfid", nullable = true, length = 58)
 	@JsonProperty
 	private String rfid;
 	
@@ -226,6 +228,7 @@ public class Item {
 		this.createdBy = createdBy;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -242,7 +245,7 @@ public class Item {
 		this.currentRevision = currentRevision;
 	}
 	
-	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getCurrentRevisionDate() {
 		return currentRevisionDate;
 	}
@@ -278,6 +281,7 @@ public class Item {
 		this.lastStatusChangeUser = lastStatusChangeUser;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getLastStatusChangeDate() {
 		return lastStatusChangeDate;
 	}
@@ -290,6 +294,7 @@ public class Item {
 		this.stage1Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage1Date() {
 		return stage1Date;
 	}
@@ -306,6 +311,7 @@ public class Item {
 		this.stage2Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage2Date() {
 		return stage2Date;
 	}
@@ -322,6 +328,7 @@ public class Item {
 		this.stage3Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage3Date() {
 		return stage3Date;
 	}
@@ -338,6 +345,7 @@ public class Item {
 		this.stage4Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage4Date() {
 		return stage4Date;
 	}
@@ -354,6 +362,7 @@ public class Item {
 		this.stage5Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage5Date() {
 		return stage5Date;
 	}
@@ -370,6 +379,7 @@ public class Item {
 		this.stage6Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage6Date() {
 		return stage6Date;
 	}
@@ -386,6 +396,7 @@ public class Item {
 		this.stage7Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage7Date() {
 		return stage7Date;
 	}
@@ -402,6 +413,7 @@ public class Item {
 		this.stage0Date = date;
 	}
 	
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public Date getStage0Date() {
 		return stage0Date;
 	}

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
-
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.Signature;
 
@@ -13,8 +11,6 @@ import io.dropwizard.hibernate.AbstractDAO;
 
 public class SignatureDAO extends AbstractDAO<Signature> {
 	
-	private final String[] STAGES = { "MODELING", "KITTING", "MANUFACTURING",
-			"QA/QC", "SHIPPED", "ARRIVAL", "INSTALLED", "STOPPED" };
 
 	public SignatureDAO(SessionFactory sessionFactory) {
 		super(sessionFactory);
@@ -24,11 +20,11 @@ public class SignatureDAO extends AbstractDAO<Signature> {
 		return Optional.of(get(id));
 	}
 
-	public Optional<Signature> getByItemAndStage(Long item, String stage){
+	public Optional<Signature> getByItemAndStage(Long item, Long stage){
 		if ( verifyStage(stage) ) {
 			return Optional.of(list(namedQuery("signature.getByItemAndStage")
 					.setParameter("item", item, LongType.INSTANCE)
-					.setParameter("stage", stage, StringType.INSTANCE)).get(0));
+					.setParameter("stage", stage, LongType.INSTANCE)).get(0));
 		}
 		return Optional.absent();
 	}
@@ -46,11 +42,9 @@ public class SignatureDAO extends AbstractDAO<Signature> {
 	}
 	
 	
-	private boolean verifyStage(String stage){
-		for (int i = 0; i < STAGES.length; i++){
-			if ( stage.equals(STAGES[i]) )
-				return true;
-		}
+	private boolean verifyStage(Long stage){
+		if (stage > 0 && stage < 8)
+			return true;
 		return false;
 	}
 }
