@@ -57,6 +57,14 @@ public class TestHelpers {
 				.post(ClientResponse.class, entity);
 	}
 	
+	protected ClientResponse postFile(final String endPoint, final String accessToken, final Object entity) {
+		return new Client()
+				.resource(String.format("http://localhost:%d/service%s", RULE.getLocalPort(), endPoint))
+				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
+				.header("Authorization", String.format("Bearer %s", accessToken))
+				.post(ClientResponse.class, entity);
+	}
+	
 	protected ClientResponse postJSON(final String endPoint, final String accessToken, final Object entity) {
 		return new Client()
 				.resource(String.format("http://localhost:%d/service%s", RULE.getLocalPort(), endPoint))

@@ -70,6 +70,7 @@ public class Signature {
 	public void setCreated(Date created){
 		this.created = created;
 	}
+
 	
 	public void setImage(byte[] image){
 		this.image = image;

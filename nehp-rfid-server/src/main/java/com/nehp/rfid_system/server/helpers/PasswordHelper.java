@@ -3,7 +3,10 @@ package com.nehp.rfid_system.server.helpers;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+
 import java.security.SecureRandom;
+import java.util.Random;
+
 import org.apache.commons.codec.binary.Base64;
 
 public class PasswordHelper {
@@ -13,6 +16,8 @@ public class PasswordHelper {
     private static final int iterations = 10*1024;
     private static final int saltLen = 32;
     private static final int desiredKeyLen = 256;
+	private static final int PASSWORD_LENGTH = 12;
+	private static final String AVAILABLE_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /** Computes a salted PBKDF2 hash of given plaintext password
         suitable for storing in a database. 
@@ -44,4 +49,20 @@ public class PasswordHelper {
         );
         return Base64.encodeBase64String(key.getEncoded());
     }
+    
+    /**
+	 * Create a randomized password of length determined by class constant
+	 * @return String - randomized password
+	 */
+	public static String randomizedPassword (){
+		Random rand = new Random();
+		String password = "";
+		
+		for ( int i = 0; i < PASSWORD_LENGTH; i++ ){
+			int randomInt = rand.nextInt( AVAILABLE_CHARS.length() );
+			password += AVAILABLE_CHARS.charAt(randomInt);
+		}
+		
+		return password;
+	}
 }

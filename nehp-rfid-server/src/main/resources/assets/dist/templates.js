@@ -308,10 +308,12 @@ function program17(depth0,data) {
   data.buffer.push("\r\n						</ul>\r\n          </div>\r\n        </div>\r\n				</div>\r\n			</div>\r\n			<!-- /Navigation Bar -->\r\n\r\n			<!-- Content -->\r\n			<div class=\"container-fluid\">\r\n				<section id=\"content\">\r\n					<!--  Page Contents from Ember -->\r\n					");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n					");
+  data.buffer.push(escapeExpression((helper = helpers.outlet || (depth0 && depth0.outlet),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "modal", options) : helperMissing.call(depth0, "outlet", "modal", options))));
   data.buffer.push("\r\n				</section>\r\n			</div>\r\n			<!-- /Content -->\r\n		</section>\r\n		");
   stack1 = helpers.unless.call(depth0, "notification.closed", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n	</div>\r\n	<footer>\r\n		<div class=\"container\" id=\"footer\">\r\n			<span>NEHP Worldwide, LLC. Copyright 2014.</span>\r\n		</div>\r\n	</div>");
+  data.buffer.push("\r\n	</div>\r\n	<footer>\r\n		<div class=\"container\" id=\"footer\">\r\n			<span>NEHP Worldwide, LLC. &copy; 2015.</span>\r\n		</div>\r\n	</div>");
   return buffer;
   
 });
@@ -402,91 +404,103 @@ function program1(depth0,data) {
 Ember.TEMPLATES["item"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1;
+  var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"details\">\r\n	<table class=\"double-column\">\r\n		<tbody>\r\n			<tr>\r\n				<td class=\"header\">RFID</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td class=\"header\">Item ID</td><td>");
+  data.buffer.push(escapeExpression((helper = helpers.outlet || (depth0 && depth0.outlet),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "modal", options) : helperMissing.call(depth0, "outlet", "modal", options))));
+  data.buffer.push("\r\n<div class=\"row\">\r\n	<div class=\"col-md-12\">\r\n		<div class=\"item-details-title\"><span>Details</span></div>\r\n	</div>\r\n</div>\r\n<div class=\"row\">\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Item / Drawing</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
   stack1 = helpers._triageMustache.call(depth0, "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Created By</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "created_by", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td class=\"header\">Created Date</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "created_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Last Change Date</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td class=\"header\">Last Change User</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "last_status_change_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Current Revision</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td class=\"header\">Current Revision Date</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "current_revision_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Current Stage</td><td>");
-  stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td class=\"header\">Group</td><td>");
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Group</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
   stack1 = helpers._triageMustache.call(depth0, "group", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Comment</td>\r\n				<td colspan=\"3\">");
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Revision</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Stage</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Hold Reason</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "reason", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Created By</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "created_by", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Created Date</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "created_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Last Status Change User</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Last Status Change Date</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-8\">\r\n		<table>\r\n			<tr>\r\n				<th><span>Comment</span></th>\r\n			</tr>\r\n			<tr>\r\n				<td><span>");
   stack1 = helpers._triageMustache.call(depth0, "comment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n</div>\r\n<div class=\"details\">\r\n	<table>\r\n		<tbody>\r\n			<tr class=\"header\">\r\n				<td></td>\r\n				<td>Integration Start</td>\r\n				<td>Integration End</td>\r\n				<td>Parts Allocated</td>\r\n				<td>Manufacturing Begin</td>\r\n				<td>Manufacturing End</td>\r\n				<td>QA/QC Complete</td>\r\n				<td>Shipped</td>\r\n				<td>On Hold</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">User</td>\r\n				<td>");
+  data.buffer.push("</span></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n<div class=\"row\">\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Integration Begin</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 1, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
   stack1 = helpers._triageMustache.call(depth0, "stage1_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage2_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage3_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage4_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage5_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage6_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage7_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
-  stack1 = helpers._triageMustache.call(depth0, "stage0_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"header\">Date</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage1_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Integration End</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 2, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage2_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage2_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Parts Allocated</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 3, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage3_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage3_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Manufacturing Begin</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 4, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage4_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage4_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Manufacturing End</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 5, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage5_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage5_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>QA/QC Complete</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 6, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage6_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage6_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>Shipped</th>\r\n			</tr>\r\n			<tr>\r\n				<td ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "showImage", 7, {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","INTEGER"],data:data})));
+  data.buffer.push(">");
+  stack1 = helpers._triageMustache.call(depth0, "stage7_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage7_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n				<td>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"tbl-4\">\r\n		<table>\r\n			<tr>\r\n				<th>On Hold</th>\r\n			</tr>\r\n			<tr>\r\n				<td>");
+  stack1 = helpers._triageMustache.call(depth0, "stage0_user", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n			</tr>\r\n			<tr>\r\n				<td>");
   stack1 = helpers._triageMustache.call(depth0, "stage0_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n</div>");
+  data.buffer.push("</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>");
   return buffer;
   
 });
@@ -494,45 +508,37 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["items"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
-  var buffer = '', stack1, helper, options;
-  data.buffer.push("\r\n						<tr>\r\n							<td>");
+  var buffer = '', stack1;
+  data.buffer.push("\r\n							<tr ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "goToItem", "id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
+  data.buffer.push(">\r\n								<td>");
   stack1 = helpers._triageMustache.call(depth0, "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n							<td>");
-  stack1 = helpers._triageMustache.call(depth0, "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n							<td>");
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["STRING","ID"],data:data},helper ? helper.call(depth0, "item", "", options) : helperMissing.call(depth0, "link-to", "item", "", options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n							<td>");
-  stack1 = helpers._triageMustache.call(depth0, "group", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n							<td>");
-  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n							<td>");
-  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\r\n						</tr>\r\n						");
-  return buffer;
-  }
-function program2(depth0,data) {
-  
-  var stack1;
+  data.buffer.push("</td>\r\n								<td>");
   stack1 = helpers._triageMustache.call(depth0, "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  else { data.buffer.push(''); }
+  data.buffer.push("</td>\r\n								<td>");
+  stack1 = helpers._triageMustache.call(depth0, "group", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n								<td>");
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n								<td>");
+  stack1 = helpers._triageMustache.call(depth0, "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</td>\r\n							</tr>\r\n							");
+  return buffer;
   }
 
   data.buffer.push("<div class=\"container-fluid\">\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span2\">\r\n			<ul class=\"nav nav-inverse dark-list nav-pointer\">\r\n				<li class=\"nav-header\">In-Process</li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ALL", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">All</a></li>\r\n				<li><a ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "INTEGRATION START", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
-  data.buffer.push(">Integration Start</a></li>\r\n				<li><a ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "INTEGRATION BEGIN", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(">Integration Begin</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "INTEGRATION COMPLETE", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Integration Complete</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "PARTS ALLOCATED", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
@@ -548,22 +554,22 @@ function program2(depth0,data) {
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ON HOLD", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">All</a></li>\r\n			</ul>\r\n			<button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "allexcel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(" class=\"dark-blue\">Export All Data</button>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<div class=\"tables-items\">\r\n				<table>\r\n					<thead>\r\n						<th><button ");
+  data.buffer.push(" class=\"dark-blue\">Export All Data</button>\r\n			<button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "excelDuration", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" class=\"dark-blue\">Export Durations</button>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<div class=\"tables-items\">\r\n				<table>\r\n					<thead>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "current_stage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Current Stage</button></th>\r\n						<th><button ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "rfid", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
-  data.buffer.push(">RFID</button></th>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "item_id", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
-  data.buffer.push(">Item ID</button></th>\r\n						<th><button ");
+  data.buffer.push(">Item / Drawing</button></th>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "group", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Group</button></th>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Last Change</button></th>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "current_revision", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
-  data.buffer.push(">Revision</button></th>\r\n					</thead>\r\n					<tbody>\r\n						");
+  data.buffer.push(">Revision</button></th>\r\n					</thead>\r\n				</table>\r\n				<div class=\"inner-table\">\r\n					<table class=\"table-hover\">\r\n						<tbody>\r\n							");
   stack1 = helpers.each.call(depth0, "filteredItems", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n					</tbody>\r\n				</table>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span12\">\r\n			<div class=\"content-body\">\r\n				");
+  data.buffer.push("\r\n						</tbody>\r\n					</table>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"row-fluid\">\r\n		<div class=\"span12\">\r\n			<div class=\"content-body\">\r\n				");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<br>\r\n</div>");
@@ -616,6 +622,42 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 
   data.buffer.push("<div class=\"spinner\">\r\n  <div class=\"spinner-container container1\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n  <div class=\"spinner-container container2\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n  <div class=\"spinner-container container3\">\r\n    <div class=\"circle1\"></div>\r\n    <div class=\"circle2\"></div>\r\n    <div class=\"circle3\"></div>\r\n    <div class=\"circle4\"></div>\r\n  </div>\r\n</div>");
+  
+});
+
+Ember.TEMPLATES["modal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"modal-header\">\r\n	<button type=\"button\" class=\"close\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{
+    'target': ("view")
+  },hashTypes:{'target': "STRING"},hashContexts:{'target': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(">&times;</button>\r\n	<h3>Modal header</h3>\r\n</div>\r\n<div class=\"modal-body\">\r\n	<img src=\"");
+  stack1 = helpers._triageMustache.call(depth0, "image", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\">\r\n</div>\r\n<div class=\"modal-footer\">\r\n	<a href=\"#\" class=\"btn\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{
+    'target': ("view")
+  },hashTypes:{'target': "STRING"},hashContexts:{'target': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(">Close</a> \r\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["modal_layout"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1;
+
+
+  data.buffer.push("<div class=\"modal-backdrop fade\">&nbsp;</div>\r\n<div class=\"modal fade\">\r\n	");
+  stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n	<div>");
+  return buffer;
   
 });
 

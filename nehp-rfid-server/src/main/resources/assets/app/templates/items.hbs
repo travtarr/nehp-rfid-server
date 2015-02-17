@@ -4,7 +4,7 @@
 			<ul class="nav nav-inverse dark-list nav-pointer">
 				<li class="nav-header">In-Process</li>
 				<li><a {{action 'setStage' 'ALL'}}>All</a></li>
-				<li><a {{action 'setStage' 'INTEGRATION START'}}>Integration Start</a></li>
+				<li><a {{action 'setStage' 'INTEGRATION BEGIN'}}>Integration Begin</a></li>
 				<li><a {{action 'setStage' 'INTEGRATION COMPLETE'}}>Integration Complete</a></li>
 				<li><a {{action 'setStage' 'PARTS ALLOCATED'}}>Parts Allocated</a></li>
 				<li><a {{action 'setStage' 'MANUFACTURING BEGIN'}}>Manufacturing Begin</a></li>
@@ -16,31 +16,34 @@
 				<li><a {{action 'setStage' 'ON HOLD'}}>All</a></li>
 			</ul>
 			<button {{action 'allexcel'}} class="dark-blue">Export All Data</button>
+			<button {{action 'excelDuration'}} class="dark-blue">Export Durations</button>
 		</div>
 		<div class="span10">
 			<div class="tables-items">
 				<table>
 					<thead>
 						<th><button {{action 'toggleSort' 'current_stage'}}>Current Stage</button></th>
-						<th><button {{action 'toggleSort' 'rfid'}}>RFID</button></th>
-						<th><button {{action 'toggleSort' 'item_id'}}>Item ID</button></th>
+						<th><button {{action 'toggleSort' 'item_id'}}>Item / Drawing</button></th>
 						<th><button {{action 'toggleSort' 'group'}}>Group</button></th>
 						<th><button {{action 'toggleSort' 'last_status_change_date'}}>Last Change</button></th>
 						<th><button {{action 'toggleSort' 'current_revision'}}>Revision</button></th>
 					</thead>
-					<tbody>
-						{{#each filteredItems}}
-						<tr>
-							<td>{{current_stage}}</td>
-							<td>{{rfid}}</td>
-							<td>{{#link-to 'item' this}}{{item_id}}{{/link-to}}</td>
-							<td>{{group}}</td>
-							<td>{{last_status_change_date}}</td>
-							<td>{{current_revision}}</td>
-						</tr>
-						{{/each}}
-					</tbody>
 				</table>
+				<div class="inner-table">
+					<table class="table-hover">
+						<tbody>
+							{{#each filteredItems}}
+							<tr {{action 'goToItem' this.id}}>
+								<td>{{current_stage}}</td>
+								<td>{{item_id}}</td>
+								<td>{{group}}</td>
+								<td>{{last_status_change_date}}</td>
+								<td>{{current_revision}}</td>
+							</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

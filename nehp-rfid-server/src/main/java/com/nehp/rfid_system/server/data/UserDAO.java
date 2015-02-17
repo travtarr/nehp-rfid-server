@@ -3,7 +3,6 @@ package com.nehp.rfid_system.server.data;
 import io.dropwizard.hibernate.AbstractDAO;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
@@ -21,9 +20,6 @@ import com.nehp.rfid_system.server.helpers.PasswordHelper;
 
 public class UserDAO extends AbstractDAO<User> {
 	
-	private static final int PASSWORD_LENGTH = 20;
-	private static final String AVAILABLE_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
-	
 	private final EmailCredentials emailCreds;
 	SessionFactory factory;
 
@@ -39,14 +35,9 @@ public class UserDAO extends AbstractDAO<User> {
 
 		user = Optional.of(list(namedQuery("users.getByUsername")
 						.setParameter("username", username, StringType.INSTANCE)).get(0));
-//		try {
-//			System.out.println("EnteredPW: " + PasswordHelper.getSaltedHash(password));
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
 
 		try {
-			if(PasswordHelper.check(password, user.get().getPassword()))
+			if( PasswordHelper.check( password, user.get().getPassword() ) )
 				return user;
 			else
 				return Optional.absent();
@@ -57,11 +48,21 @@ public class UserDAO extends AbstractDAO<User> {
 	}
 	
 	public Optional<User> getUserByEmail(String email) {
-		Optional<User> user = null;
 		
-		user = Optional.of(list(namedQuery("users.getByEmail")
-						.setParameter("email", email, StringType.INSTANCE)).get(0));
-		return user;
+		User user = null;
+		try {
+			List<User> list = list(namedQuery("users.getByEmail")
+					.setParameter("email", email, StringType.INSTANCE));
+			if (list.size() > 0)
+				user = list.get(0);
+		} catch (HibernateException e) {
+			// User not found
+		}
+
+		if (user == null)
+			return Optional.absent();
+		else
+			return Optional.of(user);
 	}
 	
 	public Optional<User> getUserByUsername(String username) {
@@ -85,7 +86,11 @@ public class UserDAO extends AbstractDAO<User> {
 
 	public Optional<Long> create(User user) {
 		User newUser = user;
-		String newPassword = randomizedPassword();
+		String newPassword = PasswordHelper.randomizedPassword();
+
+		// Check to make sure email won't be duplicated
+		if (this.getUserByEmail(user.getEmail()).isPresent())
+			return Optional.absent();
 		
 		newUser.setSetting(1);
 		
@@ -99,10 +104,12 @@ public class UserDAO extends AbstractDAO<User> {
 		user.setPasswordReset(true);
 		
 		// set-up email 
-		String txtMsg = String.format("Your account has been created.  Username: %s, Password: %s  Please visit www.nehptracker.com to login.", newUser.getUsername(), newPassword);
-		String htmlMsg =  "<div style=\"background-color: #53535E;\">"
-						+ "<div style=\"background-color: #1b1b1b; color: #0088cc; padding-left: 20px; padding-top: 8px; height: '35px';\"><span>NEHP Worldwide Tracker</span></div>"
-						+ "<div style=\"background-color: #B4B4B4; margin-left: auto; margin-right: auto; width: 400px; height: 500px;\">"
+		String txtMsg = String.format("Your account has been created.  Username: %s, Password: %s  "
+				+ "Please visit www.nehptracker.com to login.", newUser.getUsername(), newPassword);
+		String htmlMsg =  "<div>"
+						+ "<div style=\"color: #0088cc; font-weight: bold; padding-left: 20px; padding-top: 8px; height: '35px';\">"
+						+ "<span>NEHP Worldwide Tracker</span></div>"
+						+ "<div style=\"margin-left: auto; margin-right: auto; width: 400px; height: 500px;\">"
 						+ "<p>Hello " + user.getName() + ",</p>"
 						+ "<p>Your account has been created. <br>"
 						+ "Username: " + user.getUsername() + "<br>"
@@ -131,6 +138,7 @@ public class UserDAO extends AbstractDAO<User> {
 			return false;
 		}
 		user.setPasswordReset(false);
+		persist(user);
 		return true;
 	}
 	
@@ -144,7 +152,7 @@ public class UserDAO extends AbstractDAO<User> {
 	 */
 	public boolean resetPassword (Long userId){
 		User user = get(userId);
-		String newPassword = randomizedPassword();
+		String newPassword = PasswordHelper.randomizedPassword();
 				
 		// update user
 		try {
@@ -177,7 +185,7 @@ public class UserDAO extends AbstractDAO<User> {
 	}
 	
 	/**
-	 * Updates the user's information, including password.
+	 * Updates the user's information, excluding password.
 	 * @param user
 	 * @return
 	 */
@@ -193,14 +201,6 @@ public class UserDAO extends AbstractDAO<User> {
 		updateUser.setName(user.getName());
 		updateUser.setEmail(user.getEmail());
 		updateUser.setScanner(user.getScanner());
-		
-		// make sure we hash the password
-		try {
-			updateUser.setPassword( PasswordHelper.getSaltedHash( user.getPassword() ) );
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 		
 		persist(updateUser);
 
@@ -243,23 +243,6 @@ public class UserDAO extends AbstractDAO<User> {
 	 */
 	public boolean isAdmin(Long id){
 		return get(id).getAdmin();
-	}
-	
-	
-	/**
-	 * Create a randomized password of length determined by class constant
-	 * @return String - randomized password
-	 */
-	private String randomizedPassword (){
-		Random rand = new Random();
-		String password = "";
-		
-		for ( int i = 0; i < PASSWORD_LENGTH; i++ ){
-			int randomInt = rand.nextInt( AVAILABLE_CHARS.length() );
-			password = password + AVAILABLE_CHARS.charAt(randomInt);
-		}
-		
-		return password;
 	}
 	
 

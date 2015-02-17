@@ -48,7 +48,7 @@ public class MainApp extends Application<MainConfiguration> {
 	}
 	
 	private HibernateBundle<MainConfiguration> hibernate = new HibernateBundle<MainConfiguration>(
-			Item.class, User.class, AccessToken.class, Notification.class, Setting.class, Group.class) {
+			Item.class, User.class, AccessToken.class, Notification.class, Setting.class, Group.class, Signature.class) {
 		@Override
 		public DataSourceFactory getDataSourceFactory(MainConfiguration configuration) {
 			return configuration.getDataSourceFactory();
@@ -59,7 +59,7 @@ public class MainApp extends Application<MainConfiguration> {
 	public void run(MainConfiguration configuration, Environment environment)
 			throws ClassNotFoundException {
 		
-		// intialize DAOs
+		// initialize DAOs
 		ItemDAO itemDAO = new ItemDAO(hibernate.getSessionFactory());
 		AccessTokenDAO accessTokenDAO = new AccessTokenDAO(hibernate.getSessionFactory());
 		UserDAO userDAO = new UserDAO(hibernate.getSessionFactory(), configuration.getEmailCredentials());
@@ -79,6 +79,7 @@ public class MainApp extends Application<MainConfiguration> {
 		final SettingResource settingResource = new SettingResource(settingDAO);
 		final SignatureResource signatureResource = new SignatureResource(signatureDAO, itemDAO);
 		final DownloadResource downloadResource = new DownloadResource(configuration.getFilename());
+		final ReportsResource reportsResource = new ReportsResource(itemDAO);
 		
 		// test resource
 		final PingResource pingResource = new PingResource();
@@ -104,12 +105,13 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().register(settingResource);
 		environment.jersey().register(signatureResource);
 		environment.jersey().register(downloadResource);
+		environment.jersey().register(reportsResource);
 		// test resource
 		environment.jersey().register(pingResource);
 
 		// register @RestrictedTo pre-matching
-		environment.jersey().register(new RestrictedToMethodDispatchAdapter<Long>(new SimpleAuthenticator(hibernate.getSessionFactory()), configuration
-				.getRealm()));
+		environment.jersey().register(new RestrictedToMethodDispatchAdapter<Long>(
+				new SimpleAuthenticator(hibernate.getSessionFactory()), configuration.getRealm()));
 		
 	}
 }

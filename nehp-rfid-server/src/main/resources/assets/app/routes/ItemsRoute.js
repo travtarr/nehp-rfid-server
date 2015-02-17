@@ -7,7 +7,7 @@ App.ItemsRoute = App.AuthenticatedRoute.extend({
 		/**
 		 * Exports the current visible items in the table to an excel file.
 		 */
-		excel: function(){
+		excelFilter: function(){
 			var excel="<table>";
 			var el = this;
 			// Header
@@ -67,7 +67,10 @@ App.ItemsRoute = App.AuthenticatedRoute.extend({
 			excelFile += "</html>";
 
 			var base64data = "base64," + $.base64.encode(excelFile);
-			window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+			window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + base64data);
+		},
+		excel: function(data){
+			
 		},
 		/**
 		 * Exports all items loaded from the server into an excel file.
@@ -126,8 +129,14 @@ App.ItemsRoute = App.AuthenticatedRoute.extend({
 				excelFile += "</html>";
 	
 				var base64data = "base64," + $.base64.encode(excelFile);
-				window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+				window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + base64data);
 			});
+		},
+		excelDuration: function() {
+			$.get("/service/reports/duration/hours").done(function(data) {
+				window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + data);
+			});
+			
 		}
 	}
 });

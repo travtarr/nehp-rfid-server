@@ -70,6 +70,7 @@ public class UserResource {
 	@POST
 	@Timed
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_ADMIN)
 	public Response createUser(UserWrap user) {

@@ -117,11 +117,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 		if (item.getId() > 0)
 			updateItem = get(item.getId());
 		else 
-			updateItem = this.getItemByItemId(item.getItemId()).get();
+			updateItem = this.getItemByItemIdAndRev(item.getItemId(), item.getCurrentRevision()).get();
 		
 		if(updateItem == null)
 			return false;
 		
+		updateItem.setGroup(item.getGroup());
 		updateItem.setCurrentStage(item.getCurrentStage());
 		updateItem.setCurrentRevision(item.getCurrentRevision());
 		updateItem.setCurrentRevisionDate(item.getCurrentRevisionDate());
@@ -215,22 +216,42 @@ public class ItemDAO extends AbstractDAO<Item>{
 		return updated;
 	}
 	
-	
-	public boolean updateGroup(Item item){
-		// Make sure we update the correct item
-		Item updateItem;
-		if (item.getId() > 0)
-			updateItem = get(item.getId());
-		else 
-			updateItem = this.getItemByItemId(item.getItemId()).get();
+	public boolean sendToShipping(Item item, String modifier){
 		
-		if(updateItem == null)
-			return false;
-		
-		updateItem.setGroup(item.getGroup());
-		persist(updateItem);
+		if (item.getCurrentStageNum() == Stages.STAGE2_NUM) {
+				item.setCurrentStageNum(Stages.STAGE7_NUM);
+				item.setCurrentStage(Stages.STAGE7);
+				item.setStage7Date(new Date());
+				item.setStage7User(modifier);
+		}
 
-		return true;	
+		boolean updated = this.update(item);
+
+		
+		return updated;
+	}
+	
+	
+	public void updateGroup(Item item, String user){		
+		Optional<List<Item>> optItems = this.getItemsByItemId(item.getItemId());
+		
+		if ( optItems.isPresent() ) {
+			List<Item> updateItems = optItems.get();
+			
+			// need to set every other revision to ON HOLD status
+			for ( Item itemFromList : updateItems ){
+				if ( itemFromList.getCurrentStageNum() != Stages.STAGE0_NUM 
+						&& !itemFromList.getCurrentRevision().equals(item.getCurrentRevision())){
+					itemFromList.setCurrentStageNum(Stages.STAGE0_NUM);
+					itemFromList.setCurrentStage(Stages.STAGE0);
+					itemFromList.setStage0Date(new Date());
+					itemFromList.setStage0User(user);
+					persist(itemFromList);
+				}
+			}
+		}
+		
+		persist(item);
 	}
 	
 	

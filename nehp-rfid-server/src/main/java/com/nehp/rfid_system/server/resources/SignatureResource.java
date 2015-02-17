@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.json.JSONArray;
+import org.apache.commons.codec.binary.Base64;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
@@ -33,6 +36,22 @@ public class SignatureResource {
 	public SignatureResource(SignatureDAO dao, ItemDAO items){
 		this.dao = dao;
 		this.itemDAO = items;
+	}
+	
+	@GET
+	@Path("/{item}/{stage}")
+	@Timed
+	@UnitOfWork
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response getByItemAndRev(@PathParam("item") String item,
+			@PathParam("stage") String stage) {
+		Optional<Signature> optSig = dao.getByItemAndStage(Long.parseLong(item), Long.parseLong(stage));
+		if (optSig.isPresent()){
+			Signature sig = optSig.get();
+			return Response.status( Response.Status.OK ).entity( Base64.encodeBase64URLSafeString( sig.getImage()) ).build();
+		} else {
+			return Response.status( Response.Status.BAD_REQUEST ).build();
+		}
 	}
      
 	@POST
@@ -61,11 +80,10 @@ public class SignatureResource {
 			Optional<Item> optItem = itemDAO.getItemByItemIdAndRev(itemid, revision);
 			if (optItem.isPresent())
 				item = optItem.get();
-			
 			if (item != null) {
 				Signature sig = new Signature();
 				sig.setItem(item.getId());
-				sig.setStage(item.getCurrentStageNum() + 1);	
+				sig.setStage(item.getCurrentStageNum() + 1);
 				sig.setImage(image);
 				sig.setAuthor(name);
 				Long newId = dao.create(sig);
@@ -86,6 +104,7 @@ public class SignatureResource {
 	@Timed
 	@Path("/multi")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
 	@UnitOfWork
 	@RestrictedTo(Authority.ROLE_USER)
 	public Response createMulti(@FormDataParam("file") InputStream file, 
@@ -125,15 +144,17 @@ public class SignatureResource {
 						sig.setAuthor(name);
 						newList[i] = dao.create(sig);
 						System.out.println("new sig id: "+ newList[i]);
+					} else {
+						System.out.println("Item not found");
 					}
-					System.out.println("Item not found");
+					
 				}
 			}
 			
 			// just check the first one, may need to check all in the future
 			if ( newList[0] > 0 ){
 				System.out.println("Success: 200");
-				return Response.status( Response.Status.OK ).entity( new JSONArray(newList) ).build();
+				return Response.status( Response.Status.OK ).entity( newList ).build();
 			} else {
 				System.out.println("No signatures created: 400");
 				return Response.status( Response.Status.BAD_REQUEST ).build();

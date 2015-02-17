@@ -1,4 +1,7 @@
 App.ApplicationRoute = Ember.Route.extend({
+	
+	image: null,
+	
 	actions : {
 		// create a global logout action
 		logout : function() {

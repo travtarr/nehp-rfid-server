@@ -129,7 +129,6 @@ App.SessionsController = Ember.Controller.extend({
 						username : null,
 						password : null
 					});
-
 					var key = _this.get('store').createRecord('apiKey', {
 						accessToken : response.api_key[0].access_token.string
 					});

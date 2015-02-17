@@ -4,13 +4,13 @@ import static org.fest.assertions.Assertions.assertThat;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Date;
 
-import javax.ws.rs.core.MultivaluedMap;
-
-import org.joda.time.DateTime;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -19,8 +19,11 @@ import com.nehp.rfid_system.server.MainApp;
 import com.nehp.rfid_system.server.MainConfiguration;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.ItemList;
+import com.nehp.rfid_system.server.core.User;
+import com.nehp.rfid_system.server.core.UserWrap;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.multipart.FormDataMultiPart;
+import com.sun.jersey.multipart.file.FileDataBodyPart;
 
 
 public class ResourcesTest {
@@ -193,4 +196,45 @@ public class ResourcesTest {
 		ClientResponse response = helper.put("/item/create", helper.accessToken(), item);
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 	}
+	
+	@Test
+	public void createSignature() throws ParseException, IllegalArgumentException, URISyntaxException, IOException {
+		
+		File file = new File(Resources.getResource("test.gif").toURI());
+		FormDataMultiPart form = new FormDataMultiPart();
+		//FormDataBodyPart body = new FormDataBodyPart("file", new FileInputStream(file), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+		FileDataBodyPart body = new FileDataBodyPart("file", file);
+		form.field("item", "2:3:5");
+		form.field("name", "trav");	
+		form.bodyPart(body);
+		ClientResponse response = helper.postFile("/signature/multi", helper.accessToken(), form);
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
+		File newFile = new File("output.txt");
+		FileWriter writer = new FileWriter(newFile);
+		String result = response.getEntity(String.class);
+		writer.write(result);
+		writer.close();
+		
+		assertThat(result).isEqualTo("1");
+	}
+	
+	@Test
+	public void createNewUser(){
+		User user = new User();
+		user.setAdmin(false);
+		user.setEmail("travis.tarr@nehp.com");
+		user.setName("test5");
+		user.setScanner(false);
+		user.setUsername("test5");
+		user.setUserCreatedDate(new Date());
+		
+		UserWrap wrap = new UserWrap();
+		wrap.setUser(user);
+		
+		ClientResponse response = helper.postJSON("/users", helper.accessToken(), wrap);
+		
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.CREATED.getStatusCode());
+	}
 }
+
+

@@ -176,14 +176,21 @@ public class ItemsResource {
 		// Verify all given items are in the database, fail if even one is wrong
 		List<Item> itemList = new ArrayList<Item>();
 		List<String> failedList = new ArrayList<String>();
-		for (String itemid : list){
-			String trimItem = itemid.trim();
-			Item item = items.getItemByItemId(trimItem).get();
-			// if item wasn't found, add to failed list
-			if ( item == null || !item.getItemId().equals(trimItem) ) {
-				failedList.add(trimItem);
+		for (String whole : list){
+			String[] split = whole.split(":");
+			String itemid = split[0];
+			String revision = split[1];
+			Optional<Item> optItem = items.getItemByItemIdAndRev(itemid, revision);
+			if ( optItem.isPresent() ) {
+				Item item = optItem.get();
+				// if item wasn't found, add to failed list
+				if ( item == null ) {
+					failedList.add(itemid + ":" + revision);
+				} else {
+					itemList.add(item);
+				}
 			} else {
-				itemList.add(item);
+				failedList.add(itemid + ":" + revision);
 			}
 		}
 		
@@ -203,7 +210,7 @@ public class ItemsResource {
 		// Add Group to each item, then update each item in the DB
 		for (Item itemToUpdate : itemList){
 			itemToUpdate.setGroup(groupId);
-			items.updateGroup(itemToUpdate);
+			items.updateGroup(itemToUpdate, user);
 		}
 		return Response.status(Response.Status.OK).build();
 	}
@@ -273,20 +280,72 @@ public class ItemsResource {
 		boolean updated = false;
 		for (ItemMin itemMin : list.getItemMins()) {
 			Item item = null;
+			/*
 			if (itemMin.getRfid().length() > 0){
 				Optional<Item> opt = items.getItemByRFID(itemMin.getRfid());
 				if (opt.isPresent())
 					item = opt.get();
 			}
+			*/
 			
-			if (item == null) {
-				Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
-				if (opt.isPresent())
-					item = opt.get();
-			}
+			Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
+			if (opt.isPresent())
+				item = opt.get();
+			
 			
 			if (item != null) {
 				updated = items.sendNextStage(item, itemMin.getModifier());
+			}
+			
+			if (!updated) {
+				System.out.println("Not updated");
+				failedList.add(itemMin);
+			} else
+				System.out.println("Updated");
+		}
+		if (failedList.size() != 0) {
+			ItemMinList failedItemList = new ItemMinList();
+			failedItemList.setItemMins(failedList);
+			return Response.status(Response.Status.OK).entity(failedItemList)
+					.build();
+		} else {
+			return Response.status(Response.Status.OK).build();
+		}
+	}
+	
+	@POST
+	@Timed
+	@Path("/ToShipping")
+	@UnitOfWork
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RestrictedTo(Authority.ROLE_USER)
+	public Response sendToShipping(ItemMinList list) {
+
+		if (list.getItemMins().size() < 1) {
+			System.out.println("Bad list or empty list");
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
+		List<ItemMin> failedList = new ArrayList<ItemMin>();
+		boolean updated = false;
+		for (ItemMin itemMin : list.getItemMins()) {
+			Item item = null;
+			/*
+			if (itemMin.getRfid().length() > 0){
+				Optional<Item> opt = items.getItemByRFID(itemMin.getRfid());
+				if (opt.isPresent())
+					item = opt.get();
+			}
+			*/
+			
+			Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
+			if (opt.isPresent())
+				item = opt.get();
+			
+			
+			if (item != null) {
+				updated = items.sendToShipping(item, itemMin.getModifier());
 			}
 			
 			if (!updated) {

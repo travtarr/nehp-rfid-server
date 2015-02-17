@@ -1,69 +1,214 @@
-<div class="details">
-	<table class="double-column">
-		<tbody>
-			<tr>
-				<td class="header">RFID</td><td>{{rfid}}</td>
-				<td class="header">Item ID</td><td>{{item_id}}</td>
-			</tr>
-			<tr>
-				<td class="header">Created By</td><td>{{created_by}}</td>
-				<td class="header">Created Date</td><td>{{created_date}}</td>
-			</tr>
-			<tr>
-				<td class="header">Last Change Date</td><td>{{last_status_change_date}}</td>
-				<td class="header">Last Change User</td><td>{{last_status_change_user}}</td>
-			</tr>
-			<tr>
-				<td class="header">Current Revision</td><td>{{current_revision}}</td>
-				<td class="header">Current Revision Date</td><td>{{current_revision_date}}</td>
-			</tr>
-			<tr>
-				<td class="header">Current Stage</td><td>{{current_stage}}</td>
-				<td class="header">Group</td><td>{{group}}</td>
-			</tr>
-			<tr>
-				<td class="header">Comment</td>
-				<td colspan="3">{{comment}}</td>
-			</tr>
-		</tbody>
-	</table>
+{{outlet modal}}
+<div class="row">
+	<div class="col-md-12">
+		<div class="item-details-title"><span>Details</span></div>
+	</div>
 </div>
-<div class="details">
-	<table>
-		<tbody>
-			<tr class="header">
-				<td></td>
-				<td>Integration Start</td>
-				<td>Integration End</td>
-				<td>Parts Allocated</td>
-				<td>Manufacturing Begin</td>
-				<td>Manufacturing End</td>
-				<td>QA/QC Complete</td>
-				<td>Shipped</td>
-				<td>On Hold</td>
+<div class="row">
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Item / Drawing</span></th>
 			</tr>
 			<tr>
-				<td class="header">User</td>
-				<td>{{stage1_user}}</td>
-				<td>{{stage2_user}}</td>
-				<td>{{stage3_user}}</td>
-				<td>{{stage4_user}}</td>
-				<td>{{stage5_user}}</td>
-				<td>{{stage6_user}}</td>
-				<td>{{stage7_user}}</td>
+				<td><span>{{item_id}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Group</span></th>
+			</tr>
+			<tr>
+				<td><span>{{group}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Revision</span></th>
+			</tr>
+			<tr>
+				<td><span>{{current_revision}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Stage</span></th>
+			</tr>
+			<tr>
+				<td><span>{{current_stage}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Hold Reason</span></th>
+			</tr>
+			<tr>
+				<td><span>{{reason}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Created By</span></th>
+			</tr>
+			<tr>
+				<td><span>{{created_by}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Created Date</span></th>
+			</tr>
+			<tr>
+				<td><span>{{created_date}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Last Status Change User</span></th>
+			</tr>
+			<tr>
+				<td><span>{{last_status_change_user}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th><span>Last Status Change Date</span></th>
+			</tr>
+			<tr>
+				<td><span>{{last_status_change_date}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-8">
+		<table>
+			<tr>
+				<th><span>Comment</span></th>
+			</tr>
+			<tr>
+				<td><span>{{comment}}</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Integration Begin</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 1}}>{{stage1_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage1_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Integration End</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 2}}>{{stage2_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage2_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Parts Allocated</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 3}}>{{stage3_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage3_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Manufacturing Begin</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 4}}>{{stage4_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage4_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Manufacturing End</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 5}}>{{stage5_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage5_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>QA/QC Complete</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 6}}>{{stage6_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage6_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>Shipped</th>
+			</tr>
+			<tr>
+				<td {{action 'showImage' 7}}>{{stage7_user}}</td>
+			</tr>
+			<tr>
+				<td>{{stage7_date}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tbl-4">
+		<table>
+			<tr>
+				<th>On Hold</th>
+			</tr>
+			<tr>
 				<td>{{stage0_user}}</td>
 			</tr>
 			<tr>
-				<td class="header">Date</td>
-				<td>{{stage1_date}}</td>
-				<td>{{stage2_date}}</td>
-				<td>{{stage3_date}}</td>
-				<td>{{stage4_date}}</td>
-				<td>{{stage5_date}}</td>
-				<td>{{stage6_date}}</td>
-				<td>{{stage7_date}}</td>
 				<td>{{stage0_date}}</td>
 			</tr>
-		</tbody>
-	</table>
+		</table>
+	</div>
 </div>

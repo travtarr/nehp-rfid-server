@@ -79,10 +79,10 @@ public class UserDAOTest extends DAOTest{
 		// set-up new user
 		User user = new User();
 		user.setAdmin(false);
-		user.setEmail("root@localhost.com");
-		user.setName("root");
+		user.setEmail("travis.tarr@nehp.com");
+		user.setName("test5");
 		user.setScanner(false);
-		user.setUsername("root");
+		user.setUsername("test5");
 		user.setUserCreatedDate(new Date());
 		
 		getSession().beginTransaction();

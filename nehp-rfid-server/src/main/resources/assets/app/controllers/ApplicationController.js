@@ -7,8 +7,8 @@ App.ApplicationController = Ember.Controller.extend({
 		title: null,
 		message: null,
 		closed: true
-	},		
-		
+	},	
+	
 	// creates a computed property called currentUser that will be
 	// binded on the curretUser of the sessions controller and will return its
 	// value
@@ -50,9 +50,6 @@ App.ApplicationController = Ember.Controller.extend({
 				closed : false
 			};
 			this.set('notification', notification);
-		},
-		testNotification : function() {
-			this.send('setNotification', 'success', 'Success', 'Yay you did it.');
 		}
 	}
 });

@@ -64,15 +64,15 @@ public class User {
 	private String password;
 	
 	@Column(name = "password_reset", nullable = true)
-	@JsonProperty
+	@JsonProperty("password_reset")
 	private boolean password_reset;
 	
 	@Column(name = "last_login_date", nullable = true)
-	@JsonProperty
+	@JsonProperty("last_login_date")
 	private Date last_login_date;
 	
 	@Column(name = "user_created_date", nullable = true)
-	@JsonProperty
+	@JsonProperty("user_created_date")
 	private Date user_created_date;
 	
 	@Column(name = "admin", nullable = false)
@@ -144,14 +144,17 @@ public class User {
 		return password;
 	}
 	
+	@JsonProperty("password_reset")
 	public boolean getPasswordReset(){
 		return password_reset;
 	}
 
+	@JsonProperty("last_login_date")
 	public Date getLastLoginDate(){
 		return last_login_date;
 	}
 
+	@JsonProperty("user_created_date")
 	public Date getUserCreatedDate(){
 		return user_created_date;
 	}

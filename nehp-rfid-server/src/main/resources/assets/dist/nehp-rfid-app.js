@@ -100,8 +100,8 @@ var config  = {
 		title: null,
 		message: null,
 		closed: true
-	},		
-		
+	},	
+	
 	// creates a computed property called currentUser that will be
 	// binded on the curretUser of the sessions controller and will return its
 	// value
@@ -143,9 +143,6 @@ var config  = {
 				closed : false
 			};
 			this.set('notification', notification);
-		},
-		testNotification : function() {
-			this.send('setNotification', 'success', 'Success', 'Yay you did it.');
 		}
 	}
 });;App.ChangeController = Ember.Controller.extend({
@@ -215,6 +212,10 @@ var config  = {
 		      this.set('sortProperties', [column]);
 		      this.set('sortAscending', true);
 		    }
+		},
+		
+		goToItem: function(id) {
+			this.transitionToRoute('item', id); 
 		}
 	}
 });;App.NotificationsController = Ember.ArrayController.extend({
@@ -470,7 +471,6 @@ var config  = {
 						username : null,
 						password : null
 					});
-
 					var key = _this.get('store').createRecord('apiKey', {
 						accessToken : response.api_key[0].access_token.string
 					});
@@ -857,6 +857,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
 		}
 	}
 });;App.ApplicationRoute = Ember.Route.extend({
+	
+	image: null,
+	
 	actions : {
 		// create a global logout action
 		logout : function() {
@@ -894,6 +897,17 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.ItemRoute = App.AuthenticatedRoute.extend({
 	model: function(params) {
 		return this.store.find('item', params.item_id);
+	},
+	actions: {
+		showImage: function(stage) {
+			var imageData = "data:image/gif;base64,"  + $.getJSON("/service/signature/" + this.currentModel.get('id') + "/" + stage);
+			
+			this.set('image', imageData);
+			this.render('modal', { into: 'application', outlet: 'modal' });
+		},
+		closeImage: function() {
+		    this.render('nothing', { into: 'application', outlet: 'modal' });
+		}
 	}
 });;App.ItemsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
@@ -904,7 +918,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 		/**
 		 * Exports the current visible items in the table to an excel file.
 		 */
-		excel: function(){
+		excelFilter: function(){
 			var excel="<table>";
 			var el = this;
 			// Header
@@ -964,7 +978,10 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			excelFile += "</html>";
 
 			var base64data = "base64," + $.base64.encode(excelFile);
-			window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+			window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + base64data);
+		},
+		excel: function(data){
+			
 		},
 		/**
 		 * Exports all items loaded from the server into an excel file.
@@ -1023,8 +1040,14 @@ App.AuthenticatedRoute = Ember.Route.extend({
 				excelFile += "</html>";
 	
 				var base64data = "base64," + $.base64.encode(excelFile);
-				window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+				window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + base64data);
 			});
+		},
+		excelDuration: function() {
+			$.get("/service/reports/duration/hours").done(function(data) {
+				window.open('data:application/vnd.ms-excel;filename=exportData.xls;' + data);
+			});
+			
 		}
 	}
 });;App.ListRoute = App.AuthenticatedRoute.extend({
@@ -1219,5 +1242,23 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.UsersEditRoute = App.AuthenticatedRoute.extend({});;App.UsersRoute = App.AuthenticatedRoute.extend({
 	model : function() {
 		return this.store.find('user');
+	}
+});;App.ModalView = Ember.View.Extend({
+	didInsertElement : function() {
+		this.$('.modal, .modal-backdrop').addClass('in');
+	},
+
+	layoutName : 'modal_layout',
+
+	close : function() {
+		var view = this;
+		// use one of: transitionend webkitTransitionEnd oTransitionEnd
+		// MSTransitionEnd
+		// events so the handler is only fired once in your browser
+		this.$('.modal').one("transitionend", function(ev) {
+			view.controller.send('close');
+		});
+
+		this.$('.modal, .modal-backdrop').removeClass('in');
 	}
 });

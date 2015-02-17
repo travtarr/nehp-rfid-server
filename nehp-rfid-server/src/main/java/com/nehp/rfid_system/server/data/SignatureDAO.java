@@ -22,9 +22,13 @@ public class SignatureDAO extends AbstractDAO<Signature> {
 
 	public Optional<Signature> getByItemAndStage(Long item, Long stage){
 		if ( verifyStage(stage) ) {
-			return Optional.of(list(namedQuery("signature.getByItemAndStage")
+			List<Signature> sigList = list(namedQuery("signature.getByItemAndStage")
 					.setParameter("item", item, LongType.INSTANCE)
-					.setParameter("stage", stage, LongType.INSTANCE)).get(0));
+					.setParameter("stage", stage, LongType.INSTANCE));
+			if (sigList.size() > 0)
+				return Optional.of(sigList.get(0));
+			else
+				return Optional.absent();
 		}
 		return Optional.absent();
 	}

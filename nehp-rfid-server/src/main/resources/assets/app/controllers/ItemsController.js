@@ -31,6 +31,10 @@ App.ItemsController = Ember.ArrayController.extend({
 		      this.set('sortProperties', [column]);
 		      this.set('sortAscending', true);
 		    }
+		},
+		
+		goToItem: function(id) {
+			this.transitionToRoute('item', id); 
 		}
 	}
 });
