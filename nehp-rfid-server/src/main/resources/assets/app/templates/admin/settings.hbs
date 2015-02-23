@@ -2,14 +2,13 @@
 	<form {{action 'edit' this on="submit"}}>
 		<fieldset>
 			<legend>Summary Settings - Overdue Limits</legend>
-			<label>Modeling<br>{{input type='text' value=stage1day required="required" class="small"}}Day(s){{input type='text' value=stage1hour required="required" class="small"}}Hour(s)</label>
+			<label>Integration<br>{{input type='text' value=stage1day required="required" class="small"}}Day(s){{input type='text' value=stage1hour required="required" class="small"}}Hour(s)</label>
 			<label>Kitting<br>{{input type='text' value=stage2day required="required" class="small"}}Day(s){{input type='text' value=stage2hour required="required" class="small"}}Hour(s)</label>
-			<label>Manufacturing<br>{{input type='text' value=stage3day required="required" class="small"}}Day(s){{input type='text' value=stage3hour required="required" class="small"}}Hour(s)</label>
-			<label>QA/QC<br>{{input type='text' value=stage4day required="required" class="small"}}Day(s){{input type='text' value=stage4hour required="required" class="small"}}Hour(s)</label>
-			<label>Shipped<br>{{input type='text' value=stage5day required="required" class="small"}}Day(s){{input type='text' value=stage5hour required="required" class="small"}}Hour(s)</label>
-			<label>Arrival<br>{{input type='text' value=stage6day required="required" class="small"}}Day(s){{input type='text' value=stage6hour required="required" class="small"}}Hour(s)</label>
-			<label>Installed<br>{{input type='text' value=stage7day required="required" class="small"}}Day(s){{input type='text' value=stage7hour required="required" class="small"}}Hour(s)</label>
-			<label>Stopped<br>{{input type='text' value=stage0day required="required" class="small"}}Day(s){{input type='text' value=stage0hour required="required" class="small"}}Hour(s)</label>
+			<label>Awaiting Mfg<br>{{input type='text' value=stage3day required="required" class="small"}}Day(s){{input type='text' value=stage3hour required="required" class="small"}}Hour(s)</label>
+			<label>Manufacturing<br>{{input type='text' value=stage4day required="required" class="small"}}Day(s){{input type='text' value=stage4hour required="required" class="small"}}Hour(s)</label>
+			<label>QA/QC<br>{{input type='text' value=stage5day required="required" class="small"}}Day(s){{input type='text' value=stage5hour required="required" class="small"}}Hour(s)</label>
+			<label>Shipping<br>{{input type='text' value=stage6day required="required" class="small"}}Day(s){{input type='text' value=stage6hour required="required" class="small"}}Hour(s)</label>
+			<label>On Hold<br>{{input type='text' value=stage0day required="required" class="small"}}Day(s){{input type='text' value=stage0hour required="required" class="small"}}Hour(s)</label>
 			<label><button {{action 'cancel'}}>Cancel</button>{{input type='submit' value="Submit Changes"}}</label>
 		</fieldset>
 	</form>

@@ -1,5 +1,5 @@
 App.ItemsController = Ember.ArrayController.extend({
-	sortProperties: ['rfid'],
+	sortProperties: ['item_id'],
 	stage: 'ALL',
 	sortedColumn: (function() {
 	    var properties = this.get('sortProperties');
@@ -14,7 +14,7 @@ App.ItemsController = Ember.ArrayController.extend({
 			return items;
 		else {
 			return items.filter(function(item) {
-				return item.get('current_stage') == stage;
+				return item.get('current_stage_desc') == stage;
 			});
 		}
 	}.property('stage', 'arrangedContent'),

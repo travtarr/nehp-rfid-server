@@ -1,7 +1,9 @@
 App.Router.map(function() {
   this.resource('summary'); 
   this.resource('items', function() {
-    this.resource('item', { path:'/:item_id' });
+    this.resource('item', { path:'/:item_id' }, function(){
+       this.resource('stages');
+    });
   });
   this.resource('user', { path:'/user/:user_id' }, function(){
 	  this.route('info');

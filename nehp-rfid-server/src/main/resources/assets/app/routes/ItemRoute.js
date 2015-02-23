@@ -2,6 +2,9 @@ App.ItemRoute = App.AuthenticatedRoute.extend({
 	model: function(params) {
 		return this.store.find('item', params.item_id);
 	},
+	afterModel: function(){
+		this.transitionTo('stages');
+	},
 	actions: {
 		showImage: function(stage) {
 			var imageData = "data:image/gif;base64,"  + $.getJSON("/service/signature/" + this.currentModel.get('id') + "/" + stage);

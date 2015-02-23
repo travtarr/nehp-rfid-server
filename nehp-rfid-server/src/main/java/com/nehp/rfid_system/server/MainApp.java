@@ -48,7 +48,8 @@ public class MainApp extends Application<MainConfiguration> {
 	}
 	
 	private HibernateBundle<MainConfiguration> hibernate = new HibernateBundle<MainConfiguration>(
-			Item.class, User.class, AccessToken.class, Notification.class, Setting.class, Group.class, Signature.class) {
+			Item.class, User.class, AccessToken.class, Notification.class, 
+			Setting.class, Group.class, Signature.class, StageLog.class) {
 		@Override
 		public DataSourceFactory getDataSourceFactory(MainConfiguration configuration) {
 			return configuration.getDataSourceFactory();
@@ -67,19 +68,21 @@ public class MainApp extends Application<MainConfiguration> {
 		SettingDAO settingDAO = new SettingDAO(hibernate.getSessionFactory());
 		SignatureDAO signatureDAO = new SignatureDAO(hibernate.getSessionFactory());
 		GroupDAO groupDAO = new GroupDAO(hibernate.getSessionFactory());
+		StageLogDAO stageDAO = new StageLogDAO(hibernate.getSessionFactory());
 				
 		// initialize resources
 		final ListResource listResource = new ListResource(itemDAO);
 		final ItemResource itemResource = new ItemResource(itemDAO);
-		final ItemsResource itemsResource = new ItemsResource(itemDAO, groupDAO);
+		final ItemsResource itemsResource = new ItemsResource(itemDAO, groupDAO, stageDAO);
 		final AuthResource authResource = new AuthResource(
 				configuration.getAllowedGrantTypes(), accessTokenDAO, userDAO);
 		final UserResource userResource = new UserResource(userDAO, accessTokenDAO, settingDAO);
 		final NotificationsResource notificationsResource = new NotificationsResource(notificationsDAO);
 		final SettingResource settingResource = new SettingResource(settingDAO);
-		final SignatureResource signatureResource = new SignatureResource(signatureDAO, itemDAO);
+		final SignatureResource signatureResource = new SignatureResource(signatureDAO, itemDAO, stageDAO);
 		final DownloadResource downloadResource = new DownloadResource(configuration.getFilename());
-		final ReportsResource reportsResource = new ReportsResource(itemDAO);
+		final ReportsResource reportsResource = new ReportsResource(itemDAO, stageDAO);
+		final StageLogResource stageResource = new StageLogResource(stageDAO);
 		
 		// test resource
 		final PingResource pingResource = new PingResource();
@@ -106,6 +109,7 @@ public class MainApp extends Application<MainConfiguration> {
 		environment.jersey().register(signatureResource);
 		environment.jersey().register(downloadResource);
 		environment.jersey().register(reportsResource);
+		environment.jersey().register(stageResource);
 		// test resource
 		environment.jersey().register(pingResource);
 

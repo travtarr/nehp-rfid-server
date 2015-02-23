@@ -18,7 +18,10 @@
 							<th>Delete</th>
 						</tr>
 					</thead>
-					<tbody>
+				</table>
+				<div class="inner-table">
+					<table>
+						<tbody>
 						{{#each}}
 							<tr>
 								<td>{{username}}</td>
@@ -29,8 +32,9 @@
 								<td><button {{action 'remove' this}}><img src="assets/images/delete-icon.png" alt="delete icon"></button></td>
 							</tr>
 						{{/each}}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

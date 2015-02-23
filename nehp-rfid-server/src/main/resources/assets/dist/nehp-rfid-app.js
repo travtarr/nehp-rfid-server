@@ -179,8 +179,12 @@ var config  = {
 });;App.IndexController = Ember.ArrayController.extend({
 	sortProperties: ['date'],
 	sortAscending: false
-});;App.ItemController = Ember.ObjectController.extend({});;App.ItemsController = Ember.ArrayController.extend({
-	sortProperties: ['rfid'],
+});;App.ItemController = Ember.ObjectController.extend({
+	itemid: function() {
+		return this.model.get('id');
+	}.property('model')
+});;App.ItemsController = Ember.ArrayController.extend({
+	sortProperties: ['item_id'],
 	stage: 'ALL',
 	sortedColumn: (function() {
 	    var properties = this.get('sortProperties');
@@ -195,7 +199,7 @@ var config  = {
 			return items;
 		else {
 			return items.filter(function(item) {
-				return item.get('current_stage') == stage;
+				return item.get('current_stage_desc') == stage;
 			});
 		}
 	}.property('stage', 'arrangedContent'),
@@ -540,7 +544,7 @@ var config  = {
 			});
 		}
 	}
-});;;App.SummaryController = Ember.ArrayController.extend({
+});;App.StagesController = Ember.ArrayController.extend({});;;App.SummaryController = Ember.ArrayController.extend({
 	sortProperties: ['rfid'],
 	stage: 'ALL',
 	
@@ -688,33 +692,17 @@ var config  = {
     rfid: DS.attr('string'),
     item_id: DS.attr('string'),
     comment: DS.attr('string'),
-    reason: DS.attr('string'),
     printed: DS.attr('boolean'),
     group: DS.attr('number'),
     created_by: DS.attr('string'),
     created_date: DS.attr('simpledate'),
     current_revision: DS.attr('string'),
     current_revision_date: DS.attr('simpledate'),
-    current_stage: DS.attr('string'),
+    current_stage: DS.attr('number'),
     current_stage_num: DS.attr('number'),
+    current_stage_desc: DS.attr('string'),
     last_status_change_date: DS.attr('simpledate'),
-    last_status_change_user: DS.attr('string'),
-    stage1_user: DS.attr('string'),
-    stage1_date: DS.attr('simpledate'),
-    stage2_user: DS.attr('string'),
-    stage2_date: DS.attr('simpledate'),
-    stage3_user: DS.attr('string'),
-    stage3_date: DS.attr('simpledate'),
-    stage4_user: DS.attr('string'),
-    stage4_date: DS.attr('simpledate'),
-    stage5_user: DS.attr('string'),
-    stage5_date: DS.attr('simpledate'),
-    stage6_user: DS.attr('string'),
-    stage6_date: DS.attr('simpledate'),
-    stage7_user: DS.attr('string'),
-    stage7_date: DS.attr('simpledate'),
-    stage0_user: DS.attr('string'),
-    stage0_date: DS.attr('simpledate')
+    last_status_change_user: DS.attr('string')
 });;App.Notification = DS.Model.extend({
   title: DS.attr('string'),
   date: DS.attr('simpledate'),
@@ -731,6 +719,13 @@ var config  = {
   stage6:				DS.attr('string'),
   stage7:				DS.attr('string'),
   stage0:				DS.attr('string')
+});;App.Stagelog = DS.Model.extend({
+	item: DS.attr('number'),
+	stage: DS.attr('number'),
+	description: DS.attr('string'),
+	stage_date: DS.attr('simpledate'),
+	signed_by: DS.attr('string'),
+	reason: DS.attr('string')
 });;App.User = DS.Model.extend({
   username:              DS.attr('string'),
   password:              DS.attr('string'),
@@ -746,7 +741,9 @@ var config  = {
 });;App.Router.map(function() {
   this.resource('summary'); 
   this.resource('items', function() {
-    this.resource('item', { path:'/:item_id' });
+    this.resource('item', { path:'/:item_id' }, function(){
+       this.resource('stages');
+    });
   });
   this.resource('user', { path:'/user/:user_id' }, function(){
 	  this.route('info');
@@ -857,9 +854,7 @@ App.AuthenticatedRoute = Ember.Route.extend({
 		}
 	}
 });;App.ApplicationRoute = Ember.Route.extend({
-	
 	image: null,
-	
 	actions : {
 		// create a global logout action
 		logout : function() {
@@ -883,9 +878,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
   actions: {
 	  // recover from any error that may happen during the transition to this
 	  // route
-  error: function(reason, transition) {
-  // if the HTTP status is 401 (unauthorized), redirect to the login
-	  // page
+	  error: function(reason, transition) {
+		  // if the HTTP status is 401 (unauthorized), redirect to the login
+		  // page
 	  if (reason.status === 401) {
 		  this.controllerFor('sessions').reset();
 		  return this.transitionTo('sessions');
@@ -897,6 +892,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.ItemRoute = App.AuthenticatedRoute.extend({
 	model: function(params) {
 		return this.store.find('item', params.item_id);
+	},
+	afterModel: function(){
+		this.transitionTo('stages');
 	},
 	actions: {
 		showImage: function(stage) {
@@ -1107,6 +1105,16 @@ App.AuthenticatedRoute = Ember.Route.extend({
 			this.transitionTo('index');
 		}
 	}
+});;App.StagesRoute = App.AuthenticatedRoute.extend({
+	setupController: function(controller) {
+        var _this = this;
+        var item = this.controllerFor('item').get('itemid');
+        return this.get('store').find('stagelog').then(function() {
+            controller.set('model', _this.get('store').filter('stagelog', function(stage){
+                return stage.get('item') == item;
+            }));
+        });
+    }
 });;App.SummaryRoute = App.AuthenticatedRoute.extend({
 	model: function() {
 		// grab settings based upon current user
@@ -1117,38 +1125,10 @@ App.AuthenticatedRoute = Ember.Route.extend({
 				var setting = data.setting;
 				// visible items = (now - stage_date) > stage_date_setting
 				return _this.store.filter('item', function(item){
-					var curStage = item.get('current_stage');
-					var curStageNum = 0;
+					var curStageNum = item.get('current_stage_num');
 					
-					// get the correct stage #
-					switch(curStage){
-						case 'STOPPED':
-							curStageNum = 0;
-							break;
-						case 'MODELING':
-							curStageNum = 1;
-							break;
-						case 'KITTING':
-							curStageNum = 2;
-							break;
-						case 'MANUFACTURING':
-							curStageNum = 3;
-							break;
-						case 'QA/QC':
-							curStageNum = 4;
-							break;
-						case 'SHIPPED':
-							curStageNum = 5;
-							break;
-						case 'ARRIVAL':
-							curStageNum = 6;
-							break;
-						case 'INSTALLED':
-							curStageNum = 7;
-							break;
-					}
-					var stage = item.get('stage' + curStageNum + '_date');
-					if( stage !== null){
+					var stage = item.get('last_status_change_date');
+					if( stage !== null ){
 						var a = moment($.now());
 						var diff = a.diff(moment(stage), 'days');
 						if( diff > setting['stage' + curStageNum] ){

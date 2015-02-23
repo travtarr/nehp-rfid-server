@@ -1,0 +1,29 @@
+<div class = "tables-items">
+	<table class="table-hover">
+		<thead>
+			<tr>
+				<th>Stage</th>
+				<th>Description</th>
+				<th>Date</th>
+				<th>Signed By</th>
+				<th>Reason</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div class="inner-table">
+		<table>
+			<tbody>
+			{{#each}}
+				<tr>
+					<td>{{stage}}</td>
+					<td>{{description}}</td>
+					<td>{{stage_date}}</td>
+					<td>{{signed_by}}</td>
+					<td>{{reason}}</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -2,14 +2,28 @@ package com.nehp.rfid_system.server.helpers;
 
 public class Stages {
 	
-	public static final String STAGE1 = "INTEGRATION START";
+	public static final String STAGE1 = "INTEGRATION BEGIN";
 	public static final String STAGE2 = "INTEGRATION COMPLETE";
-	public static final String STAGE3 = "PARTS ALLOCATED";
+	public static final String STAGE3 = "PARTS KITTED";
 	public static final String STAGE4 = "MANUFACTURING BEGIN";
 	public static final String STAGE5 = "MANUFACTURING COMPLETE";
 	public static final String STAGE6 = "QA/QC COMPLETE";
 	public static final String STAGE7 = "SHIPPED";
 	public static final String STAGE0 = "ON HOLD";
+	public static final int NUM_STAGES = 7;
+	
+	public static final String[] STAGE_POST_STATUS = 
+		{ null, 
+		"INTEGRATING", 
+		"IN KITTING",
+		"AWAITING MFG",
+		"IN MANUFACTURING",
+		"IN QA/QC",
+		"IN SHIPPING",
+		"COMPLETE" };
+	
+	public static final String[] STAGES = { STAGE0, STAGE1, STAGE2, STAGE3, STAGE4,
+			STAGE5, STAGE6, STAGE7 };
 	
 	public static final int STAGE1_NUM = 1;
 	public static final int STAGE2_NUM = 2;

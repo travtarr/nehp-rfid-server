@@ -9,10 +9,15 @@ div.container {
 }
 
 .header-summary {
-	max-width: 600px;
-	margin: auto;
-	font-size: 32px;
+	text-align: center;
+	line-height: 1.2em;
 	font-weight: bold;
+	font-size: 1.5em;
+	color: #0D0D0D;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #1A1A1A;
+	border-radius: 3px;
 }
 button.dark-blue {
 	background-color: #1b1b1b;
@@ -198,12 +203,11 @@ div.nav-admin .button:hover {
 	text-align: center;
 	line-height: 1.2em;
 	font-weight: bold;
-	font-size: 3em;
+	font-size: 1.5em;
 	color: #0D0D0D;
-	max-width: 635px;
 	margin-left: auto;
 	margin-right: auto;
-	background-color: #333333;
+	background-color: #1A1A1A;
 	border-radius: 3px;
 }
 
@@ -238,7 +242,7 @@ div.nav-admin .button:hover {
 	text-align: center;
 	line-height: 1.2em;
 	font-weight: bold;
-	font-size: 3em;
+	font-size: 1.5em;
 	color: #D5D5D5;
 }
 .tables-items {
@@ -246,7 +250,7 @@ div.nav-admin .button:hover {
 	padding:0px;
 	width:100%;
 	max-height: 400px;
-	overflow-y: none;
+	overflow-y: auto;
 	-moz-border-radius-bottomleft:0px;
 	-webkit-border-bottom-left-radius:0px;
 	border-bottom-left-radius:0px;
@@ -586,7 +590,7 @@ table.double-column td.header {
 }
 
 .light-title {
-	color: #BCB8CB;
+	color: #FFFFFF;
 }
 
 .spinner {
@@ -702,7 +706,7 @@ table.double-column td.header {
 }
 
 .tbl-4 {
-	width: 185px;
+	max-width: 185px;
 	float: left;
 	border-radius: 5px;
 	border: 2px solid rgb(161, 157, 157);
@@ -737,8 +741,7 @@ table.double-column td.header {
 	height: 21px;
 }
 .tbl-8 {
-	width: 360px;
-	float: left;
+	float:left;
 	border-radius: 5px;
 	border: 2px solid rgb(161, 157, 157);
 	margin-right: 2px;
@@ -772,3 +775,4 @@ table.double-column td.header {
 	font-size: 12px;
 	height: 21px;
 }
+.

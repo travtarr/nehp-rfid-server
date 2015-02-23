@@ -20,8 +20,10 @@ import com.nehp.rfid_system.server.auth.annotation.RestrictedTo;
 import com.nehp.rfid_system.server.core.Authority;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.Signature;
+import com.nehp.rfid_system.server.core.StageLog;
 import com.nehp.rfid_system.server.data.ItemDAO;
 import com.nehp.rfid_system.server.data.SignatureDAO;
+import com.nehp.rfid_system.server.data.StageLogDAO;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -32,10 +34,12 @@ public class SignatureResource {
 	
 	private final SignatureDAO dao;
 	private final ItemDAO itemDAO;
+	private final StageLogDAO stageDAO;
 	
-	public SignatureResource(SignatureDAO dao, ItemDAO items){
+	public SignatureResource(SignatureDAO dao, ItemDAO items, StageLogDAO stageDAO){
 		this.dao = dao;
 		this.itemDAO = items;
+		this.stageDAO = stageDAO;
 	}
 	
 	@GET
@@ -83,7 +87,10 @@ public class SignatureResource {
 			if (item != null) {
 				Signature sig = new Signature();
 				sig.setItem(item.getId());
-				sig.setStage(item.getCurrentStageNum() + 1);
+				StageLog stageLog = stageDAO.getById( item.getCurrentStage() ).get();
+				// any time a signature is created, the signature that is created is done so before
+				// the item is sent to the next stage, so need to grab the next stage
+				sig.setStage(stageLog.getStage() + 1);
 				sig.setImage(image);
 				sig.setAuthor(name);
 				Long newId = dao.create(sig);
@@ -139,7 +146,10 @@ public class SignatureResource {
 						System.out.println("Item not null");
 						Signature sig = new Signature();
 						sig.setItem(item.getId());
-						sig.setStage(item.getCurrentStageNum() + 1);	
+						StageLog stageLog = stageDAO.getById( item.getCurrentStage() ).get();
+						// any time a signature is created, the signature that is created is done so before
+						// the item is sent to the next stage, so need to grab the next stage
+						sig.setStage(stageLog.getStage() + 1);
 						sig.setImage(image);
 						sig.setAuthor(name);
 						newList[i] = dao.create(sig);

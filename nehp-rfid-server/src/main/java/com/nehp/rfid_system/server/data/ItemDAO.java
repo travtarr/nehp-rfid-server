@@ -1,7 +1,6 @@
 package com.nehp.rfid_system.server.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import org.hibernate.type.StringType;
 
 import com.google.common.base.Optional;
 import com.nehp.rfid_system.server.core.Item;
-import com.nehp.rfid_system.server.helpers.Stages;
 
 import io.dropwizard.hibernate.AbstractDAO;
 
@@ -29,7 +27,6 @@ public class ItemDAO extends AbstractDAO<Item>{
 	
 	public Optional<Item> getItemById(Long id){
 		return Optional.of(get(id));
-		//return list(namedQuery("items.getById").setParameter("id", id, StringType.INSTANCE)).get(0);
 	}
 	
 	public Optional<Item> getItemByRFID(String id){
@@ -117,141 +114,24 @@ public class ItemDAO extends AbstractDAO<Item>{
 		if (item.getId() > 0)
 			updateItem = get(item.getId());
 		else 
-			updateItem = this.getItemByItemIdAndRev(item.getItemId(), item.getCurrentRevision()).get();
+			updateItem = this.getItemByItemIdAndRev(item.getItemId(), item.getRevision()).get();
 		
 		if(updateItem == null)
 			return false;
 		
 		updateItem.setGroup(item.getGroup());
 		updateItem.setCurrentStage(item.getCurrentStage());
-		updateItem.setCurrentRevision(item.getCurrentRevision());
-		updateItem.setCurrentRevisionDate(item.getCurrentRevisionDate());
-		updateItem.setComment(item.getComment());
+		updateItem.setCurrentStageDesc(item.getCurrentStageDesc());
+		updateItem.setRevision(item.getRevision());
 		updateItem.setReason(item.getReason());
+		updateItem.setComment(item.getComment());
 		updateItem.setPrinted(item.getPrinted());
-		updateItem.setCurrentStageNum(item.getCurrentStageNum());
 		updateItem.setRFID(item.getRFID());
 		updateItem.setLastStatusChangeDate(item.getLastStatusChangeDate());
 		updateItem.setLastStatusChangeUser(item.getLastStatusChangeUser());
-		updateItem.setStage0Date(item.getStage0Date());
-		updateItem.setStage0User(item.getStage0User());
-		updateItem.setStage1Date(item.getStage1Date());
-		updateItem.setStage1User(item.getStage1User());
-		updateItem.setStage2Date(item.getStage2Date());
-		updateItem.setStage2User(item.getStage2User());
-		updateItem.setStage3Date(item.getStage3Date());
-		updateItem.setStage3User(item.getStage3User());
-		updateItem.setStage4Date(item.getStage4Date());
-		updateItem.setStage4User(item.getStage4User());
-		updateItem.setStage5Date(item.getStage5Date());
-		updateItem.setStage5User(item.getStage5User());
-		updateItem.setStage6Date(item.getStage6Date());
-		updateItem.setStage6User(item.getStage6User());
-		updateItem.setStage7Date(item.getStage7Date());
-		updateItem.setStage7User(item.getStage7User());
 		persist(updateItem);
 
 		return true;	
-	}
-	
-	public boolean sendNextStage(Item item, String modifier){
-
-		boolean status = true;
-		switch (item.getCurrentStageNum()){
-		
-			case Stages.STAGE_NOT_SET_NUM:
-				item.setCurrentStageNum(Stages.STAGE1_NUM);
-				item.setCurrentStage(Stages.STAGE1);
-				item.setStage1Date(new Date());
-				item.setStage1User(modifier);
-				break;
-			case Stages.STAGE1_NUM:
-				item.setCurrentStageNum(Stages.STAGE2_NUM);
-				item.setCurrentStage(Stages.STAGE2);
-				item.setStage2Date(new Date());
-				item.setStage2User(modifier);
-				break;
-			case Stages.STAGE2_NUM:
-				item.setCurrentStageNum(Stages.STAGE3_NUM);
-				item.setCurrentStage(Stages.STAGE3);
-				item.setStage3Date(new Date());
-				item.setStage3User(modifier);
-				break;
-			case Stages.STAGE3_NUM:
-				item.setCurrentStageNum(Stages.STAGE4_NUM);
-				item.setCurrentStage(Stages.STAGE4);
-				item.setStage4Date(new Date());
-				item.setStage4User(modifier);
-				break;
-			case Stages.STAGE4_NUM:
-				item.setCurrentStageNum(Stages.STAGE5_NUM);
-				item.setCurrentStage(Stages.STAGE5);
-				item.setStage5Date(new Date());
-				item.setStage5User(modifier);
-				break;
-			case Stages.STAGE5_NUM:
-				item.setCurrentStageNum(Stages.STAGE6_NUM);
-				item.setCurrentStage(Stages.STAGE6);
-				item.setStage6Date(new Date());
-				item.setStage6User(modifier);
-				break;
-			case Stages.STAGE6_NUM:
-				item.setCurrentStageNum(Stages.STAGE7_NUM);
-				item.setCurrentStage(Stages.STAGE7);
-				item.setStage7Date(new Date());
-				item.setStage7User(modifier);
-				break;
-			case Stages.STAGE7_NUM:
-				status = false;
-				break;
-			case Stages.STAGE0_NUM:
-				status = false;
-				break;
-		}
-		boolean updated = false;
-		if (status) {
-			updated = this.update(item);
-		}
-		
-		return updated;
-	}
-	
-	public boolean sendToShipping(Item item, String modifier){
-		
-		if (item.getCurrentStageNum() == Stages.STAGE2_NUM) {
-				item.setCurrentStageNum(Stages.STAGE7_NUM);
-				item.setCurrentStage(Stages.STAGE7);
-				item.setStage7Date(new Date());
-				item.setStage7User(modifier);
-		}
-
-		boolean updated = this.update(item);
-
-		
-		return updated;
-	}
-	
-	
-	public void updateGroup(Item item, String user){		
-		Optional<List<Item>> optItems = this.getItemsByItemId(item.getItemId());
-		
-		if ( optItems.isPresent() ) {
-			List<Item> updateItems = optItems.get();
-			
-			// need to set every other revision to ON HOLD status
-			for ( Item itemFromList : updateItems ){
-				if ( itemFromList.getCurrentStageNum() != Stages.STAGE0_NUM 
-						&& !itemFromList.getCurrentRevision().equals(item.getCurrentRevision())){
-					itemFromList.setCurrentStageNum(Stages.STAGE0_NUM);
-					itemFromList.setCurrentStage(Stages.STAGE0);
-					itemFromList.setStage0Date(new Date());
-					itemFromList.setStage0User(user);
-					persist(itemFromList);
-				}
-			}
-		}
-		
-		persist(item);
 	}
 	
 	

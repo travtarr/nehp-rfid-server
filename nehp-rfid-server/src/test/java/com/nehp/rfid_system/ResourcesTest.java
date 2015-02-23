@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -19,6 +21,8 @@ import com.nehp.rfid_system.server.MainApp;
 import com.nehp.rfid_system.server.MainConfiguration;
 import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.ItemList;
+import com.nehp.rfid_system.server.core.ItemMin;
+import com.nehp.rfid_system.server.core.ItemMinList;
 import com.nehp.rfid_system.server.core.User;
 import com.nehp.rfid_system.server.core.UserWrap;
 import com.sun.jersey.api.client.ClientResponse;
@@ -181,7 +185,7 @@ public class ResourcesTest {
 		//assertThat(getList.getItems().get(0).getCreatedDate()).isNull();
 		assertThat(getList.getItems().size()).isGreaterThan(0);
 		Item item = getList.getItems().get(0);
-		item.setCurrentStage("ON HOLD");
+		//item.setCurrentStage("ON HOLD");
 		item.setRFID("AB02302948272372939102129FDE20292382323242323");
 		ClientResponse response2 = helper.put("/item/" + item.getId(), helper.accessToken(), item);
 		assertThat(response2.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
@@ -234,6 +238,25 @@ public class ResourcesTest {
 		ClientResponse response = helper.postJSON("/users", helper.accessToken(), wrap);
 		
 		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.CREATED.getStatusCode());
+	}
+	
+	@Test
+	public void sendNextStageIsValid() {
+		ItemMin itemmin = new ItemMin();
+		itemmin.setItemId("SL-F28A-403-HPH2-0001");
+		itemmin.setModifier("blue");
+		itemmin.setRevision("00A");
+		
+		List<ItemMin> list = new ArrayList<ItemMin>();
+		
+		list.add(itemmin);
+		
+		ItemMinList minList = new ItemMinList();
+		minList.setItemMins(list);
+		
+		ClientResponse response = helper.postJSON("/items/nextStage", helper.accessToken(), minList);
+		
+		assertThat(response.getStatus()).isEqualTo(ClientResponse.Status.OK.getStatusCode());
 	}
 }
 

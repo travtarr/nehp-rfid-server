@@ -18,10 +18,10 @@ public class ItemMin {
 	private String revision;
 	
 	@JsonProperty
-	private String rfid;
+	private String modifier;
 	
 	@JsonProperty
-	private String modifier;
+	private String reason;
 	
 	public String getItemId(){
 		return itemId;
@@ -31,12 +31,12 @@ public class ItemMin {
 		return revision;
 	}
 	
-	public String getRfid(){
-		return rfid;
-	}
-	
 	public String getModifier(){
 		return modifier;
+	}
+	
+	public String getReason(){
+		return reason;
 	}
 	
 	public void setItemId(String itemId){
@@ -47,11 +47,11 @@ public class ItemMin {
 		this.revision = revision;
 	}
 	
-	public void setRfid(String rfid){
-		this.rfid = rfid;
-	}
-	
 	public void setModifier(String modifier){
 		this.modifier = modifier;
+	}
+	
+	public void setReason(String reason){
+		this.reason = reason;
 	}
 }

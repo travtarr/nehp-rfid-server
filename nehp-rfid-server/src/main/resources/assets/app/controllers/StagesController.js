@@ -1,0 +1,1 @@
+App.StagesController = Ember.ArrayController.extend({});

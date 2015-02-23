@@ -1,16 +1,22 @@
 <div class="container-fluid">
 	<div class="row-fluid">
+		<div class="span12">
+			<div class="header-summary">
+				<span class="light-title">Current Status of All Drawings / Items</span>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
 		<div class="span2">
 			<ul class="nav nav-inverse dark-list nav-pointer">
 				<li class="nav-header">In-Process</li>
 				<li><a {{action 'setStage' 'ALL'}}>All</a></li>
-				<li><a {{action 'setStage' 'INTEGRATION BEGIN'}}>Integration Begin</a></li>
-				<li><a {{action 'setStage' 'INTEGRATION COMPLETE'}}>Integration Complete</a></li>
-				<li><a {{action 'setStage' 'PARTS ALLOCATED'}}>Parts Allocated</a></li>
-				<li><a {{action 'setStage' 'MANUFACTURING BEGIN'}}>Manufacturing Begin</a></li>
-				<li><a {{action 'setStage' 'MANUFACTURING COMPLETE'}}>Manufacturing Complete</a></li>
-				<li><a {{action 'setStage' 'QA/QC COMPLETE'}}>QA/QC Complete</a></li>
-				<li><a {{action 'setStage' 'SHIPPED'}}>Shipped</a></li>
+				<li><a {{action 'setStage' 'INTEGRATING'}}>Integrating</a></li>
+				<li><a {{action 'setStage' 'IN KITTING'}}>In Kitting</a></li>
+				<li><a {{action 'setStage' 'AWAITING MFR'}}>Awaiting Mfg</a></li>
+				<li><a {{action 'setStage' 'IN MANUFACTURING'}}>In Manufacturing</a></li>
+				<li><a {{action 'setStage' 'IN QA/QC'}}>In QA/QC</a></li>
+				<li><a {{action 'setStage' 'IN SHIPPING'}}>In Shipping</a></li>
 				<li class="divider"></li>
 				<li class="nav-header">On Hold</li>
 				<li><a {{action 'setStage' 'ON HOLD'}}>All</a></li>
@@ -22,11 +28,11 @@
 			<div class="tables-items">
 				<table>
 					<thead>
-						<th><button {{action 'toggleSort' 'current_stage'}}>Current Stage</button></th>
-						<th><button {{action 'toggleSort' 'item_id'}}>Item / Drawing</button></th>
+						<th><button {{action 'toggleSort' 'current_stage_desc'}}>Current Stage</button></th>
+						<th><button {{action 'toggleSort' 'item_id'}}>Drawing / Item</button></th>
+						<th><button {{action 'toggleSort' 'current_revision'}}>Revision</button></th>
 						<th><button {{action 'toggleSort' 'group'}}>Group</button></th>
 						<th><button {{action 'toggleSort' 'last_status_change_date'}}>Last Change</button></th>
-						<th><button {{action 'toggleSort' 'current_revision'}}>Revision</button></th>
 					</thead>
 				</table>
 				<div class="inner-table">
@@ -34,11 +40,11 @@
 						<tbody>
 							{{#each filteredItems}}
 							<tr {{action 'goToItem' this.id}}>
-								<td>{{current_stage}}</td>
+								<td>{{current_stage_desc}}</td>
 								<td>{{item_id}}</td>
+								<td>{{current_revision}}</td>
 								<td>{{group}}</td>
 								<td>{{last_status_change_date}}</td>
-								<td>{{current_revision}}</td>
 							</tr>
 							{{/each}}
 						</tbody>

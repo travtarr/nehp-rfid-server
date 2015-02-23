@@ -24,23 +24,25 @@ import com.nehp.rfid_system.server.core.Item;
 import com.nehp.rfid_system.server.core.ItemList;
 import com.nehp.rfid_system.server.core.ItemMin;
 import com.nehp.rfid_system.server.core.ItemMinList;
+import com.nehp.rfid_system.server.core.StageLog;
 import com.nehp.rfid_system.server.data.GroupDAO;
 import com.nehp.rfid_system.server.data.ItemDAO;
+import com.nehp.rfid_system.server.data.StageLogDAO;
 import com.nehp.rfid_system.server.helpers.Stages;
 
 @Path("items")
 public class ItemsResource {
 	
-	private final static int ON_HOLD_STAGE_NUM = Stages.STAGE0_NUM;
-	private final static String ON_HOLD_STAGE = Stages.STAGE0;
 	private final static String ON_HOLD_REASON_NEW_REVISION = "New Revision";
 
 	private final ItemDAO items;
 	private final GroupDAO groups;
+	private final StageLogDAO stages;
 
-	public ItemsResource(ItemDAO itemdao, GroupDAO groupDAO) {
+	public ItemsResource(ItemDAO itemdao, GroupDAO groupDAO, StageLogDAO stageDAO) {
 		this.items = itemdao;
 		this.groups = groupDAO;
+		this.stages = stageDAO;
 	}
 
 	@GET
@@ -83,7 +85,6 @@ public class ItemsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ItemList getItemListByList(List<Long> longs) {
-		// TODO: make sure the resource can interpret the sent list of longs
 		ItemList list = new ItemList();
 		list.setItems(items.getMultipleItemsById(longs));
 		return list;
@@ -116,31 +117,51 @@ public class ItemsResource {
 		for (Item item : itemArray) {
 			// If this is a new revision, need to remove the group id from old
 			// revisions and add it to this new revision
-			// Also need to set
 			Long group = null;
 			Optional<List<Item>> revList = items.getItemsByItemId(item.getItemId());
 			if (revList.isPresent() && revList.get().size() > 0){
 				for (Item revItem : revList.get()){
-					if (revItem.getGroup() != null){
-						group = revItem.getGroup();
-						revItem.setGroup(null);
+					Optional<StageLog> revStageLogOpt = stages.getById(revItem.getCurrentStage());
+					if ( revStageLogOpt.isPresent() 
+							&& revStageLogOpt.get().getStage() != Stages.STAGE0_NUM ) {
+						
+						if (revItem.getGroup() != null){
+							group = revItem.getGroup();
+							revItem.setGroup(null);
+						}
+						
+						Long revStage = this.setHold(revItem, ON_HOLD_REASON_NEW_REVISION, item.getCreatedBy());
+						revItem.setCurrentStage(revStage);
+						revItem.setCurrentStageNum(Stages.STAGE0_NUM);
+						revItem.setCurrentStageDesc(Stages.STAGE0);
 						items.update(revItem);
 					}
-					revItem.setCurrentStageNum(ON_HOLD_STAGE_NUM);
-					revItem.setCurrentStage(ON_HOLD_STAGE);
-					revItem.setReason(ON_HOLD_REASON_NEW_REVISION);
 				}
 			}
-			
-			item.setId(null);
-			item.setCurrentStageNum(Stages.STAGE_NOT_SET_NUM);
+			item.setCurrentStageNum(Stages.STAGE1_NUM);
+			item.setCurrentStageDesc(Stages.STAGE_POST_STATUS[Stages.STAGE1_NUM]);
 			item.setCreatedDate(new Date());
+			item.setLastStatusChangeDate(new Date());
+			item.setLastStatusChangeUser(item.getCreatedBy());
 			if (group != null)
 				item.setGroup(group);
 			
 			// Make sure this item is not already created
-			if (!items.getItemByItemIdAndRev(item.getItemId(), item.getCurrentRevision()).isPresent()) {
-				items.create(item);
+			if (!items.getItemByItemIdAndRev(item.getItemId(), item.getRevision()).isPresent()) {
+				Long createdId = items.create(item);
+				Item createdItem = items.getItemById(createdId).get();
+				
+				// Create stage
+				StageLog newStage = new StageLog();
+				newStage.setItem(createdId);
+				newStage.setSignedBy(item.getCreatedBy());
+				newStage.setStage(Stages.STAGE1_NUM);
+				newStage.setDescription(Stages.STAGE1);
+				Long newStageId = stages.create(newStage);
+				
+				// Update item with created stage
+				createdItem.setCurrentStage(newStageId);
+				items.update(createdItem);
 			} else {
 				duplicatedItems.add(item);
 			}
@@ -210,7 +231,7 @@ public class ItemsResource {
 		// Add Group to each item, then update each item in the DB
 		for (Item itemToUpdate : itemList){
 			itemToUpdate.setGroup(groupId);
-			items.updateGroup(itemToUpdate, user);
+			items.update(itemToUpdate);
 		}
 		return Response.status(Response.Status.OK).build();
 	}
@@ -238,13 +259,23 @@ public class ItemsResource {
 		boolean updated = false;
 		List<Item> failedList = new ArrayList<Item>();
 		for (Item item : itemList.getItems()) {
+			Item oldItem = items.getItemById(item.getId()).get();
 			item.setLastStatusChangeDate(new Date());
+			//
+			// TODO: If stage has changed, create new stage
+			//
+			item.setCurrentStageDesc( Stages.STAGE_POST_STATUS[item.getCurrentStageNum()] );
+			
+			if ( item.getCurrentStageNum() != oldItem.getCurrentStageNum() ){
+				Long newStageId = this.newStage(item.getCurrentStageNum(), item.getId(), 
+						"admin", item.getReason(), Stages.STAGES[item.getCurrentStageNum()] );
+				item.setCurrentStage(newStageId);
+			}
+			
 			updated = items.update(item);
 			if (!updated) {
-				System.out.println("Not updated");
 				failedList.add(item);
-			} else
-				System.out.println("Updated");
+			} 
 		}
 		if (failedList.size() != 0) {
 			ItemList failedItemList = new ItemList();
@@ -275,41 +306,40 @@ public class ItemsResource {
 			System.out.println("Bad list or empty list");
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-
+		boolean success = false;
 		List<ItemMin> failedList = new ArrayList<ItemMin>();
-		boolean updated = false;
+		Long created = null;
 		for (ItemMin itemMin : list.getItemMins()) {
 			Item item = null;
-			/*
-			if (itemMin.getRfid().length() > 0){
-				Optional<Item> opt = items.getItemByRFID(itemMin.getRfid());
-				if (opt.isPresent())
-					item = opt.get();
-			}
-			*/
-			
 			Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
 			if (opt.isPresent())
 				item = opt.get();
 			
-			
 			if (item != null) {
-				updated = items.sendNextStage(item, itemMin.getModifier());
+				created = setNextStage(item, itemMin.getModifier());
 			}
 			
-			if (!updated) {
-				System.out.println("Not updated");
+			if (created == null) {
 				failedList.add(itemMin);
-			} else
-				System.out.println("Updated");
+			} else {
+				item.setCurrentStage(created);
+				StageLog newStage = stages.getById( created ).get();
+				item.setCurrentStageNum( newStage.getStage() );
+				item.setCurrentStageDesc( Stages.STAGE_POST_STATUS[newStage.getStage()] );
+				item.setReason(itemMin.getReason());
+				items.update(item);
+				success = true;
+			}	
 		}
 		if (failedList.size() != 0) {
 			ItemMinList failedItemList = new ItemMinList();
 			failedItemList.setItemMins(failedList);
 			return Response.status(Response.Status.OK).entity(failedItemList)
 					.build();
-		} else {
+		} else if (success) {
 			return Response.status(Response.Status.OK).build();
+		} else {
+			return Response.status(Response.Status.NOT_MODIFIED).build();
 		}
 	}
 	
@@ -328,31 +358,25 @@ public class ItemsResource {
 		}
 
 		List<ItemMin> failedList = new ArrayList<ItemMin>();
-		boolean updated = false;
+		Long created = null;
 		for (ItemMin itemMin : list.getItemMins()) {
 			Item item = null;
-			/*
-			if (itemMin.getRfid().length() > 0){
-				Optional<Item> opt = items.getItemByRFID(itemMin.getRfid());
-				if (opt.isPresent())
-					item = opt.get();
-			}
-			*/
 			
 			Optional<Item> opt = items.getItemByItemIdAndRev(itemMin.getItemId(), itemMin.getRevision());
 			if (opt.isPresent())
 				item = opt.get();
 			
-			
 			if (item != null) {
-				updated = items.sendToShipping(item, itemMin.getModifier());
+				created = setShipping(item, itemMin.getModifier());
 			}
-			
-			if (!updated) {
-				System.out.println("Not updated");
+			StageLog newStage = stages.getById(created).get();
+			if (created == null) {
 				failedList.add(itemMin);
-			} else
-				System.out.println("Updated");
+			} else {
+				item.setCurrentStage(created);
+				item.setCurrentStageDesc( Stages.STAGE_POST_STATUS[newStage.getStage()] );
+				item.setCurrentStageNum( newStage.getStage() );
+			}
 		}
 		if (failedList.size() != 0) {
 			ItemMinList failedItemList = new ItemMinList();
@@ -362,5 +386,67 @@ public class ItemsResource {
 		} else {
 			return Response.status(Response.Status.OK).build();
 		}
+	}
+	
+	private Long setNextStage(Item item, String signedBy) {
+		if (item.getCurrentStage() == null){
+			return newStage(1, item.getId(), signedBy, null, Stages.STAGE1);
+		}	
+		Optional<StageLog> stageOpt = stages.getById(item.getCurrentStage());
+		if (stageOpt.isPresent()){
+			int curStage = stageOpt.get().getStage();
+			if (curStage > 0 && curStage < 7) {
+				return newStage(curStage + 1, item.getId(), signedBy, null, Stages.STAGES[curStage + 1]);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	private Long setShipping(Item item, String signedBy) {
+		if (item.getCurrentStage() == null){
+			return null;
+		}	
+		Optional<StageLog> stageOpt = stages.getById(item.getCurrentStage());
+		if (stageOpt.isPresent()){
+
+			int curStage = stageOpt.get().getStage();
+			if (curStage > 0 && curStage < 7) {
+				return newStage(Stages.STAGE6_NUM, item.getId(), signedBy, null, Stages.STAGE6);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	private Long setHold(Item item, String reason,  String signedBy) {
+		if (item.getCurrentStage() == null){
+			return newStage(1, item.getId(), signedBy, null, Stages.STAGE0);
+		}	
+		Optional<StageLog> stageOpt = stages.getById(item.getCurrentStage());
+		if (stageOpt.isPresent()){
+			int curStage = stageOpt.get().getStage();
+			if (curStage > 0 && curStage < 7) {
+				return newStage(Stages.STAGE0_NUM, item.getId(), signedBy, reason, Stages.STAGE0);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	private Long newStage(int stageNum, Long item, String signedBy, String reason, String description) {
+		StageLog stage = new StageLog();
+		stage.setItem(item);
+		stage.setReason(reason);
+		stage.setSignedBy(signedBy);
+		stage.setStage(stageNum);
+		stage.setDescription(description);
+		return stages.create(stage);
 	}
 }

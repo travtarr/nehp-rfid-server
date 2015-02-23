@@ -10,14 +10,14 @@ import io.dropwizard.jackson.JsonSnakeCase;
 @JsonSnakeCase
 public class ItemMinList {
 	
-	@JsonProperty
-	private List<ItemMin> itemmins = Lists.newArrayList();
+	@JsonProperty("itemmins")
+	private List<ItemMin> itemMins = Lists.newArrayList();
 	
 	public List<ItemMin> getItemMins(){
-		return itemmins;
+		return itemMins;
 	}
 	
 	public void setItemMins(List<ItemMin> list){
-		this.itemmins = list;
+		this.itemMins = list;
 	}
 }
