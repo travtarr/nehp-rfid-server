@@ -73,9 +73,13 @@ public class ReportsResource {
 				group = item.getGroup().toString();
 			excelData += getCell( group );
 			List<String> durations = getDurations(item);
-			for ( String dur : durations ){
-				excelData += getCell( dur );
-			}			
+			if (durations != null)
+			{
+				for ( String dur : durations ){
+					excelData += getCell( dur );
+				}		
+			}
+				
 			excelData += "</tr>";
 		}
 		excelData += "</table>";

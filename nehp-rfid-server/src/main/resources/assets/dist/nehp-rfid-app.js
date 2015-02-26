@@ -91,7 +91,41 @@ App.SimpledateTransform = DS.Transform.extend({
 
 var config  = {
 	baseURL: "54.85.61.143:8080"
-};;App.ApplicationController = Ember.Controller.extend({
+};;App.AdminSettingsController = Ember.ObjectController.extend({
+	needs: ['application'],
+	actions: {
+		edit: function() {	
+			var _this = this;
+
+			this.store.find( 'setting', { user : this.get('controllers.application.currentUser').id } ).then( function(settings) {
+				// Update the model
+				console.log(settings);
+				settings.forEach(function(setting) {
+					var stage = setting.get('stage');
+					console.log(stage);
+					var total = (Math.floor(parseInt(_this.get('stage' + stage + 'day'), 10)) * 24) + 
+						Math.floor(parseInt(_this.get('stage' + stage + 'hour'), 10));
+					setting.set('duration', total);
+				});
+				
+				var onSuccess = function(){
+					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+					'Setting updated successfully.');
+					_this.transitionToRoute('settings');
+				};
+				
+				var onFail = function(error){
+					settings.rollback();
+					_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+					'Unable to edit this setting.');
+					_this.transitionToRoute('settings');
+				};
+				
+				settings.save().then(onSuccess, onFail);
+			});
+		}
+	}
+});;App.ApplicationController = Ember.Controller.extend({
 	// requires the sessions controller
 	needs : [ 'sessions' ],
 
@@ -161,6 +195,7 @@ var config  = {
 					data: formData,
 					type: 'POST',
 					success: function(response){
+						this.set('controllers.application.currentUser.password_reset', false);
 						_this.get('controllers.application').send('setNotification', 'success', 'Success', 
 						'Thank you for updating your password.');
 						_this.transitionToRoute('index');
@@ -194,7 +229,35 @@ var config  = {
 	filteredItems: function(){
 		var stage = this.get('stage');
 		var items = this.get('arrangedContent');
-		
+		items.forEach(function(item){
+			var stage = item.get('last_status_change_date');
+			if( stage !== null ){
+				var a = moment($.now());
+				var diff = a.diff(moment(stage, "YYYY-MM-DD HH:mm:ss"), 'hours');
+				var days = 0;
+				var hours = 0;
+				var dayStr = "days";
+				var hourStr = "hours";
+				if (diff > 24){
+					days = Math.floor(diff / 24);
+					hours = (diff - (days * 24));	
+					if (hours == 1)
+						hourStr = "hour";
+					if (days == 1)
+						dayStr = "day";
+					item.set('last_status_change_duration', days + " " + dayStr +
+							", " + hours + " " + hourStr + " ago");
+				} else {
+					days = 0;
+					hours = diff;
+					if (hours == 1)
+						hourStr = "hour";
+					item.set('last_status_change_duration', hours + " " + hourStr + " ago");
+				}
+			} else {
+				item.set('last_status_change_duration', "");
+			}
+		});
 		if(stage == 'ALL')
 			return items;
 		else {
@@ -544,7 +607,49 @@ var config  = {
 			});
 		}
 	}
-});;App.StagesController = Ember.ArrayController.extend({});;;App.SummaryController = Ember.ArrayController.extend({
+});;App.StagesController = Ember.ArrayController.extend({
+	filteredItems: function(){
+		var items = this.get('arrangedContent');
+		var prevItem = null;
+		items.forEach(function(item){
+			if (prevItem !== null){
+				var prevStage = prevItem.get('stage_date');
+				var stage = item.get('stage_date');
+				var a = moment(prevStage, "YYYY-MM-DD HH:mm:ss");
+				var b = null;
+				if( stage === null ){
+					b = moment($.now());
+				} else {
+					b = moment(stage, "YYYY-MM-DD HH:mm:ss");
+				}
+				var diff = b.diff(a, 'hours');
+				var days = 0;
+				var hours = 0;
+				var dayStr = "days";
+				var hourStr = "hours";
+				if (diff > 24){
+					days = Math.floor(diff / 24);
+					hours = (diff - (days * 24));	
+					if (hours == 1)
+						hourStr = "hour";
+					if (days == 1)
+						dayStr = "day";
+					item.set('duration', days + " " + dayStr +
+							", " + hours + " " + hourStr);
+				} else {
+					days = 0;
+					hours = diff;
+					if (hours == 1)
+						hourStr = "hour";
+					item.set('duration', hours + " " + hourStr);
+				}
+			}
+			prevItem = item;
+		});
+		return items;
+		
+	}.property('arrangedContent')
+});;;App.SummaryController = Ember.ArrayController.extend({
 	sortProperties: ['rfid'],
 	stage: 'ALL',
 	
@@ -557,12 +662,40 @@ var config  = {
 	filteredItems: function(){
 		var stage = this.get('stage');
 		var items = this.get('arrangedContent');
-		
+		items.forEach(function(item){
+			var stage = item.get('last_status_change_date');
+			if( stage !== null ){
+				var a = moment($.now());
+				var diff = a.diff(moment(stage, "YYYY-MM-DD HH:mm:ss"), 'hours');
+				var days = 0;
+				var hours = 0;
+				var dayStr = "days";
+				var hourStr = "hours";
+				if (diff > 24){
+					days = Math.floor(diff / 24);
+					hours = (diff - (days * 24));	
+					if (hours == 1)
+						hourStr = "hour";
+					if (days == 1)
+						dayStr = "day";
+					item.set('last_status_change_duration', days + " " + dayStr +
+							", " + hours + " " + hourStr + " ago");
+				} else {
+					days = 0;
+					hours = diff;
+					if (hours == 1)
+						hourStr = "hour";
+					item.set('last_status_change_duration', hours + " " + hourStr + " ago");
+				}
+			} else {
+				item.set('last_status_change_duration', "");
+			}
+		});
 		if(stage == 'ALL')
 			return items;
 		else {
 			return items.filter(function(item) {
-				return item.get('current_stage') == stage;
+				return item.get('current_stage_desc') == stage;
 			});
 		}
 	}.property('stage', 'arrangedContent'),
@@ -579,9 +712,44 @@ var config  = {
 		      this.set('sortProperties', [column]);
 		      this.set('sortAscending', true);
 		    }
+		},
+		goToItem: function(id) {
+			this.transitionToRoute('item', id); 
 		}
 	}
-});;App.UserController = Ember.Controller.extend({});;App.UsersController = Ember.ArrayController.extend({
+});;App.UserController = Ember.Controller.extend({});;App.UserSettingsController = Ember.ObjectController.extend({
+	needs: ['application'],
+	actions: {
+		edit: function() {	
+			var _this = this;
+
+			this.store.find( 'setting', { user : this.get('controllers.application.currentUser').id } ).then( function(settings) {
+				// Update the model
+				console.log(settings);
+				settings.forEach(function(setting) {
+					var stage = setting.get('stage');
+					console.log(stage);
+					var total = (Math.floor(parseInt(_this.get('stage' + stage + 'day'), 10)) * 24) + 
+						Math.floor(parseInt(_this.get('stage' + stage + 'hour'), 10));
+					setting.set('duration', total);
+				});
+				
+				var onSuccess = function(){
+					_this.get('controllers.application').send('setNotification', 'success', 'Success', 
+					'Setting updated successfully.');
+				};
+				
+				var onFail = function(error){
+					settings.rollback();
+					_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
+					'Unable to edit this setting.');
+				};
+				
+				settings.save().then(onSuccess, onFail);
+			});
+		}
+	}
+});;App.UsersController = Ember.ArrayController.extend({
 	needs: ['application'],
 	actions : {
 		resetPW : function(id) {
@@ -671,7 +839,7 @@ var config  = {
 				};
 				
 				var onFail = function(error){
-					notification.rollback();
+					user.rollback();
 					_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
 					'Unable to edit this user.');
 					_this.transitionToRoute('users');
@@ -693,11 +861,11 @@ var config  = {
     item_id: DS.attr('string'),
     comment: DS.attr('string'),
     printed: DS.attr('boolean'),
+    reason: DS.attr('string'),
     group: DS.attr('number'),
     created_by: DS.attr('string'),
     created_date: DS.attr('simpledate'),
-    current_revision: DS.attr('string'),
-    current_revision_date: DS.attr('simpledate'),
+    revision: DS.attr('string'),
     current_stage: DS.attr('number'),
     current_stage_num: DS.attr('number'),
     current_stage_desc: DS.attr('string'),
@@ -711,14 +879,8 @@ var config  = {
 });;App.Setting = DS.Model.extend({
   user:                 DS.attr('number'),
   user_changed:         DS.attr('boolean'),
-  stage1:				DS.attr('string'),
-  stage2:				DS.attr('string'),
-  stage3:				DS.attr('string'),
-  stage4:				DS.attr('string'),
-  stage5:				DS.attr('string'),
-  stage6:				DS.attr('string'),
-  stage7:				DS.attr('string'),
-  stage0:				DS.attr('string')
+  stage:				DS.attr('number'),
+  duration:				DS.attr('number')
 });;App.Stagelog = DS.Model.extend({
 	item: DS.attr('number'),
 	stage: DS.attr('number'),
@@ -732,7 +894,6 @@ var config  = {
   password_reset:        DS.attr('boolean'),
   name:                  DS.attr('string'),
   email:                 DS.attr('string'),
-  setting:               DS.attr('number'),
   last_login_date:		 DS.attr('simpledate'),
   user_created_date:	 DS.attr('simpledate'),
   admin:                 DS.attr('boolean'),
@@ -808,50 +969,18 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.AdminRoute = App.AuthenticatedRoute.extend({});;App.AdminSettingsRoute = App.AuthenticatedRoute.extend({
 	model: function() {
 		return this.store.find('setting', { admin: true }).then(function(settings){
-			var setting = settings.get('content')[0];
 			var obj = {};
-			for (var i = 0; i < 8; i++) {
-				var total = setting.get('stage' + i);
-				// need to round down since hours gets the remainder
+			settings.forEach(function(setting){
+				var stage = setting.get('stage');
+				var total = setting.get('duration');
 				var days = Math.floor(total / 24);
 				var hours = total % 24;
-				obj["stage" + i + "day"] = days;
-				obj["stage" + i + "hour"] = hours;
-			}
+				obj["stage" + stage + "day"] = days;
+				obj["stage" + stage + "hour"] = hours;
+			});
+
 			return obj;
 		});
-	},
-	actions: {
-		edit: function() {
-			var _this = this;
-
-			this.store.find('setting', { admin: true }).then( function(settings) {
-				var setting = settings.get('content')[0];
-				
-				// Update the model
-				for (var i = 0; i < 8; i++) {
-					var total = (_this.get('stage' + i + 'day') * 24) + _this.get('stage' + i + 'hour');
-					setting.set('stage' + i, total);
-				}
-								
-				Ember.$.ajax({
-					url: '/service/settings/admin',
-					data: setting,
-					dataType: 'json',
-					type: 'PUT',
-					success: function (response) {
-						_this.controllerFor('application').send('setNotification', 'success', 'Success', 
-						'Setting updated successfully.');
-						_this.transitionToRoute('settings');
-					},
-					error: function (error) {
-						_this.controllerFor('application').send('setNotification', 'failure', 'Failed', 
-						'Unable to edit this setting.');
-						_this.transitionToRoute('settings');
-					}
-				});
-			});
-		}
 	}
 });;App.ApplicationRoute = Ember.Route.extend({
 	image: null,
@@ -895,17 +1024,6 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	},
 	afterModel: function(){
 		this.transitionTo('stages');
-	},
-	actions: {
-		showImage: function(stage) {
-			var imageData = "data:image/gif;base64,"  + $.getJSON("/service/signature/" + this.currentModel.get('id') + "/" + stage);
-			
-			this.set('image', imageData);
-			this.render('modal', { into: 'application', outlet: 'modal' });
-		},
-		closeImage: function() {
-		    this.render('nothing', { into: 'application', outlet: 'modal' });
-		}
 	}
 });;App.ItemsRoute = App.AuthenticatedRoute.extend({
 	model: function(){
@@ -1114,15 +1232,28 @@ App.AuthenticatedRoute = Ember.Route.extend({
                 return stage.get('item') == item;
             }));
         });
-    }
+    },
+	actions: {
+		showImage: function(stageid) {
+			var stage = this.modelFor('stages').findBy('id', stageid);
+			var imageData = "data:image/gif;base64,"  + 
+			$.getJSON("/service/signature/" + stage.get('item') + "/" + stage.get('stage'));
+			
+			this.set('image', imageData);
+			this.render('modal', { into: 'application', outlet: 'modal' });
+		},
+		closeImage: function() {
+		    this.render('nothing', { into: 'application', outlet: 'modal' });
+		}
+	}
 });;App.SummaryRoute = App.AuthenticatedRoute.extend({
 	model: function() {
 		// grab settings based upon current user
 		var _this = this;
 		
 		return this.store.find('item').then(function(items) {
-			return Ember.$.getJSON('service/settings/' + _this.controllerFor('application').get('currentUser.id')).then(function(data){
-				var setting = data.setting;
+			return Ember.$.getJSON('service/settings?user=' + _this.controllerFor('application').get('currentUser.id')).then(function(data){
+				var settings = Ember.A(data.settings);
 				// visible items = (now - stage_date) > stage_date_setting
 				return _this.store.filter('item', function(item){
 					var curStageNum = item.get('current_stage_num');
@@ -1130,8 +1261,8 @@ App.AuthenticatedRoute = Ember.Route.extend({
 					var stage = item.get('last_status_change_date');
 					if( stage !== null ){
 						var a = moment($.now());
-						var diff = a.diff(moment(stage), 'days');
-						if( diff > setting['stage' + curStageNum] ){
+						var diff = a.diff(moment(stage, "YYYY-MM-DD HH:mm:ss"), 'hours');
+						if( diff > settings.filterBy('stage', curStageNum).get('duration') ){
 							return item;
 						}
 					}
@@ -1173,47 +1304,19 @@ App.AuthenticatedRoute = Ember.Route.extend({
 	}
 });;App.UserRoute = App.AuthenticatedRoute.extend({});;App.UserSettingsRoute = App.AuthenticatedRoute.extend({
 	model: function() {
-		return this.store.find('setting', this.controllerFor('application').get('currentUser.setting') ).then(function(setting){
+		return this.store.find('setting', { user : this.controllerFor('application').get('currentUser.id')}).then(function(settings){
 			var obj = {};
-			for (var i = 0; i < 8; i++) {
-				var total = setting.get('stage' + i);
-				// need to round down since hours gets the remainder
+			settings.forEach(function(setting){
+				var stage = setting.get('stage');
+				var total = setting.get('duration');
 				var days = Math.floor(total / 24);
 				var hours = total % 24;
-				obj["stage" + i + "day"] = days;
-				obj["stage" + i + "hour"] = hours;
-			}
+				obj["stage" + stage + "day"] = days;
+				obj["stage" + stage + "hour"] = hours;
+			});
+
 			return obj;
 		});
-	},
-	actions: {
-		edit: function() {	
-			var _this = this;
-
-			this.store.find( 'setting', this.controllerFor('application').get('currentUser.setting') ).then( function(setting) {
-
-				// Update the model
-				for (var i = 0; i < 8; i++) {
-					var total = (parseInt(_this.get('stage' + i + 'day'), 10) * 24) + parseInt(_this.get('stage' + i + 'hour'), 10);
-					setting.set('stage' + i, total);
-				}
-				
-				var onSuccess = function(){
-					_this.controllerFor('application').send('setNotification', 'success', 'Success', 
-					'Setting updated successfully.');
-					_this.transitionToRoute('settings');
-				};
-				
-				var onFail = function(error){
-					setting.rollback();
-					_this.controllerFor('application').send('setNotification', 'failure', 'Failed', 
-					'Unable to edit this setting.');
-					_this.transitionToRoute('settings');
-				};
-				
-				setting.save().then(onSuccess, onFail);
-			});
-		}
 	}
 });;App.UsersCreateRoute = App.AuthenticatedRoute.extend({
 	setupController: function(controller, model) {

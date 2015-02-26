@@ -7,6 +7,7 @@
 				<th>Date</th>
 				<th>Signed By</th>
 				<th>Reason</th>
+				<th>Duration</th>
 			</tr>
 		</thead>
 	</table>
@@ -14,13 +15,14 @@
 	<div class="inner-table">
 		<table>
 			<tbody>
-			{{#each}}
-				<tr>
+			{{#each filteredItems}}
+				<tr {{action 'showImage' this.id}}>
 					<td>{{stage}}</td>
 					<td>{{description}}</td>
 					<td>{{stage_date}}</td>
 					<td>{{signed_by}}</td>
 					<td>{{reason}}</td>
+					<td>{{duration}}</td>
 				</tr>
 			{{/each}}
 			</tbody>

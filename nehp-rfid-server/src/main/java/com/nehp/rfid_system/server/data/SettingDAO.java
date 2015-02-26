@@ -32,11 +32,7 @@ public class SettingDAO extends AbstractDAO<Setting>{
 		return get(id);
 	}
 	
-	public Setting getByUserId(Long id){
-		return list(namedQuery("setting.getByUser").setParameter("user", id, LongType.INSTANCE)).get(0);
-	}
-	
-	public List<Setting> getByUserIdList(Long id){
+	public List<Setting> getByUserId(Long id){
 		return list(namedQuery("setting.getByUser").setParameter("user", id, LongType.INSTANCE));
 	}
 	
@@ -47,29 +43,23 @@ public class SettingDAO extends AbstractDAO<Setting>{
 	/**
 	 * Updates the setting record.<br>
 	 * 
-	 * NOTE: Only to be used by a resource without the <b>UnitOfWork</b> annotation.
 	 * 
 	 * @param id
 	 * @param setting
 	 * @return
 	 */
-	public boolean update(Long id, Setting setting){
-		
+	public boolean update(Setting setting){
+		if (setting.getId() == null)
+			return false;
 		// Make sure we update the correct setting
-		Setting update = getById(id);
+		Setting update = get(setting.getId());
 
 		if (update == null){
 			return false;
 		}
-
-		update.setStage0(setting.getStage0());
-		update.setStage1(setting.getStage1());
-		update.setStage2(setting.getStage2());
-		update.setStage3(setting.getStage3());
-		update.setStage4(setting.getStage4());
-		update.setStage5(setting.getStage5());
-		update.setStage6(setting.getStage6());
-		update.setStage7(setting.getStage7());
+		
+		update.setDuration(setting.getDuration());
+		
 		persist(update);
 		
 		return true;
@@ -102,7 +92,7 @@ public class SettingDAO extends AbstractDAO<Setting>{
 		return result;
 	}
 	
-	public boolean updateAllUnlessUserChanged(Setting newSetting){
+	public boolean updateAllUnlessUserChanged(List<Setting> list){
 		
 		boolean success = false;
 		Session session = factory.openSession();
@@ -116,14 +106,13 @@ public class SettingDAO extends AbstractDAO<Setting>{
 			int count = 0;
 			while ( settings.next() ) {
 				Setting setting = (Setting) settings.get(0);
-				setting.setStage0(newSetting.getStage0());
-				setting.setStage1(newSetting.getStage1());
-				setting.setStage2(newSetting.getStage2());
-				setting.setStage3(newSetting.getStage3());
-				setting.setStage4(newSetting.getStage4());
-				setting.setStage5(newSetting.getStage5());
-				setting.setStage6(newSetting.getStage6());
-				setting.setStage7(newSetting.getStage7());
+				for ( Setting newSetting : list ) {
+					if ( setting.getStage() == newSetting.getStage() ){
+						setting.setDuration( newSetting.getDuration() );
+					}
+					
+				}
+
 				session.saveOrUpdate(setting);
 				if( ++count % 100 == 0 ) {
 					session.flush();

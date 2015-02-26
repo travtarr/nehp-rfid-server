@@ -1,98 +1,19 @@
-{{outlet modal}}
 <div class="row">
-	<div class="col-md-12">
-		<div class="item-details-title"><span>Details</span></div>
-	</div>
-</div>
-<div class="row">
-	<div class="tbl-4">
+	<div class="tables-items no-hover">
 		<table>
-			<tr>
-				<th><span>Item / Drawing</span></th>
-			</tr>
-			<tr>
-				<td><span>{{item_id}}</span></td>
-			</tr>
-		</table>
-	</div>
-		<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Revision</span></th>
-			</tr>
-			<tr>
-				<td><span>{{current_revision}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Group</span></th>
-			</tr>
-			<tr>
-				<td><span>{{group}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Stage</span></th>
-			</tr>
-			<tr>
-				<td><span>{{current_stage_num}}:{{current_stage_desc}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Created By</span></th>
-			</tr>
-			<tr>
-				<td><span>{{created_by}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Created Date</span></th>
-			</tr>
-			<tr>
-				<td><span>{{created_date}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Last Status Change User</span></th>
-			</tr>
-			<tr>
-				<td><span>{{last_status_change_user}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-4">
-		<table>
-			<tr>
-				<th><span>Last Status Change Date</span></th>
-			</tr>
-			<tr>
-				<td><span>{{last_status_change_date}}</span></td>
-			</tr>
-		</table>
-	</div>
-	<div class="tbl-8">
-		<table>
-			<tr>
-				<th><span>Comment</span></th>
-			</tr>
-			<tr>
-				<td><span>{{comment}}</span></td>
-			</tr>
+				<tr>
+					<th>Item</th><th>Revision</th><th>Group</th><th>Stage</th><th>Created By</th><th>Created Date</th>
+				</tr>
+				<tr>
+					<td>{{item_id}}</td><td>{{revision}}</td><td>{{group}}</td><td>{{current_stage_desc}}</td>
+					<td>{{created_by}}</td><td>{{created_date}}</td>
+				</tr>
+				<tr>
+					<th>Last Status Change User</th><th>Last Status Change Date</th><th>Hold Reason</th><th colspan="3">Comment</th>
+				</tr>
+				<tr>
+					<td>{{last_status_change_user}}</td><td>{{last_status_change_date}}</td><td>{{reason}}</td><td colspan="3">{{comment}}</td>
+				</tr>
 		</table>
 	</div>
 </div>

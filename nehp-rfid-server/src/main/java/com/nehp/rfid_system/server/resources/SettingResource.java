@@ -1,5 +1,8 @@
 package com.nehp.rfid_system.server.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.validation.Valid;
@@ -41,9 +44,9 @@ public class SettingResource {
 	public SettingList getAll(@QueryParam("user") String user, @QueryParam("admin") Boolean admin){
 		SettingList list = new SettingList();
 		if(user != null && !user.isEmpty()){
-			list.setSettings(settingDAO.getByUserIdList(Long.parseLong(user)));
+			list.setSettings(settingDAO.getByUserId(Long.parseLong(user)));
 		} else if(admin != null && admin) {
-			list.setSettings(settingDAO.getByUserIdList(ADMIN));
+			list.setSettings(settingDAO.getByUserId(ADMIN));
 		} else {
 			list.setSettings(settingDAO.getAll());
 		}
@@ -57,9 +60,10 @@ public class SettingResource {
 	@RestrictedTo({Authority.ROLE_USER})
 	public SettingWrap getById(@PathParam("id") String id){
 		SettingWrap wrap = new SettingWrap();
-		wrap.setSetting(settingDAO.getByUserId(Long.parseLong(id)));
+		wrap.setSetting(settingDAO.getById(Long.parseLong(id)));
 		return wrap;
 	}
+	
 		
 	@PUT
 	@Timed
@@ -69,18 +73,18 @@ public class SettingResource {
 	@RestrictedTo({Authority.ROLE_USER})
 	public Response updateById(@PathParam("id") String id, @Valid SettingWrap setting){
 		Setting persistedSetting = setting.getSetting();
-		if(Long.parseLong(id) == ADMIN){
-			return Response.status( Response.Status.UNAUTHORIZED ).build();
-		} 
-		boolean success = settingDAO.update(Long.parseLong(id), persistedSetting);
+		persistedSetting.setId(Long.parseLong(id));
 		
-		SettingWrap wrap = new SettingWrap();
+		boolean success = settingDAO.update(persistedSetting);
+		
 		if( success ){
-			wrap.setSetting( persistedSetting );
+			SettingWrap wrap = new SettingWrap();
+			wrap.setSetting( settingDAO.getById(Long.parseLong(id)) );
 			return Response.status( Response.Status.OK ).entity( wrap ).build();
 		} else
 			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
+	
 	
 	@PUT
 	@Timed
@@ -88,15 +92,19 @@ public class SettingResource {
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RestrictedTo({Authority.ROLE_ADMIN})
-	public Response updateByAdmin(@Valid SettingWrap setting){
-		Setting persistedSetting = setting.getSetting();
-		boolean success = settingDAO.update(persistedSetting.getId(), persistedSetting);
+	public Response updateByAdmin(@Valid SettingList list){
+		List<Setting> settings = list.getSettings();
+		List<Setting> persistedSettings = new ArrayList<Setting>();
 		
-		SettingWrap wrap = new SettingWrap();
-		if( success ){
-			wrap.setSetting( persistedSetting );
-			return Response.status( Response.Status.OK ).entity( wrap ).build();
-		} else
+		for ( Setting setting : settings ){
+			boolean success = settingDAO.update(setting);
+			if (success)
+				persistedSettings.add(settingDAO.getById(setting.getId()));
+		}
+
+		if (persistedSettings.size() > 0)
+			return Response.status( Response.Status.OK ).entity( persistedSettings ).build();
+		else
 			return Response.status( Response.Status.BAD_REQUEST ).build();
 	}
 }

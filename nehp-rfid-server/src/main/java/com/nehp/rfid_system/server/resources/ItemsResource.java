@@ -205,7 +205,7 @@ public class ItemsResource {
 			if ( optItem.isPresent() ) {
 				Item item = optItem.get();
 				// if item wasn't found, add to failed list
-				if ( item == null ) {
+				if ( item == null  || item.getGroup() != null) {
 					failedList.add(itemid + ":" + revision);
 				} else {
 					itemList.add(item);
@@ -261,9 +261,7 @@ public class ItemsResource {
 		for (Item item : itemList.getItems()) {
 			Item oldItem = items.getItemById(item.getId()).get();
 			item.setLastStatusChangeDate(new Date());
-			//
-			// TODO: If stage has changed, create new stage
-			//
+
 			item.setCurrentStageDesc( Stages.STAGE_POST_STATUS[item.getCurrentStageNum()] );
 			
 			if ( item.getCurrentStageNum() != oldItem.getCurrentStageNum() ){
@@ -271,6 +269,8 @@ public class ItemsResource {
 						"admin", item.getReason(), Stages.STAGES[item.getCurrentStageNum()] );
 				item.setCurrentStage(newStageId);
 			}
+			if (item.getCurrentStageNum() != 0)
+				item.setReason("");
 			
 			updated = items.update(item);
 			if (!updated) {

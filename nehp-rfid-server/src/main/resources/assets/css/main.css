@@ -54,7 +54,8 @@ input.small {
 }
 
 .content-body{
-	margin: auto;
+	margin-top: 2em;
+	margin-left: 0;
 }
 
 .active {
@@ -332,12 +333,20 @@ div.nav-admin .button:hover {
 	font-weight:bold;
 	color:#ffffff;
 }
-.tables-items thead tr:hover th{
+.tables-items tr th:hover {
 	background:-o-linear-gradient(bottom, #091521 5%, #052544 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #091521), color-stop(1, #052544) );
 	background:-moz-linear-gradient( center top, #091521 5%, #052544 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#091521", endColorstr="#052544");	background: -o-linear-gradient(top,#091521,052544);
 
 	background-color:#091521;
+}
+.no-hover tr th:hover {
+	background:-o-linear-gradient(bottom, #6E8194 5%, #052544 100%);	
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6E8194), color-stop(1, #052544) );
+	background:-moz-linear-gradient( center top, #6E8194 5%, #052544 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#6E8194", endColorstr="#052544");	background: -o-linear-gradient(top,#091521,052544);
+
+	background-color:#6E8194;
 }
 .tables-items td {
 	word-wrap: break-word;

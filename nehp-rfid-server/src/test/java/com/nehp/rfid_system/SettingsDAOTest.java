@@ -35,17 +35,11 @@ public class SettingsDAOTest extends DAOTest {
 		setting.setId(1L);
 		setting.setUser(1L);
 		setting.setUserChanged(false);
-		setting.setStage0("5");
-		setting.setStage1("5");
-		setting.setStage2("5");
-		setting.setStage3("5");
-		setting.setStage4("5");
-		setting.setStage5("5");
-		setting.setStage6("5");
-		setting.setStage7("5");
+		setting.setStage(1);
+		setting.setDuration(5);
 		
 		getSession().beginTransaction();
-		boolean success = dao.update(setting.getId(), setting);
+		boolean success = dao.update(setting);
 		getSession().getTransaction().commit();
 		
 		assertThat(success).isTrue();

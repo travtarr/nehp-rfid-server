@@ -41,7 +41,7 @@ public class User {
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	@JsonProperty
-	private long id;
+	private Long id;
 	
 	@Column(name = "username", unique = true, nullable = false, length = 32)
 	@JsonProperty
@@ -54,10 +54,6 @@ public class User {
 	@Column(name = "email", nullable = false, length = 64)
 	@JsonProperty
 	private String email;
-	
-	@Column(name = "setting")
-	@JsonProperty
-	private long setting;
 	
 	@Column(name = "password", nullable = false, length = 89)
 	@JsonProperty
@@ -77,14 +73,14 @@ public class User {
 	
 	@Column(name = "admin", nullable = false)
 	@JsonProperty
-	private boolean admin;
+	private Boolean admin;
 	
 	@Column(name = "scanner", nullable = true)
 	@JsonProperty
-	private boolean scanner;
+	private Boolean scanner;
 	
 	// SETTERS
-	public void setId(long id){
+	public void setId(Long id){
 		this.id = id;
 	}
 	public void setUsername(String username){
@@ -96,13 +92,10 @@ public class User {
 	public void setEmail(String email){
 		this.email = email;
 	}
-	public void setSetting(long setting){
-		this.setting = setting;
-	}
 	public void setPassword(String password){
 		this.password = password;
 	}
-	public void setPasswordReset(boolean reset){
+	public void setPasswordReset(Boolean reset){
 		this.password_reset = reset;
 	}
 	public void setLastLoginDate(Date date){
@@ -135,17 +128,13 @@ public class User {
 	public String getEmail(){
 		return email;
 	}
-	
-	public long getSetting(){
-		return setting;
-	}
 
 	public String getPassword(){
 		return password;
 	}
 	
 	@JsonProperty("password_reset")
-	public boolean getPasswordReset(){
+	public Boolean getPasswordReset(){
 		return password_reset;
 	}
 
@@ -159,16 +148,16 @@ public class User {
 		return user_created_date;
 	}
 
-	public boolean getAdmin(){
+	public Boolean getAdmin(){
 		return admin;
 	}
 
-	public boolean getScanner(){
+	public Boolean getScanner(){
 		return scanner;
 	}
 	
 	@JsonProperty
-	public boolean hasAllAuthorities(Set<Authority> requiredAuthorities){
+	public Boolean hasAllAuthorities(Set<Authority> requiredAuthorities){
 		Set<Authority> authorities = Sets.newHashSet();
 		if(admin)
 			authorities.add(Authority.ROLE_ADMIN);
@@ -181,7 +170,7 @@ public class User {
 	}
 	
 	@JsonProperty
-	public boolean hasAuthority(Authority authority){
+	public Boolean hasAuthority(Authority authority){
 		return hasAllAuthorities(Sets.newHashSet(authority));
 	}
 	

@@ -14,6 +14,7 @@ App.ChangeController = Ember.Controller.extend({
 					data: formData,
 					type: 'POST',
 					success: function(response){
+						this.set('controllers.application.currentUser.password_reset', false);
 						_this.get('controllers.application').send('setNotification', 'success', 'Success', 
 						'Thank you for updating your password.');
 						_this.transitionToRoute('index');

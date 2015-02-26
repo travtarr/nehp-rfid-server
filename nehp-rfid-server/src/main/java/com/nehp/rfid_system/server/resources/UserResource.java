@@ -1,5 +1,6 @@
 package com.nehp.rfid_system.server.resources;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.dropwizard.hibernate.UnitOfWork;
@@ -83,14 +84,17 @@ public class UserResource {
 		if (userId != null) {
 			/* Create Settings Profile for new user */
 			// grab global settings profile
-			Setting setting = settingDAO.getById(GLOBAL_SETTINGS_ID);
-			setting.setUser(userId);
-			setting.setUserChanged(false);
-			Long settingId = settingDAO.create(setting);
+			List<Setting> settingList = settingDAO.getByUserId(GLOBAL_SETTINGS_ID);
+			for ( Setting defaultSetting : settingList ) {
+				Setting setting = new Setting();
+				setting.setStage(defaultSetting.getStage());
+				setting.setUser(userId);
+				setting.setUserChanged(false);
+				setting.setDuration(defaultSetting.getDuration());
+				settingDAO.create(setting);
+			}
 			
 			User newUser = userDAO.getUserById(userId).get();
-			newUser.setSetting(settingId);
-			userDAO.update(newUser);
 			
 			UserWrap wrap = new UserWrap();
 			wrap.setUser(newUser);
@@ -221,7 +225,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RestrictedTo( {Authority.ROLE_USER} )
 	public Response updateUser(@PathParam("user_id") String userId,
-			UserWrap user, @Context HttpServletRequest request) {
+			UserWrap userWrap, @Context HttpServletRequest request) {
 		System.out.println("Inside updateUser");
 		UUID accessTokenUUID = getUUID(request
 				.getHeader(HttpHeaders.AUTHORIZATION));
@@ -232,7 +236,9 @@ public class UserResource {
 		// User can only update own information, admin can update anyone
 		if ( currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true) {
 			System.out.println("Found user");
-			if (userDAO.update(user.getUser())) {
+			User user = userWrap.getUser();
+			user.setId(Long.parseLong(userId));
+			if (userDAO.update(user)) {
 				UserWrap wrap = new UserWrap();
 				User updatedUser = userDAO.getUserById( Long.parseLong(userId) )
 						.get();

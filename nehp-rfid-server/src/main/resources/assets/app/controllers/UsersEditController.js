@@ -19,7 +19,7 @@ App.UsersEditController = Ember.ObjectController.extend({
 				};
 				
 				var onFail = function(error){
-					notification.rollback();
+					user.rollback();
 					_this.get('controllers.application').send('setNotification', 'failure', 'Failed', 
 					'Unable to edit this user.');
 					_this.transitionToRoute('users');

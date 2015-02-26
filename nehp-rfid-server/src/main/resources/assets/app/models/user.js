@@ -4,7 +4,6 @@ App.User = DS.Model.extend({
   password_reset:        DS.attr('boolean'),
   name:                  DS.attr('string'),
   email:                 DS.attr('string'),
-  setting:               DS.attr('number'),
   last_login_date:		 DS.attr('simpledate'),
   user_created_date:	 DS.attr('simpledate'),
   admin:                 DS.attr('boolean'),

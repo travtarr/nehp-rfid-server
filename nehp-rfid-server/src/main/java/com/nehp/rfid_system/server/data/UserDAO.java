@@ -92,8 +92,6 @@ public class UserDAO extends AbstractDAO<User> {
 		if (this.getUserByEmail(user.getEmail()).isPresent())
 			return Optional.absent();
 		
-		newUser.setSetting(1);
-		
 		try {
 			newUser.setPassword( PasswordHelper.getSaltedHash(newPassword) );
 		} catch (Exception e) {
@@ -197,7 +195,6 @@ public class UserDAO extends AbstractDAO<User> {
 			return false;
 
 		updateUser.setAdmin(user.getAdmin());
-		updateUser.setLastLoginDate(user.getLastLoginDate());
 		updateUser.setName(user.getName());
 		updateUser.setEmail(user.getEmail());
 		updateUser.setScanner(user.getScanner());
