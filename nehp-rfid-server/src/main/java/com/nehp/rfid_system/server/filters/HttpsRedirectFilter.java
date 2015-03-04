@@ -11,8 +11,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Redirects all non-SSL encrypted requests to the SSL encrypted URL.
+ * 
+ */
 public class HttpsRedirectFilter implements Filter {
-	
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -21,7 +25,8 @@ public class HttpsRedirectFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		StringBuffer uri = ((HttpServletRequest) request).getRequestURL();
-		if ( uri.toString().startsWith("http://") && !uri.toString().endsWith("ping") ) {
+		if (uri.toString().startsWith("http://")
+				&& !uri.toString().endsWith("ping")) {
 			String location = "https://" + uri.substring("http://".length());
 			((HttpServletResponse) response).sendRedirect(location);
 		} else {

@@ -18,40 +18,76 @@ public class NotificationsDAO extends AbstractDAO<Notification> {
 		factory = sessionFactory;
 	}
 
+	/**
+	 * Get by the ID of the notification.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Notification getById(Long id) {
 		return get(id);
 	}
 
+	/**
+	 * Get all notifications.
+	 * 
+	 * @return
+	 */
 	public List<Notification> getAll() {
-		return  list(namedQuery("notifications.getAll"));
+		return list(namedQuery("notifications.getAll"));
 	}
 
+	/**
+	 * Create a new notification.
+	 * 
+	 * @param notification
+	 * @return
+	 */
 	public Long create(Notification notification) {
 		return persist(notification).getId();
 	}
 
+	/**
+	 * Update the notification.
+	 * 
+	 * @param id
+	 * @param notification
+	 * @return
+	 */
 	public boolean update(Long id, Notification notification) {
 		// Make sure we update the correct notification
 		Notification update = get(id);
 
-		if ( update == null )
+		if (update == null)
 			return false;
 
-		update.setTitle( notification.getTitle() );
-		update.setMessage( notification.getMessage() );
-		update.setCreatedBy( notification.getCreatedBy() );
-		persist( update );
+		update.setTitle(notification.getTitle());
+		update.setMessage(notification.getMessage());
+		update.setCreatedBy(notification.getCreatedBy());
+		persist(update);
 
 		return true;
 	}
-	
-	public boolean deleteById(Long id){
-		if( delete(get(id)) )
+
+	/**
+	 * Delete by the id of the notification.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean deleteById(Long id) {
+		if (delete(get(id)))
 			return true;
 		else
 			return false;
 	}
 
+	/**
+	 * Delete based upon the actual notification.
+	 * 
+	 * @param notification
+	 * @return
+	 */
 	public boolean delete(Notification notification) {
 		Boolean result = false;
 		Session session = factory.openSession();
@@ -71,5 +107,4 @@ public class NotificationsDAO extends AbstractDAO<Notification> {
 
 		return result;
 	}
-
 }

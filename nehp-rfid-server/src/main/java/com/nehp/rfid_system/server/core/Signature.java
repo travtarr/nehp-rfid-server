@@ -25,7 +25,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NamedQueries({
 	@NamedQuery(name = "signature.getByItemAndStage", query = "FROM Signature p WHERE p.item = :item AND p.stage = :stage"),
 	@NamedQuery(name = "signature.getAllByItem", query = "FROM Signature p WHERE p.item = :item"),
-	@NamedQuery(name = "signature.getAll", query = "FROM Signature")
+	@NamedQuery(name = "signature.getAll", query = "FROM Signature"),
+	@NamedQuery(name = "signature.getByStage", query = "FROM Signature p WHERE p.stage = :stage")
 })
 public class Signature {
 	
@@ -40,7 +41,7 @@ public class Signature {
 	private Long item;
 	
 	@JsonProperty
-	private Integer stage;
+	private Long stage;
 	
 	@JsonProperty
 	private String author;
@@ -59,7 +60,7 @@ public class Signature {
 		this.item = item;
 	}
 	
-	public void setStage(Integer stage){
+	public void setStage(Long stage){
 		this.stage = stage;
 	}
 	
@@ -84,7 +85,7 @@ public class Signature {
 		return item;
 	}
 	
-	public Integer getStage(){
+	public Long getStage(){
 		return stage;
 	}
 	

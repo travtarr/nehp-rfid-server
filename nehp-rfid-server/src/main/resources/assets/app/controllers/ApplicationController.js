@@ -20,8 +20,8 @@ App.ApplicationController = Ember.Controller.extend({
 	// the admin of the sessions controller to verify if the user is
 	// an administrator
 	isAdmin : (function() {
-		return this.get('controllers.sessions.admin');
-	}).property('controllers.sessions.admin'),
+		return this.get('controllers.sessions.currentUser.admin');
+	}).property('controllers.sessions.currentUser'),
 
 	// creates a computed property called isAuthenticated that will be
 	// binded on the curretUser of the sessions controller and will verify if

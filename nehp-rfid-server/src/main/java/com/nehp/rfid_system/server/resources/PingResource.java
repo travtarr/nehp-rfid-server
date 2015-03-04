@@ -12,12 +12,25 @@ import com.nehp.rfid_system.server.core.Authority;
 @Path("/ping")
 @Produces(MediaType.APPLICATION_JSON)
 public class PingResource {
+	
+	/**
+	 * Simple status check for periodic domain health check.
+	 * 
+	 * @return
+	 */
 	@GET
 	@Timed
 	public String pong() {
 		return "{\"answer\": \"pong\"}";
 	}
 
+	/**
+	 * Simple authentication check for resources.
+	 * 
+	 * Used for testing purposes.
+	 * 
+	 * @return
+	 */
 	@GET
 	@Timed
 	@Path("/auth")

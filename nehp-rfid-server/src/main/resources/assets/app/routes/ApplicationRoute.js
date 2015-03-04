@@ -1,5 +1,4 @@
 App.ApplicationRoute = Ember.Route.extend({
-	image: null,
 	actions : {
 		// create a global logout action
 		logout : function() {
@@ -14,6 +13,19 @@ App.ApplicationRoute = Ember.Route.extend({
 				this.controllerFor('sessions').reset();
 				return this.transitionTo('sessions');
 			}
+		},
+		openModal: function(modalName, model) {
+			this.controllerFor(modalName).set('model', model);
+			return this.render(modalName, {
+				into: 'application',
+				outlet: 'modal'
+			});
+		},
+		closeModal: function() {
+			return this.disconnectOutlet({
+				outlet: 'modal',
+				parentView: 'application'
+			});
 		}
 	}
 });

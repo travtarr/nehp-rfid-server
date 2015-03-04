@@ -9,6 +9,12 @@ App.SessionsController = Ember.Controller.extend({
 					'Authorization' : 'Bearer ' + Ember.$.cookie('access_token')
 				}
 			});
+		} else if (sessionStorage.token !== null) {
+			Ember.$.ajaxSetup({
+				headers : {
+					'Authorization' : 'Bearer ' + sessionStorage.token
+				}
+			});
 		}
 	},
 
@@ -23,7 +29,9 @@ App.SessionsController = Ember.Controller.extend({
 	token : (function() {
 		if(Ember.$.cookie('access_token')){
 			return Ember.$.cookie('access_token');
-		} else
+		} else if (this.get('rawToken') === null) {
+			return sessionStorage.getItem('token');
+		} else 
 			return this.get('rawToken');
 	}).property('rawToken'),
 	
@@ -33,6 +41,8 @@ App.SessionsController = Ember.Controller.extend({
 				return JSON.parse(Ember.$.cookie('auth_user'));
 			else
 				return Ember.$.cookie('auth_user');
+		} else if (sessionStorage.getItem('user') !== null){
+			return JSON.parse(sessionStorage.user);
 		}
 	}).property('rawToken'),
 	
@@ -49,6 +59,8 @@ App.SessionsController = Ember.Controller.extend({
 				return true;
 			else
 				return false;
+		} else if (this.get('user.admin') === null) {
+			return this.get('currentUser.admin');
 		} else {
 			return this.get('user.admin');
 		}
@@ -139,23 +151,24 @@ App.SessionsController = Ember.Controller.extend({
 				
 					_this.store.find('user', response.api_key[0].user_id.string).then(
 							function(user) {
-																
-								// set this controller token & current user
-								// properties
-								// based on the data from the user and
-								// access_token
-								
-								_this.setProperties({
-									rawToken: response.api_key[0].access_token.string,
-									token: response.api_key[0].access_token.string,
-									currentUser : {
+								var userToAdd = {
 										id: response.api_key[0].user_id.string,
 										setting: user.get('setting'),
 										name: user.get('name'),
 										email: user.get('email'),
 										username: user.get('username'),
 										admin: user.get('admin')
-									},
+								};								
+								// set this controller token & current user properties
+								// based on the data from the user and access_token
+								if ( typeof(Storage) !== "undefined" ) {
+									sessionStorage.token = response.api_key[0].access_token.string;
+									sessionStorage.user = JSON.stringify(userToAdd);
+								}
+								_this.setProperties({
+									rawToken: response.api_key[0].access_token.string,
+									token: response.api_key[0].access_token.string,
+									currentUser : userToAdd,
 									admin: user.get('admin'),
 									lastRequest: $.now(),
 									cookiesEnabled: _this.get('remember')

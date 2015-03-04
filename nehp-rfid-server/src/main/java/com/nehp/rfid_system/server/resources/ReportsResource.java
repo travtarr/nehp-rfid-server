@@ -40,6 +40,11 @@ public class ReportsResource {
 		this.stageDAO = stageDAO;
 	}
 	
+	/**
+	 * Get a report in Excel XML format that gives the durations of each stage.
+	 * 
+	 * @return
+	 */
 	@GET
 	@Timed
 	@UnitOfWork
@@ -73,13 +78,13 @@ public class ReportsResource {
 				group = item.getGroup().toString();
 			excelData += getCell( group );
 			List<String> durations = getDurations(item);
+			
 			if (durations != null)
 			{
 				for ( String dur : durations ){
 					excelData += getCell( dur );
 				}		
 			}
-				
 			excelData += "</tr>";
 		}
 		excelData += "</table>";

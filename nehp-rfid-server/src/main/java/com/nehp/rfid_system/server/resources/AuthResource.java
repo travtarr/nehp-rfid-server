@@ -28,49 +28,63 @@ public class AuthResource {
 	private ImmutableList<String> allowedGrantTypes;
 	private AccessTokenDAO accessTokenDAO;
 	private UserDAO userDAO;
-	
-	public AuthResource(ImmutableList<String> allowedGrantTypes, AccessTokenDAO accessTokenDAO, UserDAO userDAO){
+
+	public AuthResource(ImmutableList<String> allowedGrantTypes,
+			AccessTokenDAO accessTokenDAO, UserDAO userDAO) {
 		this.allowedGrantTypes = allowedGrantTypes;
 		this.accessTokenDAO = accessTokenDAO;
 		this.userDAO = userDAO;
 	}
-	
+
+	/**
+	 * Generates an access token based upon user's credentials.
+	 * 
+	 * @param grantType
+	 *            - default grant type, always "password"
+	 * @param username
+	 * @param password
+	 * @return Correct authorization - returns JSON object with token and user
+	 *         ID
+	 * @return Bad credentials - returns status 401
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	public JsonObject postForToken(
-					@FormParam("grant_type") String grantType,
-					@FormParam("username") String username,
-					@FormParam("password") String password
-	){
-		//System.out.println("grant_type=" + grantType);
-		//System.out.println("username=" + username);
-		//System.out.println("password=" + password);
-		
+	public JsonObject postForToken(@FormParam("grant_type") String grantType,
+			@FormParam("username") String username,
+			@FormParam("password") String password) {
+
 		// Check if the grant type is allowed
-		if(!allowedGrantTypes.contains(grantType)){
-			Response response = Response.status(Responses.METHOD_NOT_ALLOWED).build();
+		if (!allowedGrantTypes.contains(grantType)) {
+			Response response = Response.status(Responses.METHOD_NOT_ALLOWED)
+					.build();
 			throw new WebApplicationException(response);
 		}
-		
+
 		// Try to find the user
-		Optional<User> user = userDAO.getUserByUsernameAndPassword(username, password);
-		if (user == null || !user.isPresent()){
-			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).build());
+		Optional<User> user = userDAO.getUserByUsernameAndPassword(username,
+				password);
+		if (user == null || !user.isPresent()) {
+			throw new WebApplicationException(Response.status(
+					Response.Status.UNAUTHORIZED).build());
 		}
-				
+
 		// User found, generate token
 		Long userId = user.get().getId();
-		
-		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId, new Date());
-		
-		JsonObject jo = Json.createObjectBuilder()
-				.add("api_key", Json.createArrayBuilder()
-					.add(Json.createObjectBuilder()
-							.add("access_token", accessToken.getId().toString())
-							.add("user_id", userId.toString()))).build();
-		//System.out.println("[AuthResource] Returned Object: " + jo.toString());
+
+		AccessToken accessToken = accessTokenDAO.generateNewAccessToken(userId,
+				new Date());
+
+		JsonObject jo = Json
+				.createObjectBuilder()
+				.add("api_key",
+						Json.createArrayBuilder().add(
+								Json.createObjectBuilder()
+										.add("access_token",
+												accessToken.getId().toString())
+										.add("user_id", userId.toString())))
+				.build();
 		return jo;
 	}
 }

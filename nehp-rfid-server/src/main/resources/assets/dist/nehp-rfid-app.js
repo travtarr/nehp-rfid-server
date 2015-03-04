@@ -40,6 +40,12 @@ App.SimpledateTransform = DS.Transform.extend({
 		}
 		return deserialized;
 	}
+});;App.ModalImageComponent = Ember.Component.extend({
+	actions: {
+		close: function() {
+			return this.sendAction();
+		}
+	}
 });;App.NotifyAlertComponent = Ember.Component.extend({
 	
 	classNameBindings: [':notify',
@@ -147,8 +153,8 @@ var config  = {
 	// the admin of the sessions controller to verify if the user is
 	// an administrator
 	isAdmin : (function() {
-		return this.get('controllers.sessions.admin');
-	}).property('controllers.sessions.admin'),
+		return this.get('controllers.sessions.currentUser.admin');
+	}).property('controllers.sessions.currentUser'),
 
 	// creates a computed property called isAuthenticated that will be
 	// binded on the curretUser of the sessions controller and will verify if
@@ -285,6 +291,12 @@ var config  = {
 			this.transitionToRoute('item', id); 
 		}
 	}
+});;App.ModalController = Ember.ObjectController.extend({
+	actions: {
+		close: function() {
+			return this.send('closeModal');
+		}
+	}
 });;App.NotificationsController = Ember.ArrayController.extend({
 	needs: ['application'],
 	actions: {
@@ -418,6 +430,12 @@ var config  = {
 					'Authorization' : 'Bearer ' + Ember.$.cookie('access_token')
 				}
 			});
+		} else if (sessionStorage.token !== null) {
+			Ember.$.ajaxSetup({
+				headers : {
+					'Authorization' : 'Bearer ' + sessionStorage.token
+				}
+			});
 		}
 	},
 
@@ -432,7 +450,9 @@ var config  = {
 	token : (function() {
 		if(Ember.$.cookie('access_token')){
 			return Ember.$.cookie('access_token');
-		} else
+		} else if (this.get('rawToken') === null) {
+			return sessionStorage.getItem('token');
+		} else 
 			return this.get('rawToken');
 	}).property('rawToken'),
 	
@@ -442,6 +462,8 @@ var config  = {
 				return JSON.parse(Ember.$.cookie('auth_user'));
 			else
 				return Ember.$.cookie('auth_user');
+		} else if (sessionStorage.getItem('user') !== null){
+			return JSON.parse(sessionStorage.user);
 		}
 	}).property('rawToken'),
 	
@@ -458,6 +480,8 @@ var config  = {
 				return true;
 			else
 				return false;
+		} else if (this.get('user.admin') === null) {
+			return this.get('currentUser.admin');
 		} else {
 			return this.get('user.admin');
 		}
@@ -548,23 +572,24 @@ var config  = {
 				
 					_this.store.find('user', response.api_key[0].user_id.string).then(
 							function(user) {
-																
-								// set this controller token & current user
-								// properties
-								// based on the data from the user and
-								// access_token
-								
-								_this.setProperties({
-									rawToken: response.api_key[0].access_token.string,
-									token: response.api_key[0].access_token.string,
-									currentUser : {
+								var userToAdd = {
 										id: response.api_key[0].user_id.string,
 										setting: user.get('setting'),
 										name: user.get('name'),
 										email: user.get('email'),
 										username: user.get('username'),
 										admin: user.get('admin')
-									},
+								};								
+								// set this controller token & current user properties
+								// based on the data from the user and access_token
+								if ( typeof(Storage) !== "undefined" ) {
+									sessionStorage.token = response.api_key[0].access_token.string;
+									sessionStorage.user = JSON.stringify(userToAdd);
+								}
+								_this.setProperties({
+									rawToken: response.api_key[0].access_token.string,
+									token: response.api_key[0].access_token.string,
+									currentUser : userToAdd,
 									admin: user.get('admin'),
 									lastRequest: $.now(),
 									cookiesEnabled: _this.get('remember')
@@ -983,7 +1008,6 @@ App.AuthenticatedRoute = Ember.Route.extend({
 		});
 	}
 });;App.ApplicationRoute = Ember.Route.extend({
-	image: null,
 	actions : {
 		// create a global logout action
 		logout : function() {
@@ -998,6 +1022,19 @@ App.AuthenticatedRoute = Ember.Route.extend({
 				this.controllerFor('sessions').reset();
 				return this.transitionTo('sessions');
 			}
+		},
+		openModal: function(modalName, model) {
+			this.controllerFor(modalName).set('model', model);
+			return this.render(modalName, {
+				into: 'application',
+				outlet: 'modal'
+			});
+		},
+		closeModal: function() {
+			return this.disconnectOutlet({
+				outlet: 'modal',
+				parentView: 'application'
+			});
 		}
 	}
 });;App.IndexRoute = App.AuthenticatedRoute.extend({
@@ -1235,15 +1272,11 @@ App.AuthenticatedRoute = Ember.Route.extend({
     },
 	actions: {
 		showImage: function(stageid) {
-			var stage = this.modelFor('stages').findBy('id', stageid);
-			var imageData = "data:image/gif;base64,"  + 
-			$.getJSON("/service/signature/" + stage.get('item') + "/" + stage.get('stage'));
-			
-			this.set('image', imageData);
-			this.render('modal', { into: 'application', outlet: 'modal' });
-		},
-		closeImage: function() {
-		    this.render('nothing', { into: 'application', outlet: 'modal' });
+			var imageData = "data:image/GIF;base64,";
+			var _this = this;
+			Ember.$.get("/service/signature?stage=" + stageid).done( function(result) {
+				_this.send('openModal', 'modal', Em.Object.create({'image': imageData + result}));
+			});
 		}
 	}
 });;App.SummaryRoute = App.AuthenticatedRoute.extend({
@@ -1257,12 +1290,12 @@ App.AuthenticatedRoute = Ember.Route.extend({
 				// visible items = (now - stage_date) > stage_date_setting
 				return _this.store.filter('item', function(item){
 					var curStageNum = item.get('current_stage_num');
-					
 					var stage = item.get('last_status_change_date');
 					if( stage !== null ){
 						var a = moment($.now());
+						var setting = settings.findBy('stage', curStageNum);
 						var diff = a.diff(moment(stage, "YYYY-MM-DD HH:mm:ss"), 'hours');
-						if( diff > settings.filterBy('stage', curStageNum).get('duration') ){
+						if( diff > setting.duration ){
 							return item;
 						}
 					}
@@ -1325,23 +1358,5 @@ App.AuthenticatedRoute = Ember.Route.extend({
 });;App.UsersEditRoute = App.AuthenticatedRoute.extend({});;App.UsersRoute = App.AuthenticatedRoute.extend({
 	model : function() {
 		return this.store.find('user');
-	}
-});;App.ModalView = Ember.View.Extend({
-	didInsertElement : function() {
-		this.$('.modal, .modal-backdrop').addClass('in');
-	},
-
-	layoutName : 'modal_layout',
-
-	close : function() {
-		var view = this;
-		// use one of: transitionend webkitTransitionEnd oTransitionEnd
-		// MSTransitionEnd
-		// events so the handler is only fired once in your browser
-		this.$('.modal').one("transitionend", function(ev) {
-			view.controller.send('close');
-		});
-
-		this.$('.modal, .modal-backdrop').removeClass('in');
 	}
 });

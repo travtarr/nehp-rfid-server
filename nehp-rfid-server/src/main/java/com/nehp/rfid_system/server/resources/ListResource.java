@@ -35,6 +35,14 @@ public class ListResource {
 		STOPPED
 	}
 	
+	/**
+	 * Gets a list of items.  
+	 * 
+	 * This is currently not used.
+	 * 
+	 * @param stage
+	 * @return
+	 */
 	@GET
 	@Timed
 	@UnitOfWork

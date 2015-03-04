@@ -15,14 +15,31 @@ public class GroupDAO extends AbstractDAO<Group> {
 		super(sessionFactory);
 	}
 	
+	/**
+	 * Get a list of all groups.
+	 * 
+	 * @return
+	 */
 	public List<Group> getGroupsAll(){
 		return list(namedQuery("groups.getAll"));
 	}
 	
+	/**
+	 * Create a new group.
+	 * 
+	 * @param group
+	 * @return
+	 */
 	public Long create(Group group){
 		return persist(group).getId();
 	}
 	
+	/**
+	 * Get by the ID of the group.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Optional<Group> getById(long id){
 		return Optional.of(get(id));
 	}

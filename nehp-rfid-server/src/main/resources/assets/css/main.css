@@ -61,7 +61,21 @@ input.small {
 .active {
 	color: #FFFFFF !important;
 }
-
+.modal {
+  position: relative;
+  margin: 10px auto;
+  width: 300px;
+  background-color: #fff;
+  padding: 1em;
+}
+.overlay {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+}
 ul.dark-list {
 	background-color: #1b1b1b;
 	padding: 10px;

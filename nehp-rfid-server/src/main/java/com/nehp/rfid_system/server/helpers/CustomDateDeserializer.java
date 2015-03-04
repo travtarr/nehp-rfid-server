@@ -10,8 +10,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
+/**
+ * Parses a date to the specified format.
+ *
+ */
 public class CustomDateDeserializer extends JsonDeserializer<Date>
 {
+
     @Override
     public Date deserialize(JsonParser jsonparser,
             DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {

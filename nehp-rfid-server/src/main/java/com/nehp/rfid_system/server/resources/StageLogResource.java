@@ -19,13 +19,18 @@ import com.nehp.rfid_system.server.data.StageLogDAO;
 
 @Path("stagelogs")
 public class StageLogResource {
-	
+
 	private StageLogDAO stageDAO;
-	
+
 	public StageLogResource(StageLogDAO stageDAO) {
 		this.stageDAO = stageDAO;
 	}
-	
+
+	/**
+	 * Gets all stage logs.
+	 * 
+	 * @return list of stage logs
+	 */
 	@GET
 	@Timed
 	@UnitOfWork
@@ -34,8 +39,8 @@ public class StageLogResource {
 	public StageLogList getAll() {
 		StageLogList list = new StageLogList();
 		Optional<List<StageLog>> retrievedList = stageDAO.getAll();
-		if ( retrievedList.isPresent() ){
-			list.setStageLog( retrievedList.get() );
+		if (retrievedList.isPresent()) {
+			list.setStageLog(retrievedList.get());
 		}
 		return list;
 	}

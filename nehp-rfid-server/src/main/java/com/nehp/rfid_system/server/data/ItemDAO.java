@@ -25,10 +25,22 @@ public class ItemDAO extends AbstractDAO<Item>{
 		factory = sessionFactory;
 	}
 	
+	/**
+	 * Gets an by its unique id.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Optional<Item> getItemById(Long id){
 		return Optional.of(get(id));
 	}
 	
+	/**
+	 * Gets an item by its RFID tag.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Optional<Item> getItemByRFID(String id){
 		Optional<Item> item = null;
 		try {
@@ -40,6 +52,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 		return item;
 	}
 	
+	/**
+	 * Gets an item by its drawing number.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Optional<Item> getItemByItemId(String id){
 		Optional<Item> item = null;
 		try {
@@ -52,16 +70,35 @@ public class ItemDAO extends AbstractDAO<Item>{
 		return item;
 	}
 	
+	/**
+	 * Get a list of items by the drawing number.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Optional<List<Item>> getItemsByItemId(String id){
 		return Optional.of(list(namedQuery("items.getByItemId")
 				.setParameter("id", id, StringType.INSTANCE)));
 	}
 	
+	/**
+	 * Get a list of items by their printed status.
+	 * 
+	 * @param printed
+	 * @return
+	 */
 	public Optional<List<Item>> getItemsByPrinted(Boolean printed){
 		return Optional.of(list(namedQuery("items.getByPrinted")
 				.setParameter("printed", printed)));
 	}
 	
+	/**
+	 * Get an item by the drawing number and revision.
+	 * 
+	 * @param id
+	 * @param rev
+	 * @return
+	 */
 	public Optional<Item> getItemByItemIdAndRev(String id, String rev){
 		Item item = null;
 		try {
@@ -78,6 +115,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 			return Optional.of(item);	
 	}
 	
+	/**
+	 * Get item by its stage value.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public Optional<List<Item>> getItemsByStage(String type){
 		int stage = 0;
 		if(type.equals("all") || type.equals("ALL"))
@@ -88,10 +131,21 @@ public class ItemDAO extends AbstractDAO<Item>{
 		return Optional.of(list(namedQuery("items.getByStage").setParameter("stage", stage, IntegerType.INSTANCE)));
 	}
 	
+	/**
+	 * Get a list of all items.
+	 * 
+	 * @return
+	 */
 	public Optional<List<Item>> getItemsAll(){
 		return Optional.of(list(namedQuery("items.getAll")));
 	}
 	
+	/**
+	 * Get a list of items according to a list of their unique IDs.
+	 * 
+	 * @param list
+	 * @return
+	 */
 	public List<Item> getMultipleItemsById(List<Long> list){
 		Iterator<Long> iter = list.listIterator();
 		List<Item> filtered = new ArrayList<Item>();
@@ -104,10 +158,22 @@ public class ItemDAO extends AbstractDAO<Item>{
 		return filtered;
 	}
 	
+	/**
+	 * Create a new item.
+	 * 
+	 * @param item
+	 * @return
+	 */
 	public Long create(Item item){
 		return persist(item).getId();
 	}
 	
+	/**
+	 * Update an item.
+	 * 
+	 * @param item
+	 * @return
+	 */
 	public boolean update(Item item){
 		// Make sure we update the correct item
 		Item updateItem;
@@ -135,10 +201,12 @@ public class ItemDAO extends AbstractDAO<Item>{
 	}
 	
 	
-	// TODO: Create a method to update many items at once
-	// should return an array that tells which items were
-	// successfully updated.
-	
+	/**
+	 * Delete an item.
+	 * 	
+	 * @param item
+	 * @return
+	 */
 	public boolean delete(Item item){
 		Boolean result = false;
 		Session session = factory.openSession();

@@ -29,83 +29,116 @@ import com.sun.jersey.api.Responses;
 @Path("/notifications")
 @Produces(MediaType.APPLICATION_JSON)
 public class NotificationsResource {
-	
+
 	private final NotificationsDAO notificationsDAO;
-	
-	public NotificationsResource(NotificationsDAO notificationsDAO){
+
+	public NotificationsResource(NotificationsDAO notificationsDAO) {
 		this.notificationsDAO = notificationsDAO;
 	}
-	
+
+	/**
+	 * Gets all notifications.
+	 * 
+	 * @return
+	 */
 	@GET
 	@Timed
 	@UnitOfWork
-	@RestrictedTo({Authority.ROLE_USER})
-	public NotificationList getAll(){
+	@RestrictedTo({ Authority.ROLE_USER })
+	public NotificationList getAll() {
 		NotificationList list = new NotificationList();
 		list.setNotifications(notificationsDAO.getAll());
 		return list;
 	}
-	
+
+	/**
+	 * Gets the notification specified by its unique ID.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Timed
 	@Path("/{id}")
-	@UnitOfWork 
-	@RestrictedTo({Authority.ROLE_USER}) 
-	public NotificationWrap getById(@PathParam("id") String id){
+	@UnitOfWork
+	@RestrictedTo({ Authority.ROLE_USER })
+	public NotificationWrap getById(@PathParam("id") String id) {
 		NotificationWrap wrap = new NotificationWrap();
 		wrap.setNotification(notificationsDAO.getById(Long.parseLong(id)));
 		return wrap;
 	}
-	
+
+	/**
+	 * Updates a notification.
+	 * 
+	 * @param id
+	 * @param notification
+	 * @return - updated notification
+	 */
 	@PUT
 	@Timed
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	@RestrictedTo({Authority.ROLE_ADMIN}) 
-	public Response update(@PathParam("id") String id, @Valid NotificationWrap notification){
+	@RestrictedTo({ Authority.ROLE_ADMIN })
+	public Response update(@PathParam("id") String id,
+			@Valid NotificationWrap notification) {
 		Notification persistedNotification = notification.getNotification();
-		boolean success = notificationsDAO.update(Long.parseLong(id), notification.getNotification());
-		
+		boolean success = notificationsDAO.update(Long.parseLong(id),
+				notification.getNotification());
+
 		NotificationWrap wrap = new NotificationWrap();
-		if( success ){
-			wrap.setNotification( persistedNotification );
-			return Response.status( Response.Status.OK ).entity( wrap ).build();
+		if (success) {
+			wrap.setNotification(persistedNotification);
+			return Response.status(Response.Status.OK).entity(wrap).build();
 		} else
-			return Response.status( Response.Status.BAD_REQUEST ).build();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 	}
-	
+
+	/**
+	 * Create a new notification.
+	 * 
+	 * @param notification
+	 * @return newly created notification
+	 */
 	@POST
 	@Timed
 	@Consumes(MediaType.APPLICATION_JSON)
 	@UnitOfWork
-	@RestrictedTo({Authority.ROLE_ADMIN}) 
-	public Response create ( @Valid NotificationWrap notification ){
+	@RestrictedTo({ Authority.ROLE_ADMIN })
+	public Response create(@Valid NotificationWrap notification) {
 		Notification persistedNotification = notification.getNotification();
-		Long newId = notificationsDAO.create( notification.getNotification() );
-		
+		Long newId = notificationsDAO.create(notification.getNotification());
+
 		NotificationWrap wrap = new NotificationWrap();
-		if ( newId != null ) {
-			persistedNotification.setId( newId );
-			wrap.setNotification( persistedNotification );
-			return Response.status( Response.Status.CREATED ).entity( wrap ).build();
+		if (newId != null) {
+			persistedNotification.setId(newId);
+			wrap.setNotification(persistedNotification);
+			return Response.status(Response.Status.CREATED).entity(wrap)
+					.build();
 		} else
-			return Response.status( Response.Status.BAD_REQUEST ).build();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 	}
-	
+
+	/**
+	 * Deletes the notification based upon it's unique ID.
+	 * 
+	 * @param id
+	 * @return empty JSON object on success, status 304 on failure
+	 */
 	@DELETE
 	@Timed
 	@Path("/{id}")
-	@UnitOfWork 
-	@RestrictedTo({Authority.ROLE_ADMIN}) 
-	public JsonObject deleteById(@PathParam("id") String id){
-		if(notificationsDAO.deleteById(Long.parseLong(id)))
+	@UnitOfWork
+	@RestrictedTo({ Authority.ROLE_ADMIN })
+	public JsonObject deleteById(@PathParam("id") String id) {
+		if (notificationsDAO.deleteById(Long.parseLong(id)))
 			return Json.createObjectBuilder().build();
 		else {
 			Response response = Response.status(Responses.NOT_MODIFIED).build();
 			throw new WebApplicationException(response);
 		}
-			
+
 	}
-	
+
 }

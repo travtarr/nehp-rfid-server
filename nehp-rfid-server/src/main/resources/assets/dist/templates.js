@@ -336,6 +336,22 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["components/modal-image"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"overlay\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("></div>\r\n<div class=\"modal\">\r\n	");
+  stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n<div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["components/notify-alert"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -467,7 +483,7 @@ function program1(depth0,data) {
   data.buffer.push(">Integrating</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "KITTING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Kitting</a></li>\r\n				<li><a ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "AWAITING MFR", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "AWAITING MFG", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Awaiting Mfg</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "MANUFACTURING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Manufacturing</a></li>\r\n				<li><a ");
@@ -554,36 +570,26 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["modal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, escapeExpression=this.escapeExpression;
+  var stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
-
-  data.buffer.push("<div class=\"modal-header\">\r\n	<button type=\"button\" class=\"close\" ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{
-    'target': ("view")
-  },hashTypes:{'target': "STRING"},hashContexts:{'target': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push(">&times;</button>\r\n	<h3>Modal header</h3>\r\n</div>\r\n<div class=\"modal-body\">\r\n	<img src=\"");
-  stack1 = helpers._triageMustache.call(depth0, "image", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\">\r\n</div>\r\n<div class=\"modal-footer\">\r\n	<a href=\"#\" class=\"btn\" ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{
-    'target': ("view")
-  },hashTypes:{'target': "STRING"},hashContexts:{'target': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push(">Close</a> \r\n</div>");
-  return buffer;
+function program1(depth0,data) {
   
-});
-
-Ember.TEMPLATES["modal_layout"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1;
-
-
-  data.buffer.push("<div class=\"modal-backdrop fade\">&nbsp;</div>\r\n<div class=\"modal fade\">\r\n	");
-  stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\r\n	<div>");
+  var buffer = '';
+  data.buffer.push("\r\n      <p><img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("image")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" alt=\"signature image\"></p>\r\n      <button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "close", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Done</button>\r\n");
   return buffer;
+  }
+
+  stack1 = (helper = helpers['modal-image'] || (depth0 && depth0['modal-image']),options={hash:{
+    'action': ("close")
+  },hashTypes:{'action': "STRING"},hashContexts:{'action': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "modal-image", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  else { data.buffer.push(''); }
   
 });
 
@@ -856,7 +862,7 @@ function program1(depth0,data) {
   stack1 = helpers._triageMustache.call(depth0, "group", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n								<td>");
-  stack1 = helpers._triageMustache.call(depth0, "last_status_change_date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "last_status_change_duration", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\r\n							</tr>\r\n							");
   return buffer;
@@ -869,7 +875,7 @@ function program1(depth0,data) {
   data.buffer.push(">Integrating</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "KITTING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Kitting</a></li>\r\n				<li><a ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "AWAITING MFR", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "AWAITING MFG", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Awaiting Mfg</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "MANUFACTURING", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Manufacturing</a></li>\r\n				<li><a ");
@@ -879,7 +885,7 @@ function program1(depth0,data) {
   data.buffer.push(">Shipping</a></li>\r\n				<li><a ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "COMPLETE", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Completed</a></li>\r\n				<li class=\"divider\"></li>\r\n				<li class=\"nav-header\">On Hold</li>\r\n				<li><a ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ON_HOLD", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setStage", "ON HOLD", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">All</a></li>\r\n			</ul>\r\n		</div>\r\n		<div class=\"span10\">\r\n			<div class=\"tables-items\">\r\n				<table>\r\n					<thead>\r\n						<th><button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleSort", "current_stage_desc", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(">Current Stage</button></th>\r\n						<th><button ");

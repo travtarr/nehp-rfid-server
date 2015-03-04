@@ -21,16 +21,23 @@ public class SignatureDAO extends AbstractDAO<Signature> {
 	}
 
 	public Optional<Signature> getByItemAndStage(Long item, Long stage){
-		if ( verifyStage(stage) ) {
-			List<Signature> sigList = list(namedQuery("signature.getByItemAndStage")
-					.setParameter("item", item, LongType.INSTANCE)
-					.setParameter("stage", stage, LongType.INSTANCE));
-			if (sigList.size() > 0)
-				return Optional.of(sigList.get(0));
-			else
-				return Optional.absent();
-		}
-		return Optional.absent();
+		List<Signature> sigList = list(namedQuery("signature.getByItemAndStage")
+				.setParameter("item", item, LongType.INSTANCE)
+				.setParameter("stage", stage, LongType.INSTANCE));
+		if (sigList.size() > 0)
+			return Optional.of(sigList.get(0));
+		else
+			return Optional.absent();
+	}
+	
+	public Optional<Signature> getByStage(Long stage){
+		List<Signature> sigList = list(namedQuery("signature.getByStage")
+				.setParameter("stage", stage, LongType.INSTANCE));
+		if (sigList.size() > 0)
+			return Optional.of(sigList.get(0));
+		else
+			return Optional.absent();
+
 	}
 	
 	public List<Signature> getAll(){
@@ -44,11 +51,5 @@ public class SignatureDAO extends AbstractDAO<Signature> {
 	public Long create(Signature sig){
 		return persist(sig).getId();
 	}
-	
-	
-	private boolean verifyStage(Long stage){
-		if (stage > 0 && stage < 8)
-			return true;
-		return false;
-	}
+
 }

@@ -45,9 +45,8 @@ public class UserResource {
 	private final UserDAO userDAO;
 	private final AccessTokenDAO accessTokenDAO;
 	private final SettingDAO settingDAO;
-	
-	private static final String EMAIL_PATTERN = 
-			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	public UserResource(UserDAO user, AccessTokenDAO accessTokenDAO,
@@ -57,6 +56,13 @@ public class UserResource {
 		this.settingDAO = settingDAO;
 	}
 
+	/**
+	 * Gets all users.
+	 * 
+	 * Admin only.
+	 * 
+	 * @return
+	 */
 	@GET
 	@Timed
 	@UnitOfWork
@@ -68,6 +74,12 @@ public class UserResource {
 		return list;
 	}
 
+	/**
+	 * Create a new user.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	@POST
 	@Timed
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -84,8 +96,9 @@ public class UserResource {
 		if (userId != null) {
 			/* Create Settings Profile for new user */
 			// grab global settings profile
-			List<Setting> settingList = settingDAO.getByUserId(GLOBAL_SETTINGS_ID);
-			for ( Setting defaultSetting : settingList ) {
+			List<Setting> settingList = settingDAO
+					.getByUserId(GLOBAL_SETTINGS_ID);
+			for (Setting defaultSetting : settingList) {
 				Setting setting = new Setting();
 				setting.setStage(defaultSetting.getStage());
 				setting.setUser(userId);
@@ -93,9 +106,9 @@ public class UserResource {
 				setting.setDuration(defaultSetting.getDuration());
 				settingDAO.create(setting);
 			}
-			
+
 			User newUser = userDAO.getUserById(userId).get();
-			
+
 			UserWrap wrap = new UserWrap();
 			wrap.setUser(newUser);
 
@@ -105,6 +118,17 @@ public class UserResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 	}
 
+	/**
+	 * Reset a user's password.
+	 * 
+	 * Admin can reset anyone. User can only reset oneself.
+	 * 
+	 * @param userId
+	 * @param verifyEmail
+	 * @param request
+	 * @return status 200 on success, status 304 on failure
+	 * @return status 401 on unauthorized
+	 */
 	@GET
 	@Timed
 	@Path("/{user_id}/pwreset")
@@ -141,16 +165,24 @@ public class UserResource {
 		return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 
+	/**
+	 * Reset password by email
+	 * 
+	 * @param email
+	 *            - user's email
+	 * @return status 200 on success, status 304 on failure
+	 * @return status 401 on unauthorized
+	 */
 	@POST
 	@Timed
 	@Path("/pwreset-email")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@UnitOfWork
 	public Response resetPasswordByEmail(@FormParam("email") String email) {
-		if (email.matches(EMAIL_PATTERN)){
+		if (email.matches(EMAIL_PATTERN)) {
 			User user = userDAO.getUserByEmail(email).get();
 
-			if (userDAO.resetPassword( user.getId() )) {
+			if (userDAO.resetPassword(user.getId())) {
 				return Response.status(Response.Status.OK).build();
 			} else {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -159,25 +191,37 @@ public class UserResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 	}
-	
-	
+
+	/**
+	 * Change password of user.
+	 * 
+	 * @param username
+	 * @param password
+	 * @return status 200 on success, 401 on unauthorized
+	 */
 	@POST
 	@Timed
 	@Path("/pwchange")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@UnitOfWork
-	@RestrictedTo({Authority.ROLE_USER})
-	public Response changePassword( @FormParam("username") String username,
-									@FormParam("password") String password) {
+	@RestrictedTo({ Authority.ROLE_USER })
+	public Response changePassword(@FormParam("username") String username,
+			@FormParam("password") String password) {
 		User user = userDAO.getUserByUsername(username).get();
 
-		if (user != null && userDAO.updatePassword( user, password )) {
+		if (user != null && userDAO.updatePassword(user, password)) {
 			return Response.status(Response.Status.OK).build();
 		} else {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 	}
 
+	/**
+	 * Delete a user.
+	 * 
+	 * @param userId
+	 * @return empty JSON object on success, 304 on failure
+	 */
 	@DELETE
 	@Timed
 	@Path("/{user_id}")
@@ -193,6 +237,13 @@ public class UserResource {
 		}
 	}
 
+	/**
+	 * Get a user based upon id in path.
+	 * 
+	 * @param userId
+	 * @param request
+	 * @return user retrieved
+	 */
 	@GET
 	@Timed
 	@Produces(MediaType.APPLICATION_JSON)
@@ -207,23 +258,33 @@ public class UserResource {
 		Long currentUserId = accessTokenDAO
 				.findAccessTokenById(accessTokenUUID).get().getUserId();
 		User currentUser = userDAO.getUserById(currentUserId).get();
-		
+
 		UserWrap wrap = new UserWrap();
 		if (accessTokenUUID != null) {
-			// User can only get information about oneself unless user is an admin
-			if (currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true)
+			// User can only get information about oneself unless user is an
+			// admin
+			if (currentUserId == Long.parseLong(userId)
+					|| currentUser.getAdmin() == true)
 				wrap.setUser(userDAO.getUserById(Long.parseLong(userId)).get());
 		}
 		return wrap;
 	}
 
+	/**
+	 * Updates a user based on user's ID in path.
+	 * 
+	 * @param userId
+	 * @param userWrap
+	 * @param request
+	 * @return updated user
+	 */
 	@PUT
 	@Timed
 	@Path("/{user_id}")
 	@UnitOfWork
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RestrictedTo( {Authority.ROLE_USER} )
+	@RestrictedTo({ Authority.ROLE_USER })
 	public Response updateUser(@PathParam("user_id") String userId,
 			UserWrap userWrap, @Context HttpServletRequest request) {
 		System.out.println("Inside updateUser");
@@ -232,23 +293,24 @@ public class UserResource {
 		Long currentUserId = accessTokenDAO
 				.findAccessTokenById(accessTokenUUID).get().getUserId();
 		User currentUser = userDAO.getUserById(currentUserId).get();
-		
+
 		// User can only update own information, admin can update anyone
-		if ( currentUserId == Long.parseLong(userId) || currentUser.getAdmin() == true) {
+		if (currentUserId == Long.parseLong(userId)
+				|| currentUser.getAdmin() == true) {
 			System.out.println("Found user");
 			User user = userWrap.getUser();
 			user.setId(Long.parseLong(userId));
 			if (userDAO.update(user)) {
 				UserWrap wrap = new UserWrap();
-				User updatedUser = userDAO.getUserById( Long.parseLong(userId) )
+				User updatedUser = userDAO.getUserById(Long.parseLong(userId))
 						.get();
 				wrap.setUser(updatedUser);
-				return Response.status( Response.Status.OK ).entity( wrap ).build();
+				return Response.status(Response.Status.OK).entity(wrap).build();
 			} else {
-				return Response.status( Response.Status.BAD_REQUEST ).build();
+				return Response.status(Response.Status.BAD_REQUEST).build();
 			}
 		} else {
-			return Response.status( Response.Status.UNAUTHORIZED ).build();
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 	}
 

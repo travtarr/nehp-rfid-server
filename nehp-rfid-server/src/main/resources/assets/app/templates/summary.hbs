@@ -13,14 +13,14 @@
 				<li><a {{action 'setStage' 'ALL'}}>All</a></li>
 				<li><a {{action 'setStage' 'INTEGRATING'}}>Integrating</a></li>
 				<li><a {{action 'setStage' 'KITTING'}}>Kitting</a></li>
-				<li><a {{action 'setStage' 'AWAITING MFR'}}>Awaiting Mfg</a></li>
+				<li><a {{action 'setStage' 'AWAITING MFG'}}>Awaiting Mfg</a></li>
 				<li><a {{action 'setStage' 'MANUFACTURING'}}>Manufacturing</a></li>
 				<li><a {{action 'setStage' 'QA/QC'}}>QA/QC</a></li>
 				<li><a {{action 'setStage' 'SHIPPING'}}>Shipping</a></li>
 				<li><a {{action 'setStage' 'COMPLETE'}}>Completed</a></li>
 				<li class="divider"></li>
 				<li class="nav-header">On Hold</li>
-				<li><a {{action 'setStage' 'ON_HOLD'}}>All</a></li>
+				<li><a {{action 'setStage' 'ON HOLD'}}>All</a></li>
 			</ul>
 		</div>
 		<div class="span10">
@@ -43,7 +43,7 @@
 								<td>{{item_id}}</td>
 								<td>{{current_revision}}</td>
 								<td>{{group}}</td>
-								<td>{{last_status_change_date}}</td>
+								<td>{{last_status_change_duration}}</td>
 							</tr>
 							{{/each}}
 						</tbody>

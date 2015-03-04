@@ -15,7 +15,12 @@ public class AccessTokenDAO extends AbstractDAO<AccessToken>{
 		super(sessionFactory);
 	}
 
-
+	/**
+	 * Get accessToken by its unique ID.
+	 * 
+	 * @param accessTokenId
+	 * @return
+	 */
 	public Optional<AccessToken> findAccessTokenById(final UUID accessTokenId) {
 		AccessToken accessToken = get(accessTokenId);
 
@@ -25,12 +30,25 @@ public class AccessTokenDAO extends AbstractDAO<AccessToken>{
 		return Optional.of(accessToken);
 	}
 
+	/**
+	 * Create a new access token.
+	 * 
+	 * @param userId
+	 * @param dateTime
+	 * @return
+	 */
 	public AccessToken generateNewAccessToken(final long userId, final Date dateTime) {
 		AccessToken accessToken = new AccessToken(UUID.randomUUID(), userId, dateTime);
 		persist(accessToken);
 		return accessToken;
 	}
 
+	/**
+	 * Update last access time of token.
+	 * 
+	 * @param accessTokenUUID
+	 * @param dateTime
+	 */
 	public void setLastAccessTime(final UUID accessTokenUUID, final Date dateTime) {
 		AccessToken accessToken = get(accessTokenUUID);
 		AccessToken updatedAccessToken = accessToken.withLastAccessUTC(dateTime);

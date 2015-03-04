@@ -10,15 +10,10 @@ App.StagesRoute = App.AuthenticatedRoute.extend({
     },
 	actions: {
 		showImage: function(stageid) {
-			var stage = this.modelFor('stages').findBy('id', stageid);
-			var imageData = "data:image/gif;base64,"  + 
-			$.getJSON("/service/signature/" + stage.get('item') + "/" + stage.get('stage'));
-			
-			this.set('image', imageData);
-			this.render('modal', { into: 'application', outlet: 'modal' });
-		},
-		closeImage: function() {
-		    this.render('nothing', { into: 'application', outlet: 'modal' });
+			var _this = this;
+			Ember.$.get("/service/signature?stage=" + stageid).done( function(result) {
+				_this.send('openModal', 'modal', Em.Object.create({'image': result}));
+			});
 		}
 	}
 });
